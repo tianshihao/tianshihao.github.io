@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>水上书  | text</title>
+	<title>水上书  | 名称空间</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1">
 	<meta name="generator" content="Hugo 0.80.0" />
 	
@@ -26,9 +26,6 @@
 
 	
 
-	
-	<link rel="alternate" href="/tags/text/index.xml" type="application/rss+xml" title="水上书">
-	<link rel="feed" href="/tags/text/index.xml" type="application/rss+xml" title="水上书">
 	
 	
 	
@@ -150,16 +147,130 @@ onload='renderMathInElement(document.body);'></script>
 		<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 			<div
 				class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-					<div class="pb-4">
-		<h1 >
-			<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
-		</h1>
-	</div>
+				
+<div>
+	<h2>
+		<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
+	</h2>
+</div>
+<h1 class="pt-2">名称空间</h1>
+
+<div class="flex flex-wrap justify-end pt-2 "><div class="md:flex-grow-0 font-light">
+	
+	
+	
+	
+	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
+		href='/categories/c&#43;&#43;%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0'>C&#43;&#43;学习笔记</a>
+	
+	
+	
+
+	
+	&nbsp;&nbsp;
+	
+
+	
+	
+	
+	
+	<a class="post-taxonomy-tag text-eucalyptus-500"
+		href='/tags/c&#43;&#43;'>C&#43;&#43;</a>
+	
+	
+	
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4"
+		datetime="2020-12-13T22:55:02Z">2020-12-13 22:55</time>
+</div>
+
+<hr />
+
+			</div>
+		</header>
+		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+			
+
+<article>
+	<section class="mx-auto content">
+		<div class="c-rich-text"><p>C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jack
+{
+    <span style="color:#66d9ef">double</span> pail; <span style="color:#75715e">// variable declaration
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fetch</span>(); <span style="color:#75715e">// function prototype
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pal; <span style="color:#75715e">// variable declaration
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Well</span> {...}; <span style="color:#75715e">// structure declaration
+</span><span style="color:#75715e"></span>}
+<span style="color:#66d9ef">namespace</span> Jill
+{
+    <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">bucket</span>(<span style="color:#66d9ef">double</span> n){...} <span style="color:#75715e">// function prototype
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> fetch; <span style="color:#75715e">// variable declaration
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pal <span style="color:#75715e">// variable declaration
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Hill</span> {...}; <span style="color:#75715e">// structure declaration
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>名称空间可以是全局的，也可以位于另一个名称空间中，但不能位于代码块中。因此，在默认情况下，在名称空间中声明的名称的链接性为外部的（除非它引用了常量）。</p>
+<p>除了用户定义的名称空间外，还存在另一个名称空间——全局名称空间（global namespace）。它对应于文件级声明区域，因此前面所说的全局变量现在被描述位于全局名称空间中。</p>
+<p>名称空间中的声明和定义规则同全局声明和定义规则相同 。</p>
+<p>名称空间是开放的（open），即可以把名称加入到已有的名称空间中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jill
+{
+    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">goose</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>);
+}
+</code></pre></div><p>可以在名称空间声明的后面，即该文件后面（或另外一个文件中）再次使用Jack名称空间来提供函数的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jack
+{
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fetch</span>()
+    {
+        ...
+    }
+}
+</code></pre></div><p>访问给定名称空间中的名称的方法是，通过作用域解析符<code>::</code>，使用名称空间来<strong>限定</strong>该名称：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#f92672">::</span>pail <span style="color:#f92672">=</span> <span style="color:#ae81ff">12.34</span>; <span style="color:#75715e">// use a variable
+</span><span style="color:#75715e"></span>Jill<span style="color:#f92672">::</span>Hill mole; <span style="color:#75715e">// create a type Hill structure
+</span><span style="color:#75715e"></span>Jack<span style="color:#f92672">::</span>fetch(); <span style="color:#75715e">// use a function
+</span></code></pre></div><p>未被装饰的名称（如pail）称为未限定的名称（unqualified name）；包含名称空间的名称（如Jack::pail）称为限定的名称（qualified name）。</p>
+<h2 id="using声明和using编译指令">using声明和using编译指令</h2>
+<h3 id="using声明">using声明</h3>
+<p>我们并不希望每次使用每次时都对它进行限定,因此C++提供了两种机制(using声明和using编译指令)来简化对名称空间中名称的使用。<code>using</code>声明使特定的标识符可用，<code>using</code>编译指令是整个名称空间可用。</p>
+<p>using声明由被限定的名称和它前面的关键字using组成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> Jill<span style="color:#f92672">::</span>fetch; <span style="color:#75715e">// a using declaration
+</span></code></pre></div><p>将using声明添加到它所属的声明区域之后，便可以使用<code>fetch</code>代替<code>Jill::fetch</code>。另外,和其它局部变量一样,使用了using声明之后的名称会覆盖同名的全局变量。</p>
+<h3 id="using编译指令">using编译指令</h3>
+<p>using编译指令可使所有的名称都可用。using编译指令由名称空间名和它前面的关键字<code>using namespace</code>组成，它使名称空间中的所有名称都可用，而不需要使用作用域解析运算符：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> Jack; <span style="color:#75715e">// make all names in Jack available
+</span></code></pre></div><p>在全局使用<code>using</code>编译指令，将使该名称空间的名称全局可用。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;    // places nemes in namespace std</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;  <span style="color:#75715e">// make names available globally
+</span></code></pre></div><p>在函数中使用<code>using</code>编译指令，将使其中的名称在该函数中可用。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> Jack; <span style="color:#75715e">// make names available in main()
+</span><span style="color:#75715e"></span>    ...
+}
+</code></pre></div><p>另外using声明和using编译指令增加了名称冲突的可能性：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> Jack<span style="color:#f92672">::</span>pal;
+<span style="color:#66d9ef">using</span> Jill<span style="color:#f92672">::</span>pal;
+pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>; <span style="color:#75715e">// which one? now have a conflict
+</span></code></pre></div><p>事实上，编译器不允许同时使用上述两个using声明，因为这将导致二义性。在代码中使用作用域解析运算符，则不会存在二义性：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</code></pre></div><p><code>Jack::pal</code>和<code>Jill::pal</code>是不同的标识符，表示不同的内存单元。</p></div>
+	</section>
+
+
+</article>
+
+		</main>
+		<aside role="contentinfo"
+			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+				
+	<div class="md:max-w-xs  flex flex-col md:items-end">
 	<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 	
 	
 	<li class="px-1 md:px-0">
-		<a href="/post/" title="文章 page" >
+		<a href="/post/" title="文章 page" 
+			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
 			文章
 		</a>
 	</li>
@@ -171,8 +282,7 @@ onload='renderMathInElement(document.body);'></script>
 	</li>
 	
 	<li class="px-1 md:px-0">
-		<a href="/tags/" title="标签 page" 
-			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
+		<a href="/tags/" title="标签 page" >
 			标签
 		</a>
 	</li>
@@ -183,10 +293,6 @@ onload='renderMathInElement(document.body);'></script>
 		</a>
 	</li>
 	
-	
-	<li>
-		<a href='/tags/text/index.xml'>RSS</a>
-	</li>
 	
 	
 	
@@ -200,114 +306,6 @@ onload='renderMathInElement(document.body);'></script>
 	</div>
 	
 </ul>
-			</div>
-		</header>
-		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-			
-<h1 class="pb-4">
-	text
-</h1>
-<div>
-	<section>
-		
-		<div>
-			<div class="pb-8">
-	<div class="font-serif font-medium text-xl">
-		<a href="https://tianshihao.github.io/post/placeholder-text/">
-			Placeholder Text
-		</a>
-	</div>
-	
-	
-	
-	
-	<div class="font-serif text-gray-600 font-light pt-1">
-		Lorem Ipsum Dolor Si Amet</div>
-
-	
-	<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-	
-
-	
-
-	
-	
-	
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/markdown'>markdown</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/text'>text</a>
-	
-	
-	
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light"
-			datetime="2019-03-09T00:00:00Z">2019-3-9 00:00</time>
-	</div>
-</div>
-		</div>
-		
-	</section>
-</div>
-
-		</main>
-		<aside role="contentinfo"
-			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-				
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="md:max-w-xs  flex flex-col md:items-end pt-2">
 	
 
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col  max-h-16">
@@ -438,25 +436,68 @@ onload='renderMathInElement(document.body);'></script>
 	</a>
 	
 </div>
-	<div class="a-gray text-sm text-gray-500 leading-tight">
+	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a 
-			href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>.
-			<br />
-			25 pages, 3889 words in total.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 1196 words in this page.
 	</div>
 </div>
+
 			</div>
 		</aside>
 		<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
 			
+<hr class="double-line" />
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+    
+    <a class="flex-grow-0" href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/">
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
+        存储持续性、作用域和链接性之二
+    </a>
+    
+    
+</div>
+<div >
 
 
 
+<div class="font-serif pb-2 flex align-start leading-loose">
+	<span class="heading pr-6 leading-loose">Related</span>
+	<span >
+		
+			<a href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/">存储持续性、作用域和链接性之二</a>
+		
+</span>
+</div>
 
+</div>
+<hr />
 
+<hr />
+<div class="post-comment">
+    
+      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: 'u3Da0x1I5LIq0q2kKjyhXp5w-gzGzoHsz',
+        appKey: 'PtilVneKpSPxCuKRTE43ts18',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+</div>
 
 		</footer>
 		

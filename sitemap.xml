@@ -3,18 +3,48 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://tianshihao.github.io/archives/</loc>
-    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+    <loc>https://tianshihao.github.io/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tianshihao.github.io/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <loc>https://tianshihao.github.io/tags/c&#43;&#43;/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/categories/c&#43;&#43;%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://tianshihao.github.io/categories/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/post/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/tags/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/</loc>
+    <lastmod>2020-12-13T22:55:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/</loc>
+    <lastmod>2020-12-13T14:35:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/archives/</loc>
+    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -38,22 +68,12 @@
   </url>
   
   <url>
-    <loc>https://tianshihao.github.io/post/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://tianshihao.github.io/series/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://tianshihao.github.io/categories/syntax/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
