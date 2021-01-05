@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>水上书  | syntax</title>
+	<title>水上书  | 内存管理基础</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1">
 	<meta name="generator" content="Hugo 0.80.0" />
 	
@@ -26,9 +26,6 @@
 
 	
 
-	
-	<link rel="alternate" href="/categories/syntax/index.xml" type="application/rss+xml" title="水上书">
-	<link rel="feed" href="/categories/syntax/index.xml" type="application/rss+xml" title="水上书">
 	
 	
 	
@@ -150,23 +147,216 @@ onload='renderMathInElement(document.body);'></script>
 		<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 			<div
 				class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-					<div class="pb-4">
-		<h1 >
-			<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
-		</h1>
-	</div>
+				
+<div>
+	<h2>
+		<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
+	</h2>
+</div>
+<h1 class="pt-2">内存管理基础</h1>
+
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">C&#43;&#43;中可以访问的内存通常分为三类。</h3>
+
+<div class="flex flex-wrap justify-end pt-2 "><div class="md:flex-grow-0 font-light">
+	
+	
+	
+	
+	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
+		href='/categories/c&#43;&#43;%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0'>C&#43;&#43;学习笔记</a>
+	
+	
+	
+
+	
+	&nbsp;&nbsp;
+	
+
+	
+	
+	
+	
+	<a class="post-taxonomy-tag text-eucalyptus-500"
+		href='/tags/c&#43;&#43;'>C&#43;&#43;</a>&nbsp;&#47;
+	
+	<a class="post-taxonomy-tag text-eucalyptus-500"
+		href='/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86'>内存管理</a>
+	
+	
+	
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4"
+		datetime="2020-12-03T19:39:37Z">2020-12-3 19:39</time>
+</div>
+
+<hr />
+
+			</div>
+		</header>
+		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+			
+
+<article>
+	<section class="mx-auto content">
+		<div class="c-rich-text"><p>C++中可以访问的内存，通常可以分为三类：静态常量区、调用栈和堆。通常编译器使用三块独立内存：一块用于静态变量（可能再细分），一块用于自动变量，另一块用于动态存储。</p>
+<h2 id="静态变量区">静态变量区</h2>
+<p>这一块内存用于静态变量。静态变量区是编译器在编译期间就已经确定好的数据。例如在全局范围内声明<code>const char text[] = &quot;Hello World!&quot;</code>，字符串text就会被存放在静态变量区。</p>
+<h3 id="特点">特点</h3>
+<ol>
+<li>只读；</li>
+<li>大小固定；</li>
+<li>无法管理；</li>
+<li>可以利用其特性在逻辑上做一些特定的优化。</li>
+</ol>
+<h2 id="调用栈">调用栈</h2>
+<p>这一块内存用于自动变量。</p>
+<h3 id="特点-1">特点</h3>
+<ol>
+<li>被动分配，被动回收；</li>
+<li>大小在运行时有一个动态调整的过程；</li>
+<li>大小有系统限制；</li>
+<li>底大顶小。</li>
+</ol>
+<h3 id="问题">问题</h3>
+<ol>
+<li>为什么变量有作用域？</li>
+</ol>
+<p>防止不同的变量使用相同的栈内存，导致后面的变量覆盖前面的数据，从而在使用前面的变量时输出后面的变量。所以设置作用域，使变量出了作用域不再有效。</p>
+<ol start="2">
+<li>为什么不建议使用递归？</li>
+</ol>
+<p>因为栈内存是一个非常珍贵的资源，而使用递归有时会产生死循环，将消耗栈内存，直至消耗完，从而产生StackOverflow的错误。</p>
+<h3 id="注意">注意</h3>
+<ol>
+<li>栈内存先进后出，轮流使用。</li>
+</ol>
+<p>同一块内存要在占用它的函数执行完毕，内存被回收之后，其它函数才能使用这一块内存。栈中的内存可以被轮流使用，这也是为什么正常的程序可以一直执行，而不会出现栈溢出的问题。</p>
+<ol start="2">
+<li>不要在函数体中声明大块内存（大型数组，大型结构体）。</li>
+</ol>
+<p>例如声明<code>int arr[10240000]</code>，十分占用栈内存。栈内存十分珍贵，应避免这种情况。</p>
+<h2 id="堆">堆</h2>
+<p>这一块变量用于动态存储。</p>
+<h3 id="特点-2">特点</h3>
+<ol>
+<li>堆大小较大；</li>
+<li>主动分配，主动回收。</li>
+</ol>
+<h3 id="分配">分配</h3>
+<table>
+<thead>
+<tr>
+<th>分配方式</th>
+<th>回收方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>malloc/calloc</td>
+<td>free</td>
+</tr>
+<tr>
+<td>new</td>
+<td>delete</td>
+</tr>
+<tr>
+<td>new T[]</td>
+<td>delete[] T</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例">示例</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/* c 风格, 分配方式 1. */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> mem <span style="color:#f92672">=</span> malloc(<span style="color:#ae81ff">1024</span>);
+<span style="color:#75715e">/* c 风格, 分配方式 2.*/</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> mem <span style="color:#f92672">=</span> calloc(<span style="color:#ae81ff">1024</span>);
+<span style="color:#75715e">/* C 风格, 回收内存. */</span>
+free(mem);
+
+<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>; <span style="color:#75715e">// cpp new
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span> iptr;          <span style="color:#75715e">// cpp delete
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iarrptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">1024</span>]; <span style="color:#75715e">// cpp new T[]
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span>[] iarrptr;              <span style="color:#75715e">// cpp delete[] T
+</span></code></pre></div><h3 id="注意-1">注意</h3>
+<ol>
+<li>不用堆内存时，一定要及时调用回收API回收内存。</li>
+<li>访问申请的内存时不要超过申请的量，例如<code> int * ptr = new int[4]; ptr[8] = 0;</code>否则会出现一系列未定义行为Undefined behavior。</li>
+</ol>
+<h2 id="指针">指针</h2>
+<p>指针表示的时某块数据在内存中的地址，地址为整型，它能表示的范围因平台的不同而不同。</p>
+<table>
+<thead>
+<tr>
+<th>程序类型</th>
+<th>指针位数</th>
+<th>等同于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32位程序</td>
+<td>32</td>
+<td>uint32_t</td>
+</tr>
+<tr>
+<td>64位程序</td>
+<td>64</td>
+<td>uint64_t</td>
+</tr>
+</tbody>
+</table>
+<p>在同一平台上，任何一个指针都可以退化为整数表示，因为任何指针的本质都是一个整数，它代表着一个内存位置。</p>
+<h3 id="基本操作">基本操作</h3>
+<ol>
+<li>赋值</li>
+<li>强制转换</li>
+<li>解引用</li>
+<li>加减</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>;
+<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iptr <span style="color:#f92672">=</span> ptr;       <span style="color:#75715e">// 1. 相同类型的指针直接赋值.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> c <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)ptr; <span style="color:#75715e">// 2. 不同类型的指针需要强制转换.
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>ptr; <span style="color:#75715e">// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
+</span><span style="color:#75715e">// sizeof(int) == 4;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> arrPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">4</span>];
+<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> testPtr <span style="color:#f92672">=</span> arrPtr;
+printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr); <span style="color:#75715e">// 可将指针作为无符号整型输出.
+</span><span style="color:#75715e"></span>testPtr <span style="color:#f92672">=</span> testPtr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr);
+testPtr <span style="color:#f92672">=</span> testPtr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr);
+</code></pre></div><h3 id="指针指向指针的指针指向指针的指针的指针">指针，指向指针的指针，指向指针的指针的指针</h3>
+<h2 id="视频链接">视频链接</h2>
+<ol>
+<li><a href="https://www.bilibili.com/video/BV1WE411W7dH">（含字幕）C++ 让你不再害怕内存和指针 其一_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</a></li>
+<li><a href="https://www.bilibili.com/video/BV1hE411p7Ly">（含字幕）C++ 让你不再害怕内存和指针 其二_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</a></li>
+</ol></div>
+	</section>
+
+
+</article>
+
+		</main>
+		<aside role="contentinfo"
+			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+				
+	<div class="md:max-w-xs  flex flex-col md:items-end">
 	<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 	
 	
 	<li class="px-1 md:px-0">
-		<a href="/post/" title="文章 page" >
+		<a href="/post/" title="文章 page" 
+			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
 			文章
 		</a>
 	</li>
 	
 	<li class="px-1 md:px-0">
-		<a href="/categories/" title="分类 page" 
-			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
+		<a href="/categories/" title="分类 page" >
 			分类
 		</a>
 	</li>
@@ -184,10 +374,6 @@ onload='renderMathInElement(document.body);'></script>
 	</li>
 	
 	
-	<li>
-		<a href='/categories/syntax/index.xml'>RSS</a>
-	</li>
-	
 	
 	
 	<div id="fastSearch" class="m-0">
@@ -200,145 +386,6 @@ onload='renderMathInElement(document.body);'></script>
 	</div>
 	
 </ul>
-			</div>
-		</header>
-		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-			
-<h1 class="pb-4">
-	syntax
-</h1>
-<div>
-	<section>
-		
-		<div>
-			<div class="pb-8">
-	<div class="font-serif font-medium text-xl">
-		<a href="https://tianshihao.github.io/post/markdown-syntax/">
-			Markdown Syntax Guide
-		</a>
-	</div>
-	
-	
-	
-	
-	<div class="font-serif text-gray-600 font-light pt-1">
-		Sample article showcasing basic Markdown syntax and formatting for HTML elements.</div>
-
-	
-	<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-	
-	
-	
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/categories/themes'>themes</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/categories/syntax'>syntax</a>
-	
-	
-	
-
-	
-	&nbsp;&nbsp;
-	
-
-	
-	
-	
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/markdown'>markdown</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/css'>css</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/html'>html</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/themes'>themes</a>
-	
-	
-	
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light"
-			datetime="2019-03-11T00:00:00Z">2019-3-11 00:00</time>
-	</div>
-</div>
-		</div>
-		
-	</section>
-</div>
-
-		</main>
-		<aside role="contentinfo"
-			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-				
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="md:max-w-xs  flex flex-col md:items-end pt-2">
 	
 
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col  max-h-16">
@@ -469,25 +516,66 @@ onload='renderMathInElement(document.body);'></script>
 	</a>
 	
 </div>
-	<div class="a-gray text-sm text-gray-500 leading-tight">
+	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a 
-			href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>.
-			<br />
-			31 pages, 9056 words in total.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 1220 words in this page.
 	</div>
 </div>
+
 			</div>
 		</aside>
 		<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
 			
+<hr class="double-line" />
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+    
+    <a class="flex-grow-0" href="/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/">
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
+        单链表原地逆置
+    </a>
+    
+    
+    <a class="flex-grow-0" href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/">
+        存储持续性、作用域和链接性
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" /></svg></a>
+    
+</div>
+<div >
 
 
 
+</div>
+<hr />
 
+<hr />
+<div class="post-comment">
+    
+      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: 'u3Da0x1I5LIq0q2kKjyhXp5w-gzGzoHsz',
+        appKey: 'PtilVneKpSPxCuKRTE43ts18',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+</div>
 
 		</footer>
 		

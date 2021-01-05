@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>水上书  | syntax</title>
+	<title>水上书  | 单链表原地逆置</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1">
 	<meta name="generator" content="Hugo 0.80.0" />
 	
@@ -26,9 +26,6 @@
 
 	
 
-	
-	<link rel="alternate" href="/categories/syntax/index.xml" type="application/rss+xml" title="水上书">
-	<link rel="feed" href="/categories/syntax/index.xml" type="application/rss+xml" title="水上书">
 	
 	
 	
@@ -150,23 +147,166 @@ onload='renderMathInElement(document.body);'></script>
 		<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 			<div
 				class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-					<div class="pb-4">
-		<h1 >
-			<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
-		</h1>
-	</div>
+				
+<div>
+	<h2>
+		<a href="https://tianshihao.github.io" title="水上书" class="heading font-cursive icon">水上书</a>
+	</h2>
+</div>
+<h1 class="pt-2">单链表原地逆置</h1>
+
+<div class="flex flex-wrap justify-end pt-2 "><div class="md:flex-grow-0 font-light">
+	
+	
+	
+	
+	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
+		href='/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84'>数据结构</a>
+	
+	
+	
+
+	
+	&nbsp;&nbsp;
+	
+
+	
+	
+	
+	
+	<a class="post-taxonomy-tag text-eucalyptus-500"
+		href='/tags/%E9%93%BE%E8%A1%A8'>链表</a>
+	
+	
+	
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4"
+		datetime="2020-11-28T21:29:32Z">2020-11-28 21:29</time>
+</div>
+
+<hr />
+
+			</div>
+		</header>
+		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+			
+
+<article>
+	<section class="mx-auto content">
+		<div class="c-rich-text"><p>给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。</p>
+<h1 id="头插法">头插法</h1>
+<h2 id="思路">思路</h2>
+<p>我们知道，用头插法建立链表，得到的链表中元素的顺序和输入的顺序相反，所以利用这一特点，可以将链表逆置。</p>
+<p>给定一个带头结点的单链表L，如下图所示。</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451442020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-1.png" alt="2020-11-28-单链表原地逆置-1"></p>
+<p>首先用指针p存储链表第一个结点，然后将头结点从链表中剥离下来，如下图所示，此时链表L只有一个头结点。</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452042020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-2.png" alt="2020-11-28-单链表原地逆置-2"></p>
+<p>另设一指针r保存p的后继，将p指向的结点N1用尾插法插入到链表L中，</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE3.png" alt="2020-11-28-单链表原地逆置3"></p>
+<p>此时p指向N2，保存p的后继N3，再将N2尾插到链表L中，</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451552020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-4.png" alt="2020-11-28-单链表原地逆置-4"></p>
+<p>以此类推，直至保存后继的指针r为空，退出循环。</p>
+<h2 id="头插法的实现代码">头插法的实现代码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Reverse_L1</span>(Linklist L)
+{
+    <span style="color:#75715e">/* p 为工作指针, r 为 p 的后继, 以防断链. */</span>
+    LNode <span style="color:#f92672">*</span>p, <span style="color:#f92672">*</span>r;
+
+    <span style="color:#75715e">/* 从第一个元素开始. */</span>
+    p <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next;
+
+    <span style="color:#75715e">/* 先将头结点剥离出来. */</span>
+    L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+
+    <span style="color:#75715e">/* 依次将元素摘下. */</span>
+    <span style="color:#66d9ef">while</span> (p <span style="color:#f92672">!=</span> NULL)
+    {
+        <span style="color:#75715e">/* 暂存 p 的后继. */</span>
+        r <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+        <span style="color:#75715e">/* 用头插法插入 p. */</span>
+        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next;
+        L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> p;
+        <span style="color:#75715e">/* 更新 p, 指向下一个结点. */</span>
+        p <span style="color:#f92672">=</span> r;
+    }
+
+    <span style="color:#66d9ef">return</span>;
+}
+
+</code></pre></div><h1 id="冒泡法">冒泡法</h1>
+<p>我把这种方法称为“冒泡法”，是因为算法流程和冒泡排序类似，只不过在冒泡排序中是相邻的元素出现逆序才交换，而链表逆置则要求每对结点之间都要交换顺序。</p>
+<h2 id="思路-1">思路</h2>
+<p>冒泡法和头插法不同，头插法只有一个工作指针p指向一个操作对象——被摘下来的结点，以及存储其后继的指针r。而冒泡法有两个工作指针，即一对工作指针，以及存储其后继的指针r，共计3个指针。考虑如下一般情况，</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-5.png" alt="2020-11-28-单链表原地逆置-5"></p>
+<p>指针pre和p分别指向两个结点，将其看作一对结点，它们是每次循环操作的对象。循环中，让N2的后继指向N1，即完成了(N1,N2)的逆置。之后三个指针进一，pre=p，p=r，r=r-&gt;next，重复上述逆置操作，链表变成了下图。</p>
+<p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457282020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-6.png" alt="2020-11-28-单链表原地逆置-6"></p>
+<p>显而易见，如果指针<code>r!=NULL</code>，则循环还要继续下去，若<code>r==NULL</code>，循环结束，链表逆置完成，而指针p指向逆置后的一个元素。</p>
+<p>上述步骤发生的前提是链表中除了头结点以外，至少有两个结点，而为了将判断是否继续循环和是否进入循环结合起来，应将指针r初始置为指向第一个结点的后继，p指向第一个结点，即<code>p=L-&gt;next,r=p-&gt;next</code>，指针pre无强制要求。</p>
+<p>注意初始p指向的结点在完成逆置之后将成为最后一个结点，所以应该在逆置之前将p的后继置为空，否则逆置之后p的后继会指向倒数第二个结点，而倒数第二个结点的后继指向倒数第一个结点，即逆置前的p，两个结点之间形成环。</p>
+<h2 id="冒泡法的实现代码">冒泡法的实现代码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Reverse_L2</span>(Linklist L)
+{
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 三个指针, p 为要反转的结点, pre 为 p 前面的结点, r 是保存 p 后继的指针.
+</span><span style="color:#75715e">     * 初始状态 p 指向第一个元素, r 指向第二个元素.
+</span><span style="color:#75715e">     */</span>
+    LNode <span style="color:#f92672">*</span>pre <span style="color:#f92672">=</span> L, <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next, <span style="color:#f92672">*</span>r <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 将要第一个结点后继链接断开. 因为它将成为逆置后链表的最后一个结点, 否则
+</span><span style="color:#75715e">     * 将在逆置后的链表中的最后一个元素和倒数第二个元素之间形成环.
+</span><span style="color:#75715e">     */</span>
+    p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 如果 r 不为空, 三个指针前进一个单位.
+</span><span style="color:#75715e">     * 否则链表只有一个结点, 直接执行 while 后的 L-&gt;next = p.
+</span><span style="color:#75715e">     * 循环中将 p 反转指向其前面的结点 pre, r 是 p 的后继.
+</span><span style="color:#75715e">     * 假设链表有 n 个元素, 则循环可将前 n - 1 个元素逆置,
+</span><span style="color:#75715e">     * 之后 p 指向第 n 个元素.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">while</span> (r <span style="color:#f92672">!=</span> NULL)
+    {
+        <span style="color:#75715e">/* 指针依次进一. */</span>
+        pre <span style="color:#f92672">=</span> p;
+        p <span style="color:#f92672">=</span> r;
+        r <span style="color:#f92672">=</span> r<span style="color:#f92672">-&gt;</span>next;
+        <span style="color:#75715e">/* 逆置. */</span>
+        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> pre;
+    }
+
+    <span style="color:#75715e">/* 头结点指向逆置之后的第一个结点. */</span>
+    L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> p;
+
+    <span style="color:#66d9ef">return</span>;
+}
+
+</code></pre></div><h1 id="代码仓库">代码仓库</h1>
+<ol>
+<li><a href="https://github.com/tianshihao/data-structure/blob/master/src/linearlist/linklist.c">data-structure/linklist.c at master · tianshihao/data-structure (github.com)</a></li>
+</ol></div>
+	</section>
+
+
+</article>
+
+		</main>
+		<aside role="contentinfo"
+			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+				
+	<div class="md:max-w-xs  flex flex-col md:items-end">
 	<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 	
 	
 	<li class="px-1 md:px-0">
-		<a href="/post/" title="文章 page" >
+		<a href="/post/" title="文章 page" 
+			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
 			文章
 		</a>
 	</li>
 	
 	<li class="px-1 md:px-0">
-		<a href="/categories/" title="分类 page" 
-			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
+		<a href="/categories/" title="分类 page" >
 			分类
 		</a>
 	</li>
@@ -184,10 +324,6 @@ onload='renderMathInElement(document.body);'></script>
 	</li>
 	
 	
-	<li>
-		<a href='/categories/syntax/index.xml'>RSS</a>
-	</li>
-	
 	
 	
 	<div id="fastSearch" class="m-0">
@@ -200,145 +336,6 @@ onload='renderMathInElement(document.body);'></script>
 	</div>
 	
 </ul>
-			</div>
-		</header>
-		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-			
-<h1 class="pb-4">
-	syntax
-</h1>
-<div>
-	<section>
-		
-		<div>
-			<div class="pb-8">
-	<div class="font-serif font-medium text-xl">
-		<a href="https://tianshihao.github.io/post/markdown-syntax/">
-			Markdown Syntax Guide
-		</a>
-	</div>
-	
-	
-	
-	
-	<div class="font-serif text-gray-600 font-light pt-1">
-		Sample article showcasing basic Markdown syntax and formatting for HTML elements.</div>
-
-	
-	<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-	
-	
-	
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/categories/themes'>themes</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/categories/syntax'>syntax</a>
-	
-	
-	
-
-	
-	&nbsp;&nbsp;
-	
-
-	
-	
-	
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/markdown'>markdown</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/css'>css</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/html'>html</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/tags/themes'>themes</a>
-	
-	
-	
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light"
-			datetime="2019-03-11T00:00:00Z">2019-3-11 00:00</time>
-	</div>
-</div>
-		</div>
-		
-	</section>
-</div>
-
-		</main>
-		<aside role="contentinfo"
-			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-				
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="md:max-w-xs  flex flex-col md:items-end pt-2">
 	
 
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col  max-h-16">
@@ -469,25 +466,66 @@ onload='renderMathInElement(document.body);'></script>
 	</a>
 	
 </div>
-	<div class="a-gray text-sm text-gray-500 leading-tight">
+	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a 
-			href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>.
-			<br />
-			31 pages, 9056 words in total.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 1319 words in this page.
 	</div>
 </div>
+
 			</div>
 		</aside>
 		<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
 			
+<hr class="double-line" />
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+    
+    <a class="flex-grow-0" href="/archives/">
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
+        
+    </a>
+    
+    
+    <a class="flex-grow-0" href="/post/2020-12-03-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%9F%BA%E7%A1%80/">
+        内存管理基础
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" /></svg></a>
+    
+</div>
+<div >
 
 
 
+</div>
+<hr />
 
+<hr />
+<div class="post-comment">
+    
+      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: 'u3Da0x1I5LIq0q2kKjyhXp5w-gzGzoHsz',
+        appKey: 'PtilVneKpSPxCuKRTE43ts18',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+</div>
 
 		</footer>
 		
