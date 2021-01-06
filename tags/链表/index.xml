@@ -7,109 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>Copyright © 2008–2019</copyright>
-    <lastBuildDate>Sat, 28 Nov 2020 21:29:32 +0000</lastBuildDate>
-    
-	<atom:link href="https://tianshihao.github.io/tags/%E9%93%BE%E8%A1%A8/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 28 Nov 2020 21:29:32 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/%E9%93%BE%E8%A1%A8/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>单链表原地逆置</title>
       <link>https://tianshihao.github.io/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/</link>
       <pubDate>Sat, 28 Nov 2020 21:29:32 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/</guid>
-      <description>&lt;p&gt;给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。&lt;/p&gt;
-&lt;h1 id=&#34;头插法&#34;&gt;头插法&lt;/h1&gt;
-&lt;h2 id=&#34;思路&#34;&gt;思路&lt;/h2&gt;
-&lt;p&gt;我们知道，用头插法建立链表，得到的链表中元素的顺序和输入的顺序相反，所以利用这一特点，可以将链表逆置。&lt;/p&gt;
-&lt;p&gt;给定一个带头结点的单链表L，如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451442020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-1.png&#34; alt=&#34;2020-11-28-单链表原地逆置-1&#34;&gt;&lt;/p&gt;
-&lt;p&gt;首先用指针p存储链表第一个结点，然后将头结点从链表中剥离下来，如下图所示，此时链表L只有一个头结点。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452042020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-2.png&#34; alt=&#34;2020-11-28-单链表原地逆置-2&#34;&gt;&lt;/p&gt;
-&lt;p&gt;另设一指针r保存p的后继，将p指向的结点N1用尾插法插入到链表L中，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE3.png&#34; alt=&#34;2020-11-28-单链表原地逆置3&#34;&gt;&lt;/p&gt;
-&lt;p&gt;此时p指向N2，保存p的后继N3，再将N2尾插到链表L中，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451552020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-4.png&#34; alt=&#34;2020-11-28-单链表原地逆置-4&#34;&gt;&lt;/p&gt;
-&lt;p&gt;以此类推，直至保存后继的指针r为空，退出循环。&lt;/p&gt;
-&lt;h2 id=&#34;头插法的实现代码&#34;&gt;头插法的实现代码&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Reverse_L1&lt;/span&gt;(Linklist L)
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* p 为工作指针, r 为 p 的后继, 以防断链. */&lt;/span&gt;
-    LNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 从第一个元素开始. */&lt;/span&gt;
-    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 先将头结点剥离出来. */&lt;/span&gt;
-    L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 依次将元素摘下. */&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 暂存 p 的后继. */&lt;/span&gt;
-        r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 用头插法插入 p. */&lt;/span&gt;
-        p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 更新 p, 指向下一个结点. */&lt;/span&gt;
-        p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r;
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;冒泡法&#34;&gt;冒泡法&lt;/h1&gt;
-&lt;p&gt;我把这种方法称为“冒泡法”，是因为算法流程和冒泡排序类似，只不过在冒泡排序中是相邻的元素出现逆序才交换，而链表逆置则要求每对结点之间都要交换顺序。&lt;/p&gt;
-&lt;h2 id=&#34;思路-1&#34;&gt;思路&lt;/h2&gt;
-&lt;p&gt;冒泡法和头插法不同，头插法只有一个工作指针p指向一个操作对象——被摘下来的结点，以及存储其后继的指针r。而冒泡法有两个工作指针，即一对工作指针，以及存储其后继的指针r，共计3个指针。考虑如下一般情况，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-5.png&#34; alt=&#34;2020-11-28-单链表原地逆置-5&#34;&gt;&lt;/p&gt;
-&lt;p&gt;指针pre和p分别指向两个结点，将其看作一对结点，它们是每次循环操作的对象。循环中，让N2的后继指向N1，即完成了(N1,N2)的逆置。之后三个指针进一，pre=p，p=r，r=r-&amp;gt;next，重复上述逆置操作，链表变成了下图。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457282020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-6.png&#34; alt=&#34;2020-11-28-单链表原地逆置-6&#34;&gt;&lt;/p&gt;
-&lt;p&gt;显而易见，如果指针&lt;code&gt;r!=NULL&lt;/code&gt;，则循环还要继续下去，若&lt;code&gt;r==NULL&lt;/code&gt;，循环结束，链表逆置完成，而指针p指向逆置后的一个元素。&lt;/p&gt;
-&lt;p&gt;上述步骤发生的前提是链表中除了头结点以外，至少有两个结点，而为了将判断是否继续循环和是否进入循环结合起来，应将指针r初始置为指向第一个结点的后继，p指向第一个结点，即&lt;code&gt;p=L-&amp;gt;next,r=p-&amp;gt;next&lt;/code&gt;，指针pre无强制要求。&lt;/p&gt;
-&lt;p&gt;注意初始p指向的结点在完成逆置之后将成为最后一个结点，所以应该在逆置之前将p的后继置为空，否则逆置之后p的后继会指向倒数第二个结点，而倒数第二个结点的后继指向倒数第一个结点，即逆置前的p，两个结点之间形成环。&lt;/p&gt;
-&lt;h2 id=&#34;冒泡法的实现代码&#34;&gt;冒泡法的实现代码&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Reverse_L2&lt;/span&gt;(Linklist L)
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 三个指针, p 为要反转的结点, pre 为 p 前面的结点, r 是保存 p 后继的指针.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 初始状态 p 指向第一个元素, r 指向第二个元素.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    LNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 将要第一个结点后继链接断开. 因为它将成为逆置后链表的最后一个结点, 否则
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 将在逆置后的链表中的最后一个元素和倒数第二个元素之间形成环.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 如果 r 不为空, 三个指针前进一个单位.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 否则链表只有一个结点, 直接执行 while 后的 L-&amp;gt;next = p.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 循环中将 p 反转指向其前面的结点 pre, r 是 p 的后继.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 假设链表有 n 个元素, 则循环可将前 n - 1 个元素逆置,
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 之后 p 指向第 n 个元素.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (r &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 指针依次进一. */&lt;/span&gt;
-        pre &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-        p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r;
-        r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 逆置. */&lt;/span&gt;
-        p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pre;
-    }
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 头结点指向逆置之后的第一个结点. */&lt;/span&gt;
-    L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;代码仓库&#34;&gt;代码仓库&lt;/h1&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tianshihao/data-structure/blob/master/src/linearlist/linklist.c&#34;&gt;data-structure/linklist.c at master · tianshihao/data-structure (github.com)&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <description>&lt;p&gt;给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。&lt;/p&gt;</description>
     </item>
     
   </channel>

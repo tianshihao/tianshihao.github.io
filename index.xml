@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>Copyright © 2008–2019</copyright>
-    <lastBuildDate>Tue, 29 Dec 2020 12:39:47 +0000</lastBuildDate>
-    
-	<atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 29 Dec 2020 12:39:47 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在Anaconda环境下安装Tensorflow</title>
       <link>https://tianshihao.github.io/post/2020-12-29-%E5%9C%A8anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</link>
@@ -21,55 +17,7 @@
       <description>&lt;h2 id=&#34;安装anaconda&#34;&gt;安装Anaconda&lt;/h2&gt;
 &lt;h3 id=&#34;下载anaconda&#34;&gt;下载Anaconda&lt;/h3&gt;
 &lt;p&gt;个人版&lt;a href=&#34;https://www.anaconda.com/products/individual&#34;&gt;Individual Edition&lt;/a&gt;。如果下载速度慢，可以复制下载链接到迅雷或者在&lt;a href=&#34;https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/&#34;&gt;清华大学开源镜像站TUNA&lt;/a&gt;中找合适的版本。&lt;/p&gt;
-&lt;p&gt;注意在安装过程中的“Advanced Options”有两个选项，推荐勾选第二项：“Register Anaconda as my default Python”。&lt;/p&gt;
-&lt;h3 id=&#34;添加环境变量&#34;&gt;添加环境变量&lt;/h3&gt;
-&lt;p&gt;添加Anaconda安装根目录.\和.\Scripts\到系统变量。例如&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;C:&lt;span style=&#34;color:#ae81ff&#34;&gt;\U&lt;/span&gt;sers&lt;span style=&#34;color:#ae81ff&#34;&gt;\M&lt;/span&gt;yUsername&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;naconda3
-C:&lt;span style=&#34;color:#ae81ff&#34;&gt;\U&lt;/span&gt;sers&lt;span style=&#34;color:#ae81ff&#34;&gt;\M&lt;/span&gt;yUsername&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;naconda3&lt;span style=&#34;color:#ae81ff&#34;&gt;\S&lt;/span&gt;cripts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-2.png&#34; alt=&#34;添加环境变量&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;激活环境&#34;&gt;激活环境&lt;/h3&gt;
-&lt;p&gt;在常用的终端——例如PowerShell——输入&lt;code&gt;conda activate&lt;/code&gt;激活环境，使用&lt;code&gt;conda deactivate&lt;/code&gt;退出环境。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-3.png&#34; alt=&#34;激活环境&#34;&gt;&lt;/p&gt;
-&lt;p&gt;conda是一个提供包管理与环境管理的工具，包管理与pip类似，环境管理则允许用户安装不同版本的python环境并可以快速切换。Anaconda是一个开源的Python发行版本，包含了conda、Python以及Python的库numpy、pandas等，就是个Python全家桶。&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;h3 id=&#34;为anaconda添加国内镜像源2&#34;&gt;为Anaconda添加国内镜像源&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/h3&gt;
-&lt;p&gt;TUNA提供了Anaconda仓库的镜像，运行以下指令可以添加：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-conda config --set show_channel_urls yes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;或者也可以直接修改个人文件夹下conda的配置文件.condarc为以下内容：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;channels:
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-show_channel_urls: true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;安装tensorflow&#34;&gt;安装Tensorflow&lt;/h2&gt;
-&lt;h3 id=&#34;创建一个tensorflow环境&#34;&gt;创建一个Tensorflow环境&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;conda create -n 环境名称 python&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Python版本号
-conda cretae -n tensorflow python&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;3.8.5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;激活tensorflow环境&#34;&gt;激活Tensorflow环境&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;conda activate tensorflow
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装tensorflow-1&#34;&gt;安装Tensorflow&lt;/h3&gt;
-&lt;p&gt;在刚才创建的名为tensorsflow的环境中安装tensorflow。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;pip install tensorflow
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-4.png&#34; alt=&#34;使用pip安装tensorflow&#34;&gt;&lt;/p&gt;
-&lt;p&gt;如果下载速度很慢，可以上&lt;a href=&#34;https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/tensorflow/&#34;&gt;Links for tensorflow&lt;/a&gt;直接下载。然后确保安装了wheel，&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;pip install wheel
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;就可以直接使用如下指令进行安装&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;pip install &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;D:\Downloads\迅雷下载\tensorflow-2.4.0-cp38-cp38-win_amd64.whl&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装成功之后，在tensorflow环境下进入python解释器，输入&lt;code&gt;import tensorflow as tf&lt;/code&gt;，没有异常，表示安装成功。注意，Pyhton的深度学习软件包tensorflow是在Anaconda名为tensorflow的环境下安装的，在基础环境base中是没有tensorflow的。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-5.png&#34; alt=&#34;安装成功并且验证&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;退出tensorflow环境&#34;&gt;退出tensorflow环境&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;conda deactivate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
-&lt;hr&gt;
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/mishdong123rousi/p/9646705.html&#34;&gt;https://www.cnblogs.com/mishdong123rousi/p/9646705.html&lt;/a&gt; &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/hizhaolei/p/9901344.html&#34;&gt;https://www.cnblogs.com/hizhaolei/p/9901344.html&lt;/a&gt; &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;</description>
+&lt;p&gt;注意在安装过程中的“Advanced Options”有两个选项，推荐勾选第二项：“Register Anaconda as my default Python”。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -78,68 +26,7 @@ conda cretae -n tensorflow python&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;
       <pubDate>Sun, 13 Dec 2020 22:55:02 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/</guid>
-      <description>&lt;p&gt;C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jack
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; pail; &lt;span style=&#34;color:#75715e&#34;&gt;// variable declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fetch&lt;/span&gt;(); &lt;span style=&#34;color:#75715e&#34;&gt;// function prototype
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; pal; &lt;span style=&#34;color:#75715e&#34;&gt;// variable declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Well&lt;/span&gt; {...}; &lt;span style=&#34;color:#75715e&#34;&gt;// structure declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
-&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jill
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bucket&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; n){...} &lt;span style=&#34;color:#75715e&#34;&gt;// function prototype
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; fetch; &lt;span style=&#34;color:#75715e&#34;&gt;// variable declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; pal &lt;span style=&#34;color:#75715e&#34;&gt;// variable declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Hill&lt;/span&gt; {...}; &lt;span style=&#34;color:#75715e&#34;&gt;// structure declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;名称空间可以是全局的，也可以位于另一个名称空间中，但不能位于代码块中。因此，在默认情况下，在名称空间中声明的名称的链接性为外部的（除非它引用了常量）。&lt;/p&gt;
-&lt;p&gt;除了用户定义的名称空间外，还存在另一个名称空间——全局名称空间（global namespace）。它对应于文件级声明区域，因此前面所说的全局变量现在被描述位于全局名称空间中。&lt;/p&gt;
-&lt;p&gt;名称空间中的声明和定义规则同全局声明和定义规则相同 。&lt;/p&gt;
-&lt;p&gt;名称空间是开放的（open），即可以把名称加入到已有的名称空间中。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jill
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;goose&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以在名称空间声明的后面，即该文件后面（或另外一个文件中）再次使用Jack名称空间来提供函数的代码：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jack
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fetch&lt;/span&gt;()
-    {
-        ...
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;访问给定名称空间中的名称的方法是，通过作用域解析符&lt;code&gt;::&lt;/code&gt;，使用名称空间来&lt;strong&gt;限定&lt;/strong&gt;该名称：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;Jack&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pail &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;12.34&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// use a variable
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;Jill&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;Hill mole; &lt;span style=&#34;color:#75715e&#34;&gt;// create a type Hill structure
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;Jack&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;fetch(); &lt;span style=&#34;color:#75715e&#34;&gt;// use a function
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;未被装饰的名称（如pail）称为未限定的名称（unqualified name）；包含名称空间的名称（如Jack::pail）称为限定的名称（qualified name）。&lt;/p&gt;
-&lt;h2 id=&#34;using声明和using编译指令&#34;&gt;using声明和using编译指令&lt;/h2&gt;
-&lt;h3 id=&#34;using声明&#34;&gt;using声明&lt;/h3&gt;
-&lt;p&gt;我们并不希望每次使用每次时都对它进行限定,因此C++提供了两种机制(using声明和using编译指令)来简化对名称空间中名称的使用。&lt;code&gt;using&lt;/code&gt;声明使特定的标识符可用，&lt;code&gt;using&lt;/code&gt;编译指令是整个名称空间可用。&lt;/p&gt;
-&lt;p&gt;using声明由被限定的名称和它前面的关键字using组成：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; Jill&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;fetch; &lt;span style=&#34;color:#75715e&#34;&gt;// a using declaration
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;将using声明添加到它所属的声明区域之后，便可以使用&lt;code&gt;fetch&lt;/code&gt;代替&lt;code&gt;Jill::fetch&lt;/code&gt;。另外,和其它局部变量一样,使用了using声明之后的名称会覆盖同名的全局变量。&lt;/p&gt;
-&lt;h3 id=&#34;using编译指令&#34;&gt;using编译指令&lt;/h3&gt;
-&lt;p&gt;using编译指令可使所有的名称都可用。using编译指令由名称空间名和它前面的关键字&lt;code&gt;using namespace&lt;/code&gt;组成，它使名称空间中的所有名称都可用，而不需要使用作用域解析运算符：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jack; &lt;span style=&#34;color:#75715e&#34;&gt;// make all names in Jack available
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在全局使用&lt;code&gt;using&lt;/code&gt;编译指令，将使该名称空间的名称全局可用。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;iostream&amp;gt;    // places nemes in namespace std&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; std;  &lt;span style=&#34;color:#75715e&#34;&gt;// make names available globally
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在函数中使用&lt;code&gt;using&lt;/code&gt;编译指令，将使其中的名称在该函数中可用。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;()
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; Jack; &lt;span style=&#34;color:#75715e&#34;&gt;// make names available in main()
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    ...
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;另外using声明和using编译指令增加了名称冲突的可能性：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; Jack&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pal;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; Jill&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pal;
-pal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// which one? now have a conflict
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;事实上，编译器不允许同时使用上述两个using声明，因为这将导致二义性。在代码中使用作用域解析运算符，则不会存在二义性：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;Jack&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
-Jill&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;Jack::pal&lt;/code&gt;和&lt;code&gt;Jill::pal&lt;/code&gt;是不同的标识符，表示不同的内存单元。&lt;/p&gt;</description>
+      <description>&lt;p&gt;C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -153,60 +40,7 @@ Jill&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;pal &lt;span style=
 &lt;li&gt;自动存储持续性：在函数定义中声明的变量（包括函数参数）的存储持续性是自动的。它们在程序开始执行其所属的函数或代码块时被创建，在执行完函数或代码块时，它们使用的内存被释放。C++有两种存储持续性为自动的变量。&lt;/li&gt;
 &lt;li&gt;静态存储持续性：在函数定义外定义的变量和使用关键字&lt;code&gt;static&lt;/code&gt;定义的变量的存储持续性为静态。它们在程序整个运行过程中都存在。C++有三种存储持续性为静态的变量。&lt;/li&gt;
 &lt;li&gt;动态存储持续性：用&lt;code&gt;new&lt;/code&gt;运算符分配的内存将一直存在，直到使用&lt;code&gt;delete&lt;/code&gt;运算符将其释放或程序结束为止。这种内存的持续性为动态，有时也被成为自由存储（free store）和堆（heap）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;动态存储持续性&#34;&gt;动态存储持续性&lt;/h2&gt;
-&lt;p&gt;使用C++运算符&lt;code&gt;new&lt;/code&gt;（或C函数&lt;code&gt;malloc()&lt;/code&gt;）分配的内存，被成为动态内存。动态内存由运算符&lt;code&gt;new&lt;/code&gt;和&lt;code&gt;delete&lt;/code&gt;控制，不是由作用域和链接性规则控制。因此，可以在一个函数中动态分配内存，而在另一个函数中将其释放。其分配和释放的顺序取决于&lt;code&gt;new&lt;/code&gt;和&lt;code&gt;delete&lt;/code&gt;在何时以何种方式被使用。&lt;/p&gt;
-&lt;p&gt;虽然存储方案概念不适用于动态内存，但适用于用来跟踪动态内存的自动和静态指针变量。例如，假设在一个函数中包含下面的语句：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p_fees &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;由&lt;code&gt;new&lt;/code&gt;分配的80个字节（假设float 为4个字节)的内存将一直保留在内存中，直到使用&lt;code&gt;delete&lt;/code&gt;运算符将其释放。但当包含该声明的语句块执行完毕时，&lt;code&gt;p_fees&lt;/code&gt; 指针将消失。如果希望另一个函数能够使用这80个字节中的内容，则必须将其地址传递或返回给该函数。另一方面，如果将p_fees 的链接性声明为外部的，则文件中位于该声明后面的所有函数都可以使用它。另外，通过在另一个文件中使用下述声明，便可在其中使用该指针：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p_fees;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;使用new运算符初始化&#34;&gt;使用new运算符初始化&lt;/h3&gt;
-&lt;p&gt;如果要为内置的标量类型（如&lt;code&gt; int&lt;/code&gt;或&lt;code&gt;double&lt;/code&gt;）分配存储空间并初始化，可在类型名后面加上初始值，并将其用括号括起：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// *pi set to 6
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;99.99&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// *pd set to 99.99
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然而，要初始化常规结构或数组，需要使用大括号的列表初始化，这要求编译器支持C++11。C++11允许您这样做：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;where&lt;/span&gt; { &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; x; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; y; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; z; };
-where &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; one &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; where {&lt;span style=&#34;color:#ae81ff&#34;&gt;2.5&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;，&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5.3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;，&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;7.2&lt;/span&gt;}; &lt;span style=&#34;color:#75715e&#34;&gt;// C++11
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ar &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;] {&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;，&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;}; &lt;span style=&#34;color:#75715e&#34;&gt;// C++11
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在C++11中，还可将列表初始化用于单值变量：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;}; &lt;span style=&#34;color:#75715e&#34;&gt;// *pi set to 6
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;99.99&lt;/span&gt;}; &lt;span style=&#34;color:#75715e&#34;&gt;// *pd set to 99.99
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;new失败时&#34;&gt;new失败时&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;new&lt;/code&gt;可能找不到请求的内存量。在最初的10年中，C++在这种情况下让 new返回空指针，但现在将引发异常std:.bad_alloc。&lt;/p&gt;
-&lt;h3 id=&#34;定位new运算符&#34;&gt;定位new运算符&lt;/h3&gt;
-&lt;p&gt;通常，&lt;code&gt;new&lt;/code&gt;负责在堆（heap）中找到一个足以能够满足要求的内存块。&lt;code&gt;new&lt;/code&gt;运算符还有另一种变体，被称为定位(placement) new运算符，它让您能够指定要使用的位置。程序员可能使用这种特性来设置其内存管理规程、处理需要通过特定地址进行访问的硬件或在特定位置创建对象。即定位new运算符可以在指定地址创建对象、将指定内存分配给指定对象。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;new&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;chaff&lt;/span&gt;
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; dross[&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;];
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; slag;
-};
-&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buffer1[&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;]
-&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buffer2[&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;];
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;()
-{
-    chaff &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p1, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p2;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p3, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p4;
-    
-    &lt;span style=&#34;color:#75715e&#34;&gt;// 首先, new的常规形式
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    p1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; chaff;     &lt;span style=&#34;color:#75715e&#34;&gt;// 放置结构体到堆中
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    p3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;];   &lt;span style=&#34;color:#75715e&#34;&gt;// 放置整型数组到堆中
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    
-    &lt;span style=&#34;color:#75715e&#34;&gt;// 然后, 两种形式的定位new, placement new
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    p2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; (buffer1) chaff;   &lt;span style=&#34;color:#75715e&#34;&gt;// 放置结构体放到 buffer1 中
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    p4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; (buffer2) &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// 放置整型数组到 buffer2 中
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    ...
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意，&lt;code&gt;buffer1&lt;/code&gt;和&lt;code&gt;buffer2&lt;/code&gt;都位于&lt;code&gt;delete&lt;/code&gt;的管辖区域之外，不能使用&lt;code&gt;delete&lt;/code&gt;释放内存块。另一方面，如果&lt;code&gt;buffer&lt;/code&gt;是使用常规&lt;code&gt;new&lt;/code&gt;运算符创建的，便可以使用常规&lt;code&gt;delete&lt;/code&gt;运算符来释放整个内存块。&lt;/p&gt;
-&lt;p&gt;定位new运算符的另一种用法是，将其与初始化结合使用，从而将信息放在特定的硬件地址处。&lt;/p&gt;
-&lt;h3 id=&#34;定位new的其他形式&#34;&gt;定位new的其他形式&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;;                 &lt;span style=&#34;color:#75715e&#34;&gt;// invokes new(sizeof (int))
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;(buffer) &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;;	        &lt;span style=&#34;color:#75715e&#34;&gt;// invokes new(sizeof(int)，buffer)
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;(buffer) &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;];    &lt;span style=&#34;color:#75715e&#34;&gt;// invokes new(40*sizeof(int), buffer)
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/ul&gt;</description>
     </item>
     
     <item>
@@ -220,89 +54,7 @@ where &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; one &lt;span styl
 &lt;li&gt;自动存储持续性：在函数定义中声明的变量（包括函数参数）的存储持续性是自动的。它们在程序开始执行其所属的函数或代码块时被创建，在执行完函数或代码块时，它们使用的内存被释放。C++有两种存储持续性为自动的变量。&lt;/li&gt;
 &lt;li&gt;静态存储持续性：在函数定义外定义的变量和使用关键字&lt;code&gt;static&lt;/code&gt;定义的变量的存储持续性为静态。它们在程序整个运行过程中都存在。C++有三种存储持续性为静态的变量。&lt;/li&gt;
 &lt;li&gt;动态存储持续性：用&lt;code&gt;new&lt;/code&gt;运算符分配的内存将一直存在，直到使用&lt;code&gt;delete&lt;/code&gt;运算符将其释放或程序结束为止。这种内存的持续性为动态，有时也被成为自由存储（free store）和堆（heap）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;自动存储持续性&#34;&gt;自动存储持续性&lt;/h2&gt;
-&lt;p&gt;在默认情况下，在函数中声明的函数参数和变量的存储持续性为自动，作用域为局部，没有链接性。l也就是常见的变量的存储持续性大多为自动，称其为自动变量。&lt;/p&gt;
-&lt;h3 id=&#34;自动变量&#34;&gt;自动变量&lt;/h3&gt;
-&lt;p&gt;C++编译器利用栈来实现自动变量。&lt;/p&gt;
-&lt;h3 id=&#34;寄存器变量&#34;&gt;寄存器变量&lt;/h3&gt;
-&lt;p&gt;关键字&lt;code&gt;register&lt;/code&gt;最初是由C语言引入的，它建议编译器使用CPU寄存器来存储自动变量，旨在提高访问变量的速度。在C++11中，这种提示作用失去了，关键字&lt;code&gt;register&lt;/code&gt;只是显式地指出变量是自动的。&lt;/p&gt;
-&lt;h2 id=&#34;静态持续变量&#34;&gt;静态持续变量&lt;/h2&gt;
-&lt;p&gt;C++为静态持续变量提供了3中链接性：&lt;strong&gt;外部链接性&lt;/strong&gt;（可在其它文件中访问）、&lt;strong&gt;内部链接性&lt;/strong&gt;（只能在当前文件中访问）和&lt;strong&gt;无链接性&lt;/strong&gt;（只能在当前函数或代码块中访问）。&lt;/p&gt;
-&lt;p&gt;这3种链接性都在整个程序执行期间存在。由于静态变量的数目在程序运行期间是不变的，因此程序不需要使用特殊的装置（如栈）来管理它们。编译器将分配固定的内存块存储所有的静态变量，这些变量在整个程序执行期间一直存在。另外，如果没有显式地初始化静态变量，编译将将把它设置为0。在默认情况下，静态数组将每个元素或成员的所有位都设置为0。这种变量被称为零初始化的（zero-initialized）。&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;存储方式&lt;/th&gt;
-&lt;th&gt;持续性&lt;/th&gt;
-&lt;th&gt;作用域&lt;/th&gt;
-&lt;th&gt;链接性&lt;/th&gt;
-&lt;th&gt;如何声明&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;自动&lt;/td&gt;
-&lt;td&gt;自动&lt;/td&gt;
-&lt;td&gt;代码块&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;td&gt;在代码块中&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;寄存器&lt;/td&gt;
-&lt;td&gt;自动&lt;/td&gt;
-&lt;td&gt;代码块&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;td&gt;在代码块中，使用关键字&lt;code&gt;register&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;静态，无链接性&lt;/td&gt;
-&lt;td&gt;静态&lt;/td&gt;
-&lt;td&gt;代码块&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;td&gt;在代码块中，使用关键字&lt;code&gt;static&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;静态，外部链接性&lt;/td&gt;
-&lt;td&gt;静态&lt;/td&gt;
-&lt;td&gt;文件&lt;/td&gt;
-&lt;td&gt;外部&lt;/td&gt;
-&lt;td&gt;不在任何函数内&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;静态，内部链接性&lt;/td&gt;
-&lt;td&gt;静态&lt;/td&gt;
-&lt;td&gt;文件&lt;/td&gt;
-&lt;td&gt;内部&lt;/td&gt;
-&lt;td&gt;不在任何函数中，只用关键字&lt;code&gt;static&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3 id=&#34;静态存储持续性外部链接性&#34;&gt;静态存储持续性、外部链接性&lt;/h3&gt;
-&lt;p&gt;链接性为外部的变量称为&lt;strong&gt;外部变量&lt;/strong&gt;，或&lt;strong&gt;常规外部变量&lt;/strong&gt;，它们的存储持续性为静态，作用域为整个文件。&lt;/p&gt;
-&lt;p&gt;单定义规则（One Definition Rule, ODR）：变量只能有一次定义。为了满足这种需求，C++提供了两种变量声明。一种是定义声明（defining declaration）或简称为定义（definition），它给变量分配内存空间；另一种是引用声明（referencing declaration）或简称为声明（declaration），它不给变量分配内存空间，因为它引用已有的变量。引用声明使用关键字&lt;code&gt;extern&lt;/code&gt;，且不进行初始化；否则，声明变为定义，导致分配内存空间。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; up; &lt;span style=&#34;color:#75715e&#34;&gt;// 定义，up是0
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; blem; &lt;span style=&#34;color:#75715e&#34;&gt;// blem在其它地方定义
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; gr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// 因为是初始化了所以是定义
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在多个文件中使用外部变量，只需要在一个文件中包含该外部变量的定义（单定义规则），但在使用该变量的其他所有文件中，都必须使用extern声明它。&lt;/p&gt;
-&lt;p&gt;如果在函数中声明了一个与外部变量同名的变量，这种声明将被视为一个自动变量的定义，当程序执行自动变量所属的函数时，该变量将位于作用域内，还将隐藏同名的全局变量。当然可以使用C++的作用域解析符（::）来访问被隐藏的外部变量，放在变量名前时，该运算符表示使用变量的全局版本。&lt;/p&gt;
-&lt;p&gt;另外可以使用&lt;code&gt;extern&lt;/code&gt;在函数中重新声明外部变量，该声明是可选的。它指出该函数被设计成使用外部变量。&lt;/p&gt;
-&lt;p&gt;可使用外部变量在多文件程序的不同部分之间共享数据。&lt;/p&gt;
-&lt;h3 id=&#34;静态存储持续性内部链接性&#34;&gt;静态存储持续性、内部链接性&lt;/h3&gt;
-&lt;p&gt;将&lt;code&gt;static&lt;/code&gt;限定符用于作用域为整个文件的变量时，该变量的链接性将为内部的。链接性为内部的变量只能在其所属的文件中使用。这种变量又被成为静态外部变量。&lt;/p&gt;
-&lt;p&gt;如果在一个文件中定义了一个&lt;strong&gt;静态外部变量&lt;/strong&gt;，其名称与另一个文件中声明的常规外部变量相同，则在该文件中，静态变量将隐藏常规外部变量。即静态外部变量和常规外部变量同名是不潍坊单定义规则的，不冲突。另一种表述，如果作用域为整个文件的变量变为静态的，就不必担心其名称与其他文件中的作用域为整个文件的变量发生冲突。&lt;/p&gt;
-&lt;p&gt;可使用链接性为内部的静态变量——静态外部变量——在同一个文件中的多个函数之间共享数据。&lt;/p&gt;
-&lt;h3 id=&#34;静态存储持续性无链接性&#34;&gt;静态存储持续性、无链接性&lt;/h3&gt;
-&lt;p&gt;使用&lt;code&gt;static&lt;/code&gt;限定符用于在代码块中定义无链接性的局部变量。这意味着，虽然该变量只在该代码库中可用，但它在该代码块不处于活跃状态时仍然存在。因此在两次函数调用之间，静态局部变量的值将保持不变。另外，如果初始化了静态局部变量，则该程序只在启动时进行一次初始化。&lt;/p&gt;
-&lt;h3 id=&#34;再谈const&#34;&gt;再谈const&lt;/h3&gt;
-&lt;p&gt;在默认情况下全局变量的链接性是外部的，但&lt;code&gt;const&lt;/code&gt;全局变量的链接性是内部的。也就是说，在C++看来，全局&lt;code&gt;const&lt;/code&gt;定义，就像是使用了&lt;code&gt;static&lt;/code&gt;说明符一样。&lt;/p&gt;
-&lt;p&gt;如果全局&lt;code&gt;const&lt;/code&gt;声明的链接性像常规变量那样是外部的，则根据单定义规则，这将出错。也就是说，只能又一个文件可以包含前面的声明，而其它文件必须使用&lt;code&gt;extern&lt;/code&gt;关键字来提供引用声明。且只有未使用&lt;code&gt;extern&lt;/code&gt;关键字的声明才能进行初始化。使用&lt;code&gt;extern&lt;/code&gt;的目的是用其覆盖默认的内部链接性。&lt;/p&gt;
-&lt;p&gt;在函数或代码块中声明&lt;code&gt;const&lt;/code&gt;时，其作用域为代码块，即仅当程序执行到该代码块中的代码时，该常量才是可用的。这意味着在函数或代码块中创建常量时，不必担心其名称与其他地方定义的常量发生冲突。&lt;/p&gt;
-&lt;h3 id=&#34;函数的链接性&#34;&gt;函数的链接性&lt;/h3&gt;
-&lt;p&gt;所有函数的存储持续性都是静态的。&lt;/p&gt;
-&lt;p&gt;在默认情况下，函数的链接性是外部的，即可以在文件间共享。实际上，可以在函数原型中使用关键字&lt;code&gt;extern&lt;/code&gt;来指出函数是在另一个文件中定义的，不过这是可选的。&lt;/p&gt;
-&lt;p&gt;还可以使用关键字&lt;code&gt;static&lt;/code&gt;将函数的链接性设置为内部的，使之只能在一个文件中使用。必须同时在原型和函数的定义中使用该关键字。这意味着，可以在其他文件中定义同名的函数。和变量一样，在定义静态函数的文件中，静态函数将覆盖外部定义。因此，即使在外部定义了同名的函数，该文件仍将使用静态函数。注意，不可以像外部变量般使用作用域解析符&lt;code&gt;::&lt;/code&gt;访问同名函数的全局版本。&lt;/p&gt;
-&lt;p&gt;内联函数不受单定义规则约束，这允许程序员能够将内联函数的定义放在头文件中。这样，包含了头文件的每个文件都有内联函数的定义。&lt;/p&gt;</description>
+&lt;/ul&gt;</description>
     </item>
     
     <item>
@@ -311,143 +63,7 @@ where &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; one &lt;span styl
       <pubDate>Thu, 03 Dec 2020 19:39:37 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2020-12-03-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%9F%BA%E7%A1%80/</guid>
-      <description>&lt;p&gt;C++中可以访问的内存，通常可以分为三类：静态常量区、调用栈和堆。通常编译器使用三块独立内存：一块用于静态变量（可能再细分），一块用于自动变量，另一块用于动态存储。&lt;/p&gt;
-&lt;h2 id=&#34;静态变量区&#34;&gt;静态变量区&lt;/h2&gt;
-&lt;p&gt;这一块内存用于静态变量。静态变量区是编译器在编译期间就已经确定好的数据。例如在全局范围内声明&lt;code&gt;const char text[] = &amp;quot;Hello World!&amp;quot;&lt;/code&gt;，字符串text就会被存放在静态变量区。&lt;/p&gt;
-&lt;h3 id=&#34;特点&#34;&gt;特点&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;只读；&lt;/li&gt;
-&lt;li&gt;大小固定；&lt;/li&gt;
-&lt;li&gt;无法管理；&lt;/li&gt;
-&lt;li&gt;可以利用其特性在逻辑上做一些特定的优化。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;调用栈&#34;&gt;调用栈&lt;/h2&gt;
-&lt;p&gt;这一块内存用于自动变量。&lt;/p&gt;
-&lt;h3 id=&#34;特点-1&#34;&gt;特点&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;被动分配，被动回收；&lt;/li&gt;
-&lt;li&gt;大小在运行时有一个动态调整的过程；&lt;/li&gt;
-&lt;li&gt;大小有系统限制；&lt;/li&gt;
-&lt;li&gt;底大顶小。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;问题&#34;&gt;问题&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;为什么变量有作用域？&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;防止不同的变量使用相同的栈内存，导致后面的变量覆盖前面的数据，从而在使用前面的变量时输出后面的变量。所以设置作用域，使变量出了作用域不再有效。&lt;/p&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;为什么不建议使用递归？&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;因为栈内存是一个非常珍贵的资源，而使用递归有时会产生死循环，将消耗栈内存，直至消耗完，从而产生StackOverflow的错误。&lt;/p&gt;
-&lt;h3 id=&#34;注意&#34;&gt;注意&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;栈内存先进后出，轮流使用。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;同一块内存要在占用它的函数执行完毕，内存被回收之后，其它函数才能使用这一块内存。栈中的内存可以被轮流使用，这也是为什么正常的程序可以一直执行，而不会出现栈溢出的问题。&lt;/p&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;不要在函数体中声明大块内存（大型数组，大型结构体）。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;例如声明&lt;code&gt;int arr[10240000]&lt;/code&gt;，十分占用栈内存。栈内存十分珍贵，应避免这种情况。&lt;/p&gt;
-&lt;h2 id=&#34;堆&#34;&gt;堆&lt;/h2&gt;
-&lt;p&gt;这一块变量用于动态存储。&lt;/p&gt;
-&lt;h3 id=&#34;特点-2&#34;&gt;特点&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;堆大小较大；&lt;/li&gt;
-&lt;li&gt;主动分配，主动回收。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;分配&#34;&gt;分配&lt;/h3&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;分配方式&lt;/th&gt;
-&lt;th&gt;回收方式&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;malloc/calloc&lt;/td&gt;
-&lt;td&gt;free&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;new&lt;/td&gt;
-&lt;td&gt;delete&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;new T[]&lt;/td&gt;
-&lt;td&gt;delete[] T&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3 id=&#34;示例&#34;&gt;示例&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* c 风格, 分配方式 1. */&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; mem &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; malloc(&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;);
-&lt;span style=&#34;color:#75715e&#34;&gt;/* c 风格, 分配方式 2.*/&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; mem &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; calloc(&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;);
-&lt;span style=&#34;color:#75715e&#34;&gt;/* C 风格, 回收内存. */&lt;/span&gt;
-free(mem);
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; iptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// cpp new
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;delete&lt;/span&gt; iptr;          &lt;span style=&#34;color:#75715e&#34;&gt;// cpp delete
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; iarrptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// cpp new T[]
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;delete&lt;/span&gt;[] iarrptr;              &lt;span style=&#34;color:#75715e&#34;&gt;// cpp delete[] T
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;注意-1&#34;&gt;注意&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;不用堆内存时，一定要及时调用回收API回收内存。&lt;/li&gt;
-&lt;li&gt;访问申请的内存时不要超过申请的量，例如&lt;code&gt; int * ptr = new int[4]; ptr[8] = 0;&lt;/code&gt;否则会出现一系列未定义行为Undefined behavior。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;指针&#34;&gt;指针&lt;/h2&gt;
-&lt;p&gt;指针表示的时某块数据在内存中的地址，地址为整型，它能表示的范围因平台的不同而不同。&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;程序类型&lt;/th&gt;
-&lt;th&gt;指针位数&lt;/th&gt;
-&lt;th&gt;等同于&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;32位程序&lt;/td&gt;
-&lt;td&gt;32&lt;/td&gt;
-&lt;td&gt;uint32_t&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;64位程序&lt;/td&gt;
-&lt;td&gt;64&lt;/td&gt;
-&lt;td&gt;uint64_t&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;在同一平台上，任何一个指针都可以退化为整数表示，因为任何指针的本质都是一个整数，它代表着一个内存位置。&lt;/p&gt;
-&lt;h3 id=&#34;基本操作&#34;&gt;基本操作&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;赋值&lt;/li&gt;
-&lt;li&gt;强制转换&lt;/li&gt;
-&lt;li&gt;解引用&lt;/li&gt;
-&lt;li&gt;加减&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; iptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ptr;       &lt;span style=&#34;color:#75715e&#34;&gt;// 1. 相同类型的指针直接赋值.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)ptr; &lt;span style=&#34;color:#75715e&#34;&gt;// 2. 不同类型的指针需要强制转换.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr; &lt;span style=&#34;color:#75715e&#34;&gt;// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// sizeof(int) == 4;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; arrPtr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;];
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; testPtr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; arrPtr;
-printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, testPtr); &lt;span style=&#34;color:#75715e&#34;&gt;// 可将指针作为无符号整型输出.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;testPtr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; testPtr &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, testPtr);
-testPtr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; testPtr &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, testPtr);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;指针指向指针的指针指向指针的指针的指针&#34;&gt;指针，指向指针的指针，指向指针的指针的指针&lt;/h3&gt;
-&lt;h2 id=&#34;视频链接&#34;&gt;视频链接&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV1WE411W7dH&#34;&gt;（含字幕）C++ 让你不再害怕内存和指针 其一_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV1hE411p7Ly&#34;&gt;（含字幕）C++ 让你不再害怕内存和指针 其二_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <description>&lt;p&gt;C++中可以访问的内存，通常可以分为三类：静态常量区、调用栈和堆。通常编译器使用三块独立内存：一块用于静态变量（可能再细分），一块用于自动变量，另一块用于动态存储。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -456,98 +72,7 @@ printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;spa
       <pubDate>Sat, 28 Nov 2020 21:29:32 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/</guid>
-      <description>&lt;p&gt;给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。&lt;/p&gt;
-&lt;h1 id=&#34;头插法&#34;&gt;头插法&lt;/h1&gt;
-&lt;h2 id=&#34;思路&#34;&gt;思路&lt;/h2&gt;
-&lt;p&gt;我们知道，用头插法建立链表，得到的链表中元素的顺序和输入的顺序相反，所以利用这一特点，可以将链表逆置。&lt;/p&gt;
-&lt;p&gt;给定一个带头结点的单链表L，如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451442020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-1.png&#34; alt=&#34;2020-11-28-单链表原地逆置-1&#34;&gt;&lt;/p&gt;
-&lt;p&gt;首先用指针p存储链表第一个结点，然后将头结点从链表中剥离下来，如下图所示，此时链表L只有一个头结点。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452042020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-2.png&#34; alt=&#34;2020-11-28-单链表原地逆置-2&#34;&gt;&lt;/p&gt;
-&lt;p&gt;另设一指针r保存p的后继，将p指向的结点N1用尾插法插入到链表L中，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281452082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE3.png&#34; alt=&#34;2020-11-28-单链表原地逆置3&#34;&gt;&lt;/p&gt;
-&lt;p&gt;此时p指向N2，保存p的后继N3，再将N2尾插到链表L中，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451552020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-4.png&#34; alt=&#34;2020-11-28-单链表原地逆置-4&#34;&gt;&lt;/p&gt;
-&lt;p&gt;以此类推，直至保存后继的指针r为空，退出循环。&lt;/p&gt;
-&lt;h2 id=&#34;头插法的实现代码&#34;&gt;头插法的实现代码&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Reverse_L1&lt;/span&gt;(Linklist L)
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* p 为工作指针, r 为 p 的后继, 以防断链. */&lt;/span&gt;
-    LNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 从第一个元素开始. */&lt;/span&gt;
-    p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 先将头结点剥离出来. */&lt;/span&gt;
-    L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 依次将元素摘下. */&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 暂存 p 的后继. */&lt;/span&gt;
-        r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 用头插法插入 p. */&lt;/span&gt;
-        p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 更新 p, 指向下一个结点. */&lt;/span&gt;
-        p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r;
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;冒泡法&#34;&gt;冒泡法&lt;/h1&gt;
-&lt;p&gt;我把这种方法称为“冒泡法”，是因为算法流程和冒泡排序类似，只不过在冒泡排序中是相邻的元素出现逆序才交换，而链表逆置则要求每对结点之间都要交换顺序。&lt;/p&gt;
-&lt;h2 id=&#34;思路-1&#34;&gt;思路&lt;/h2&gt;
-&lt;p&gt;冒泡法和头插法不同，头插法只有一个工作指针p指向一个操作对象——被摘下来的结点，以及存储其后继的指针r。而冒泡法有两个工作指针，即一对工作指针，以及存储其后继的指针r，共计3个指针。考虑如下一般情况，&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457082020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-5.png&#34; alt=&#34;2020-11-28-单链表原地逆置-5&#34;&gt;&lt;/p&gt;
-&lt;p&gt;指针pre和p分别指向两个结点，将其看作一对结点，它们是每次循环操作的对象。循环中，让N2的后继指向N1，即完成了(N1,N2)的逆置。之后三个指针进一，pre=p，p=r，r=r-&amp;gt;next，重复上述逆置操作，链表变成了下图。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281457282020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-6.png&#34; alt=&#34;2020-11-28-单链表原地逆置-6&#34;&gt;&lt;/p&gt;
-&lt;p&gt;显而易见，如果指针&lt;code&gt;r!=NULL&lt;/code&gt;，则循环还要继续下去，若&lt;code&gt;r==NULL&lt;/code&gt;，循环结束，链表逆置完成，而指针p指向逆置后的一个元素。&lt;/p&gt;
-&lt;p&gt;上述步骤发生的前提是链表中除了头结点以外，至少有两个结点，而为了将判断是否继续循环和是否进入循环结合起来，应将指针r初始置为指向第一个结点的后继，p指向第一个结点，即&lt;code&gt;p=L-&amp;gt;next,r=p-&amp;gt;next&lt;/code&gt;，指针pre无强制要求。&lt;/p&gt;
-&lt;p&gt;注意初始p指向的结点在完成逆置之后将成为最后一个结点，所以应该在逆置之前将p的后继置为空，否则逆置之后p的后继会指向倒数第二个结点，而倒数第二个结点的后继指向倒数第一个结点，即逆置前的p，两个结点之间形成环。&lt;/p&gt;
-&lt;h2 id=&#34;冒泡法的实现代码&#34;&gt;冒泡法的实现代码&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Reverse_L2&lt;/span&gt;(Linklist L)
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 三个指针, p 为要反转的结点, pre 为 p 前面的结点, r 是保存 p 后继的指针.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 初始状态 p 指向第一个元素, r 指向第二个元素.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    LNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 将要第一个结点后继链接断开. 因为它将成为逆置后链表的最后一个结点, 否则
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 将在逆置后的链表中的最后一个元素和倒数第二个元素之间形成环.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/**
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 如果 r 不为空, 三个指针前进一个单位.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 否则链表只有一个结点, 直接执行 while 后的 L-&amp;gt;next = p.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 循环中将 p 反转指向其前面的结点 pre, r 是 p 的后继.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 假设链表有 n 个元素, 则循环可将前 n - 1 个元素逆置,
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     * 之后 p 指向第 n 个元素.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;     */&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (r &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 指针依次进一. */&lt;/span&gt;
-        pre &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-        p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r;
-        r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next;
-        &lt;span style=&#34;color:#75715e&#34;&gt;/* 逆置. */&lt;/span&gt;
-        p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pre;
-    }
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;/* 头结点指向逆置之后的第一个结点. */&lt;/span&gt;
-    L&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;代码仓库&#34;&gt;代码仓库&lt;/h1&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tianshihao/data-structure/blob/master/src/linearlist/linklist.c&#34;&gt;data-structure/linklist.c at master · tianshihao/data-structure (github.com)&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <description>&lt;p&gt;给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -566,105 +91,7 @@ printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;spa
 &lt;h2 id=&#34;1-定义&#34;&gt;1. 定义&lt;/h2&gt;
 &lt;p&gt;  结点结构中含有线索的的二叉树称为线索二叉树。&lt;br&gt;
   若结点有左子树，则其lchild域指示其左子，否则令lchild域指示其前驱；若结点有右子树，则其rchild域指示其右子，否则令rchild域指示其后继。&lt;br&gt;
-  为了避免混淆，需要增加两个标志域LTag和RTag，标志域为0表示结点后接指针，标志位为1表示结点后接线索。&lt;/p&gt;
-&lt;h2 id=&#34;2-数据结构&#34;&gt;2. 数据结构&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; BiThrNode
-{
-    ElemType data;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; BiThrNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;lchild, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;rchild;
-    PointerTag LTag, RTag;
-} BiThrNode, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;BiThrTree;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;  其中，PointerTag的定义为&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; PointerTag
-{
-    Link,
-    Thread
-} PointerTag;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;  Link == 0 表示指针，Thread == 1表示线索。&lt;/p&gt;
-&lt;h1 id=&#34;二线索化&#34;&gt;二、线索化&lt;/h1&gt;
-&lt;p&gt;  线索化的实质是将二叉链表中的空指针改为指向前驱或后继的线索，而前驱或后继的信息只能在遍历时得到，所以线索化的过程即为在遍历过程中修改空指针的过程。所以为了记录遍历过程中访问结点的先后关系，附设一个指针pre始终指向刚刚访问过的结点，即若指针p指向当前访问的结点，则pre指向它的刚访问过的结点。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;InThreading&lt;/span&gt;(BiThrTree p, BiThrTree &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre)
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (p)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 左子树线索化.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        InThreading(p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;lchild, pre);
-
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 前驱线索.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 若当前结点无左子，则修改标志域并使得 lchild 指向 p 的前驱.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;lchild))
-        {
-            p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;LTag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Thread;
-            p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;lchild &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre);
-        }
-
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 后继线索.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;((&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre)&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild))
-        {
-            (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre)&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;RTag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Thread;
-
-            &lt;span style=&#34;color:#75715e&#34;&gt;// 将前驱结点的后继结点设置为当前结点.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre)&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-        }
-
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 更新 pre, 使其始终指向刚访问过的结点.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p;
-
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 右子树线索化.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        InThreading(p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild ,pre);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
-} &lt;span style=&#34;color:#75715e&#34;&gt;// InThreading
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;  我这里在学习的时候遇到一个问题：刚访问过的结点pre的后继线索设置失败。书中的伪代码未说明pre是否为全局变量，而数据结构中也没有存储pre，所以我先将pre作为一个局部变量定义并值传递给了InThreading，乍一看没什么问题，但是仔细debug之后发现，在调用这个递归形式的算法时，系统会维护一个函数调用栈，每进入一层新的递归，系统就会保存当前调用的返回地址，并压入新的调用的返回地址。在执行完子函数后，子函数的返回地址会被弹出栈，此时，之前做的一切修改就都不见了，pre也不会得到更新。&lt;/p&gt;
-&lt;p&gt;  改进方法有两个：
-    1. 将pre设置为全局变量；
-    2. 将值传递改为指针传递。&lt;/p&gt;
-&lt;p&gt;  本文采用了第二种方法。&lt;/p&gt;
-&lt;h1 id=&#34;三遍历&#34;&gt;三、遍历&lt;/h1&gt;
-&lt;p&gt;  线索化之后，可以很方便地得到结点在遍历所得线性序列中的前驱和后继，也可以很方便地得到线性序列。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;Status &lt;span style=&#34;color:#a6e22e&#34;&gt;InOrderTraverse_Thr&lt;/span&gt;(BiThrTree T, Status (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;Visit)(ElemType e))
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;// p 指向根结点.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    BiThrNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; T&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;lchild;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;// 空树或遍历结束时.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (p &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; T)
-    {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;LTag &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; Thread)
-        {
-            p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;lchild;
-        }
-
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;Visit(p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;data))
-        {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ERROR;
-        }
-
-        &lt;span style=&#34;color:#75715e&#34;&gt;// 访问后继结点.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 找到最左叶结点, 就可以轻松地访问其后继结点.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ((p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;RTag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; Thread) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; T))
-        {
-            p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild;
-            Visit(p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;data);
-        }
-
-        p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;rchild;
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; OK;
-} &lt;span style=&#34;color:#75715e&#34;&gt;// InOrderTraverse_Thr
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;参考文献&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;数据结构:C语言版/严蔚敏,吴伟民编著. ——北京：清华大学出版社，2007&lt;/li&gt;
-&lt;li&gt;线索二叉树详解 &lt;a href=&#34;https://blog.csdn.net/s_999999/article/details/86157532&#34;&gt;https://blog.csdn.net/s_999999/article/details/86157532&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;线索二叉树原理及前序、中序线索化（Java版）https://blog.csdn.net/UncleMing5371/article/details/54176252&lt;/li&gt;
-&lt;li&gt;关于函数调用栈(call stack)的个人理解 &lt;a href=&#34;https://blog.csdn.net/VarusK/article/details/83031643&#34;&gt;https://blog.csdn.net/VarusK/article/details/83031643&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;代码仓库&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tianshihao/data-structure/tree/master/chapter_6&#34;&gt;https://github.com/tianshihao/data-structure/tree/master/chapter_6&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+  为了避免混淆，需要增加两个标志域LTag和RTag，标志域为0表示结点后接指针，标志位为1表示结点后接线索。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -682,140 +109,7 @@ printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;spa
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/markdown-syntax/</guid>
-      <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;
-&lt;h2 id=&#34;headings&#34;&gt;Headings&lt;/h2&gt;
-&lt;p&gt;The following HTML &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;—&lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; elements represent six levels of section headings. &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt; is the highest section level while &lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; is the lowest.&lt;/p&gt;
-&lt;h1 id=&#34;h1&#34;&gt;H1&lt;/h1&gt;
-&lt;h2 id=&#34;h2&#34;&gt;H2&lt;/h2&gt;
-&lt;h3 id=&#34;h3&#34;&gt;H3&lt;/h3&gt;
-&lt;h4 id=&#34;h4&#34;&gt;H4&lt;/h4&gt;
-&lt;h5 id=&#34;h5&#34;&gt;H5&lt;/h5&gt;
-&lt;h6 id=&#34;h6&#34;&gt;H6&lt;/h6&gt;
-&lt;h2 id=&#34;paragraph&#34;&gt;Paragraph&lt;/h2&gt;
-&lt;p&gt;Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.&lt;/p&gt;
-&lt;p&gt;Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.&lt;/p&gt;
-&lt;h2 id=&#34;blockquotes&#34;&gt;Blockquotes&lt;/h2&gt;
-&lt;p&gt;The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a &lt;code&gt;footer&lt;/code&gt; or &lt;code&gt;cite&lt;/code&gt; element, and optionally with in-line changes such as annotations and abbreviations.&lt;/p&gt;
-&lt;h4 id=&#34;blockquote-without-attribution&#34;&gt;Blockquote without attribution&lt;/h4&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Tiam, ad mint andaepu dandae nostion secatur sequo quae.
-&lt;strong&gt;Note&lt;/strong&gt; that you can use &lt;em&gt;Markdown syntax&lt;/em&gt; within a blockquote.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h4 id=&#34;blockquote-with-attribution&#34;&gt;Blockquote with attribution&lt;/h4&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Don&amp;rsquo;t communicate by sharing memory, share memory by communicating.&lt;/p&gt;
-— &lt;cite&gt;Rob Pike&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/cite&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;tables&#34;&gt;Tables&lt;/h2&gt;
-&lt;p&gt;Tables aren&amp;rsquo;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;th&gt;Age&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Bob&lt;/td&gt;
-&lt;td&gt;27&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Alice&lt;/td&gt;
-&lt;td&gt;23&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4 id=&#34;inline-markdown-within-tables&#34;&gt;Inline Markdown within tables&lt;/h4&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Inline   &lt;/th&gt;
-&lt;th&gt;Markdown   &lt;/th&gt;
-&lt;th&gt;In   &lt;/th&gt;
-&lt;th&gt;Table&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;em&gt;italics&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;&lt;strong&gt;bold&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;del&gt;strikethrough&lt;/del&gt;   &lt;/td&gt;
-&lt;td&gt;&lt;code&gt;code&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h2 id=&#34;code-blocks&#34;&gt;Code Blocks&lt;/h2&gt;
-&lt;h4 id=&#34;code-block-with-backticks&#34;&gt;Code block with backticks&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;html
-&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-  &amp;lt;p&amp;gt;Test&amp;lt;/p&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;code-block-indented-with-four-spaces&#34;&gt;Code block indented with four spaces&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-  &amp;lt;p&amp;gt;Test&amp;lt;/p&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;code-block-with-hugos-internal-highlight-shortcode&#34;&gt;Code block with Hugo&amp;rsquo;s internal highlight shortcode&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
-&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;head&lt;/span&gt;&amp;gt;
-  &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;charset&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UTF-8&amp;#34;&lt;/span&gt;&amp;gt;
-  &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;title&lt;/span&gt;&amp;gt;Example HTML5 Document&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;title&lt;/span&gt;&amp;gt;
-&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;head&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
-  &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;Test&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
-&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
-&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;list-types&#34;&gt;List Types&lt;/h2&gt;
-&lt;h4 id=&#34;ordered-list&#34;&gt;Ordered List&lt;/h4&gt;
-&lt;ol&gt;
-&lt;li&gt;First item&lt;/li&gt;
-&lt;li&gt;Second item&lt;/li&gt;
-&lt;li&gt;Third item&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;unordered-list&#34;&gt;Unordered List&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;List item&lt;/li&gt;
-&lt;li&gt;Another item&lt;/li&gt;
-&lt;li&gt;And another item&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;nested-list&#34;&gt;Nested list&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;Item&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol&gt;
-&lt;li&gt;First Sub-item&lt;/li&gt;
-&lt;li&gt;Second Sub-item&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;other-elements--abbr-sub-sup-kbd-mark&#34;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;/h2&gt;
-&lt;p&gt;&lt;abbr title=&#34;Graphics Interchange Format&#34;&gt;GIF&lt;/abbr&gt; is a bitmap image format.&lt;/p&gt;
-&lt;p&gt;H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
-&lt;p&gt;X&lt;sup&gt;n&lt;/sup&gt; + Y&lt;sup&gt;n&lt;/sup&gt; = Z&lt;sup&gt;n&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;Press &lt;kbd&gt;&lt;kbd&gt;CTRL&lt;/kbd&gt;+&lt;kbd&gt;ALT&lt;/kbd&gt;+&lt;kbd&gt;Delete&lt;/kbd&gt;&lt;/kbd&gt; to end the session.&lt;/p&gt;
-&lt;p&gt;Most &lt;mark&gt;salamanders&lt;/mark&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;/p&gt;
-&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
-&lt;hr&gt;
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;The above quote is excerpted from Rob Pike&amp;rsquo;s &lt;a href=&#34;https://www.youtube.com/watch?v=PAAkCSZUG1c&#34;&gt;talk&lt;/a&gt; during Gopherfest, November 18, 2015. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;</description>
+      <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -825,45 +119,7 @@ printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%u&lt;/span&gt;&lt;spa
       
       <guid>https://tianshihao.github.io/post/placeholder-text/</guid>
       <description>&lt;p&gt;Lorem est tota propiore conpellat pectoribus de
-pectora summo.&lt;/p&gt;
-&lt;p&gt;Redit teque digerit hominumque toris verebor lumina non cervice
-subde tollit usus habet Arctonque, furores quas nec ferunt. Quoque montibus nunc
-caluere tempus inhospita parcite confusaque translucet patri vestro qui optatis
-lumine cognoscere flos nubis! Fronde ipsamque patulos Dryopen deorum.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Exierant elisi ambit vivere dedere&lt;/li&gt;
-&lt;li&gt;Duce pollice&lt;/li&gt;
-&lt;li&gt;Eris modo&lt;/li&gt;
-&lt;li&gt;Spargitque ferrea quos palude&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Rursus nulli murmur; hastile inridet ut ab gravi sententia! Nomine potitus
-silentia flumen, sustinet placuit petis in dilapsa erat sunt. Atria
-tractus malis.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Comas hunc haec pietate fetum procerum dixit&lt;/li&gt;
-&lt;li&gt;Post torum vates letum Tiresia&lt;/li&gt;
-&lt;li&gt;Flumen querellas&lt;/li&gt;
-&lt;li&gt;Arcanaque montibus omnes&lt;/li&gt;
-&lt;li&gt;Quidem et&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h1 id=&#34;vagus-elidunt&#34;&gt;Vagus elidunt&lt;/h1&gt;
-&lt;p&gt;&lt;svg class=&#34;canon&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; overflow=&#34;visible&#34; viewBox=&#34;0 0 496 373&#34; height=&#34;373&#34; width=&#34;496&#34;&gt;&lt;g fill=&#34;none&#34;&gt;&lt;path stroke=&#34;#000&#34; stroke-width=&#34;.75&#34; d=&#34;M.599 372.348L495.263 1.206M.312.633l494.95 370.853M.312 372.633L247.643.92M248.502.92l246.76 370.566M330.828 123.869V1.134M330.396 1.134L165.104 124.515&#34;&gt;&lt;/path&gt;&lt;path stroke=&#34;#ED1C24&#34; stroke-width=&#34;.75&#34; d=&#34;M275.73 41.616h166.224v249.05H275.73zM54.478 41.616h166.225v249.052H54.478z&#34;&gt;&lt;/path&gt;&lt;path stroke=&#34;#000&#34; stroke-width=&#34;.75&#34; d=&#34;M.479.375h495v372h-495zM247.979.875v372&#34;&gt;&lt;/path&gt;&lt;ellipse cx=&#34;498.729&#34; cy=&#34;177.625&#34; rx=&#34;.75&#34; ry=&#34;1.25&#34;&gt;&lt;/ellipse&gt;&lt;ellipse cx=&#34;247.229&#34; cy=&#34;377.375&#34; rx=&#34;.75&#34; ry=&#34;1.25&#34;&gt;&lt;/ellipse&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Canons_of_page_construction#Van_de_Graaf_canon&#34;&gt;The Van de Graaf Canon&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;mane-refeci-capiebant-unda-mulcebat&#34;&gt;Mane refeci capiebant unda mulcebat&lt;/h2&gt;
-&lt;p&gt;Victa caducifer, malo vulnere contra
-dicere aurato, ludit regale, voca! Retorsit colit est profanae esse virescere
-furit nec; iaculi matertera et visa est, viribus. Divesque creatis, tecta novat collumque vulnus est, parvas. &lt;strong&gt;Faces illo pepulere&lt;/strong&gt; tempus adest. Tendit flamma, ab opes virum sustinet, sidus sequendo urbis.&lt;/p&gt;
-&lt;p&gt;Iubar proles corpore raptos vero auctor imperium; sed et huic: manus caeli
-Lelegas tu lux. Verbis obstitit intus oblectamina fixis linguisque ausus sperare
-Echionides cornuaque tenent clausit possit. Omnia putatur. Praeteritae refert
-ausus; ferebant e primus lora nutat, vici quae mea ipse. Et iter nil spectatae
-vulnus haerentia iuste et exercebat, sui et.&lt;/p&gt;
-&lt;p&gt;Eurytus Hector, materna ipsumque ut Politen, nec, nate, ignari, vernum cohaesit sequitur. Vel &lt;strong&gt;mitis temploque&lt;/strong&gt; vocatus, inque alis, &lt;em&gt;oculos nomen&lt;/em&gt; non silvis corpore coniunx ne displicet illa. Crescunt non unus, vidit visa quantum inmiti flumina mortis facto sic: undique a alios vincula sunt iactata abdita! Suspenderat ego fuit tendit: luna, ante urbem
-Propoetides &lt;strong&gt;parte&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;style&gt;
-.canon { background: white; width: 100%; height: auto;}
-&lt;/style&gt;</description>
+pectora summo.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -872,40 +128,7 @@ Propoetides &lt;strong&gt;parte&lt;/strong&gt;.&lt;/p&gt;
       <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/math-typesetting/</guid>
-      <description>&lt;p&gt;Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.&lt;/p&gt;
-
-&lt;p&gt;In this example we will be using &lt;a href=&#34;https://katex.org/&#34;&gt;KaTeX&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create a partial under &lt;code&gt;/layouts/partials/math.html&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Within this partial reference the &lt;a href=&#34;https://katex.org/docs/autorender.html&#34;&gt;Auto-render Extension&lt;/a&gt; or host these scripts locally.&lt;/li&gt;
-&lt;li&gt;Include the partial in your templates like so:&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-&lt;li&gt;To enable KaTex globally set the parameter &lt;code&gt;math&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in a project&#39;s configuration&lt;/li&gt;
-&lt;li&gt;To enable KaTex on a per page basis include the parameter &lt;code&gt;math: true&lt;/code&gt; in content files.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Use the online reference of &lt;a href=&#34;https://katex.org/docs/supported.html&#34;&gt;Supported TeX Functions&lt;/a&gt;
-
-
-&lt;!-- KaTeX --&gt;
-&lt;link rel=&#34;stylesheet&#34; href=&#34;https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css&#34; integrity=&#34;sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ&#34; crossorigin=&#34;anonymous&#34;&gt;
-&lt;script defer src=&#34;https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js&#34; integrity=&#34;sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
-&lt;script defer src=&#34;https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js&#34; integrity=&#34;sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI&#34; crossorigin=&#34;anonymous&#34; onload=&#34;renderMathInElement(document.body);&#34;&gt;&lt;/script&gt;
-
-&lt;/p&gt;
-
-&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
-
-&lt;p&gt;Inline math: &lt;span  class=&#34;math&#34;&gt;\( \varphi = \dfrac{1+\sqrt5}{2}= 1.6180339887… \)&lt;/span&gt;&lt;/p&gt;
-
-&lt;p&gt;Block math:&lt;/p&gt;
-
-&lt;p&gt;&lt;span  class=&#34;math&#34;&gt;\[
- \varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } } 
-\]&lt;/span&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -914,31 +137,7 @@ Propoetides &lt;strong&gt;parte&lt;/strong&gt;.&lt;/p&gt;
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/emoji-support/</guid>
-      <description>&lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;
-&lt;p&gt;The &lt;a href=&#34;https://gohugo.io/functions/emojify/&#34;&gt;&lt;code&gt;emojify&lt;/code&gt;&lt;/a&gt; function can be called directly in templates or &lt;a href=&#34;https://gohugo.io/templates/shortcode-templates/#inline-shortcodes&#34;&gt;Inline Shortcodes&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;To enable emoji globally, set &lt;code&gt;enableEmoji&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in your site’s &lt;a href=&#34;https://gohugo.io/getting-started/configuration/&#34;&gt;configuration&lt;/a&gt; and then you can type emoji shorthand codes directly in content files; e.g.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙈&lt;/span&gt; &lt;code&gt;:see_no_evil:&lt;/code&gt;&lt;/span&gt;  &lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙉&lt;/span&gt; &lt;code&gt;:hear_no_evil:&lt;/code&gt;&lt;/span&gt;  &lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙊&lt;/span&gt; &lt;code&gt;:speak_no_evil:&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;br&gt;
-&lt;p&gt;The &lt;a href=&#34;http://www.emoji-cheat-sheet.com/&#34;&gt;Emoji cheat sheet&lt;/a&gt; is a useful reference for emoji shorthand codes.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;N.B.&lt;/strong&gt; The above steps enable Unicode Standard emoji characters and sequences in Hugo, however the rendering of these glyphs depends on the browser and the platform. To style the emoji you can either use a third party emoji font or a font stack; e.g.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;.emoji {
-font-family: Apple Color Emoji,Segoe UI Emoji,NotoColorEmoji,Segoe UI Symbol,Android Emoji,EmojiSymbols;
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;style&gt;
-.emojify {
-	font-family: Apple Color Emoji,Segoe UI Emoji,NotoColorEmoji,Segoe UI Symbol,Android Emoji,EmojiSymbols;
-	font-size: 2rem;
-	vertical-align: middle;
-}
-@media screen and (max-width:650px) {
-    .nowrap {
-	display: block;
-	margin: 25px 0;
-}
-}
-&lt;/style&gt;</description>
+      <description>&lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -947,20 +146,9 @@ font-family: Apple Color Emoji,Segoe UI Emoji,NotoColorEmoji,Segoe UI Symbol,And
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/about/</guid>
-      <description>&lt;p&gt;Written in Go, Hugo is an open source static site generator available under the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/LICENSE&#34;&gt;Apache Licence 2.0.&lt;/a&gt; Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.&lt;/p&gt;
-&lt;p&gt;Hugo makes use of a variety of open source projects including:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/yuin/goldmark&#34;&gt;https://github.com/yuin/goldmark&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/alecthomas/chroma&#34;&gt;https://github.com/alecthomas/chroma&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/muesli/smartcrop&#34;&gt;https://github.com/muesli/smartcrop&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/cobra&#34;&gt;https://github.com/spf13/cobra&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/viper&#34;&gt;https://github.com/spf13/viper&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Hugo is ideal for blogs, corporate websites, creative portfolios, online magazines, single page applications or even a website with thousands of pages.&lt;/p&gt;
-&lt;p&gt;Hugo is for people who want to hand code their own website without worrying about setting up complicated runtimes, dependencies and databases.&lt;/p&gt;
-&lt;p&gt;Websites built with Hugo are extremelly fast, secure and can be deployed anywhere including, AWS, GitHub Pages, Heroku, Netlify and any other hosting provider.&lt;/p&gt;
-&lt;p&gt;Learn more and contribute on &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-</description>
+      <description>Written in Go, Hugo is an open source static site generator available under the Apache Licence 2.0. Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.
+Hugo makes use of a variety of open source projects including:
+ https://github.</description>
     </item>
     
   </channel>
