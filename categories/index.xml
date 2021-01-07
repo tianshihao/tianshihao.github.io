@@ -6,7 +6,6 @@
     <description>Recent content in Categories on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <copyright>Copyright © 2008–2019</copyright>
     <lastBuildDate>Tue, 29 Dec 2020 12:39:47 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tensorflow</title>
@@ -41,24 +40,6 @@
       <pubDate>Sat, 28 Nov 2020 21:29:32 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>syntax</title>
-      <link>https://tianshihao.github.io/categories/syntax/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://tianshihao.github.io/categories/syntax/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>themes</title>
-      <link>https://tianshihao.github.io/categories/themes/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://tianshihao.github.io/categories/themes/</guid>
       <description></description>
     </item>
     

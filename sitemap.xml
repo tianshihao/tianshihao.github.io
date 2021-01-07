@@ -13,11 +13,6 @@
   </url>
   
   <url>
-    <loc>https://tianshihao.github.io/post/</loc>
-    <lastmod>2020-12-29T12:39:47+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://tianshihao.github.io/tags/</loc>
     <lastmod>2020-12-29T12:39:47+00:00</lastmod>
   </url>
@@ -34,6 +29,11 @@
   
   <url>
     <loc>https://tianshihao.github.io/post/2020-12-29-%E5%9C%A8anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</loc>
+    <lastmod>2020-12-29T12:39:47+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/post/</loc>
     <lastmod>2020-12-29T12:39:47+00:00</lastmod>
   </url>
   
@@ -108,82 +108,16 @@
   </url>
   
   <url>
-    <loc>https://tianshihao.github.io/tags/css/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/html/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/markdown/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/post/markdown-syntax/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/series/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/categories/syntax/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/themes/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/categories/themes/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/series/themes-guide/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/post/placeholder-text/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/text/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/post/math-typesetting/</loc>
-    <lastmod>2019-03-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/tags/emoji/</loc>
-    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/post/emoji-support/</loc>
-    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://tianshihao.github.io/about/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://tianshihao.github.io/tags/index/</loc>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/series/</loc>
   </url>
   
 </urlset>
