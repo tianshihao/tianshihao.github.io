@@ -810,10 +810,12 @@ a.article-title:hover,
 .article-entry .highlight {
   display: block;
   margin: 2em;
-  padding: 3em 5em 3em 2em;
+  padding: 3em 5em 3em 1em;
   box-shadow: 5px 5px 5px rgba(105,105,105, 0.5);
   border-radius: 7px;
   border: 2px solid black;
+  /* overflow 属性规定当内容溢出元素框时发生的事情。*/
+  overflow: scroll;
 }
 
 .article-entry pre,
