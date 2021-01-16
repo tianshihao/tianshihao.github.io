@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>数据结构和算法面经📚 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="数据结构和算法面经">
+
+    <meta property="og:title" content="数据结构和算法面经📚" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">数据结构和算法面经📚</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/" class="article-date">
+                <time datetime='2021-01-14T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-14</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E7%AE%97%E6%B3%95">算法</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="中序遍历的非递归写法">中序遍历的非递归写法</h2>
+<p>伪代码</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">初始化栈，工作指针指向根。
+当指针不空或栈非空时，
+	当指针不空时，
+		沿着左子一路向左，先入栈，后向左。
+	否则，
+		栈顶元素出栈，
+		访问元素，
+		工作指针向右。
+</code></pre></div><p>实现代码</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Status <span style="color:#666;font-weight:bold;font-style:italic">InOrderTraverse_Binary2</span>(BiTree T, Status (*Visit)(ElemType e))
+{
+    <span style="color:#888;font-style:italic">// 初始化顺序栈.
+</span><span style="color:#888;font-style:italic"></span>    SqStack S;
+    InitStack_Sq(&amp;S);
+
+    <span style="color:#888;font-style:italic">// 工作指针.
+</span><span style="color:#888;font-style:italic"></span>    BiTNode *p = T;
+
+    <span style="font-weight:bold;text-decoration:underline">while</span> (p || !StackEmpty_Sq(S))
+    {
+        <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">         * 1. 沿着根的左子, 依次入栈, 直至左子为空, 说明已找到可以输出的结点.
+</span><span style="color:#888;font-style:italic">         */</span>
+        <span style="font-weight:bold;text-decoration:underline">if</span> (p) <span style="color:#888;font-style:italic">// 一路向左.
+</span><span style="color:#888;font-style:italic"></span>        {
+            Push_Sq(&amp;S, *p); <span style="color:#888;font-style:italic">// 当前结点入栈.
+</span><span style="color:#888;font-style:italic"></span>            p = p-&gt;lchild;   <span style="color:#888;font-style:italic">// 左子不空, 一直向左走.
+</span><span style="color:#888;font-style:italic"></span>        }
+
+        <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">         * 2. 可以输出的结点从栈中弹出, 若其右子为空, 则继续执行 2, 否则右子树继
+</span><span style="color:#888;font-style:italic">         * 续执行 1.
+</span><span style="color:#888;font-style:italic">         * */</span>
+        <span style="font-weight:bold;text-decoration:underline">else</span> <span style="color:#888;font-style:italic">// 出栈, 并转向出栈结点的右子树.
+</span><span style="color:#888;font-style:italic"></span>        {
+            Pop_Sq(&amp;S, &amp;p); <span style="color:#888;font-style:italic">// 栈顶元素出栈.
+</span><span style="color:#888;font-style:italic"></span>            Visit(p-&gt;data); <span style="color:#888;font-style:italic">// 访问出栈结点.
+</span><span style="color:#888;font-style:italic"></span>            p = p-&gt;rchild;  <span style="color:#888;font-style:italic">// 向右子树走, p 赋值为当前结点的右子.
+</span><span style="color:#888;font-style:italic"></span>        }
+    }
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> OK;
+}
+
+</code></pre></div><h2 id="带头结点和不带头结点的链表">带头结点和不带头结点的链表</h2>
+<p>带头结点链表的优点：</p>
+<ol>
+<li>更快删除或插入第一个结点；</li>
+<li>统一空表和非空表的处理。</li>
+</ol>
+<h2 id="判断一个数是2的倍数">判断一个数是2的倍数</h2>
+<p>判断一个数是不是二的倍数，即判断该数<strong>二进制末位</strong>是不是 <strong>0</strong>。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">a % 2 == 0 || a &amp; 0x0001 == 0;
+</code></pre></div><h2 id="求一个数中有几个1">求一个数中有几个1</h2>
+<p>逐位除十取余判断。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">fun</span>(<span style="font-weight:bold;text-decoration:underline">long</span> x)
+{
+    <span style="font-weight:bold;text-decoration:underline">int</span> _count = 0;
+    <span style="font-weight:bold;text-decoration:underline">while</span>(x)
+    {
+        <span style="font-weight:bold;text-decoration:underline">if</span>(x % 10 == 1)
+        ++_count;
+        x /= 10;
+    }
+    <span style="font-weight:bold;text-decoration:underline">return</span> _count;
+}
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    cout &lt;&lt; fun(123321) &lt;&lt; endl;
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#中序遍历的非递归写法">中序遍历的非递归写法</a></li>
+    <li><a href="#带头结点和不带头结点的链表">带头结点和不带头结点的链表</a></li>
+    <li><a href="#判断一个数是2的倍数">判断一个数是2的倍数</a></li>
+    <li><a href="#求一个数中有几个1">求一个数中有几个1</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E7%AE%97%E6%B3%95">算法
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">STL面经📚&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

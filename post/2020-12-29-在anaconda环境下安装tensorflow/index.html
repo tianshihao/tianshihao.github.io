@@ -89,8 +89,8 @@
 <p>注意在安装过程中的“Advanced Options”有两个选项，推荐勾选第二项：“Register Anaconda as my default Python”。</p>
 <h3 id="添加环境变量">添加环境变量</h3>
 <p>添加Anaconda安装根目录.\和.\Scripts\到系统变量。例如</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">C:<span style="color:#c5060b;font-weight:bold">\U</span>sers<span style="color:#c5060b;font-weight:bold">\M</span>yUsername<span style="color:#c5060b;font-weight:bold">\a</span>naconda3
-C:<span style="color:#c5060b;font-weight:bold">\U</span>sers<span style="color:#c5060b;font-weight:bold">\M</span>yUsername<span style="color:#c5060b;font-weight:bold">\a</span>naconda3<span style="color:#c5060b;font-weight:bold">\S</span>cripts
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">C:<span style="color:#666;font-style:italic">\U</span>sers<span style="color:#666;font-style:italic">\M</span>yUsername<span style="color:#666;font-style:italic">\a</span>naconda3
+C:<span style="color:#666;font-style:italic">\U</span>sers<span style="color:#666;font-style:italic">\M</span>yUsername<span style="color:#666;font-style:italic">\a</span>naconda3<span style="color:#666;font-style:italic">\S</span>cripts
 </code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-2.png" alt="添加环境变量"></p>
 <h3 id="激活环境">激活环境</h3>
 <p>在常用的终端——例如PowerShell——输入<code>conda activate</code>激活环境，使用<code>conda deactivate</code>退出环境。</p>
@@ -98,32 +98,32 @@ C:<span style="color:#c5060b;font-weight:bold">\U</span>sers<span style="color:#
 <p>conda是一个提供包管理与环境管理的工具，包管理与pip类似，环境管理则允许用户安装不同版本的python环境并可以快速切换。Anaconda是一个开源的Python发行版本，包含了conda、Python以及Python的库numpy、pandas等，就是个Python全家桶。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <h3 id="为anaconda添加国内镜像源2">为Anaconda添加国内镜像源<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></h3>
 <p>TUNA提供了Anaconda仓库的镜像，运行以下指令可以添加：</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 conda config --set show_channel_urls yes
 </code></pre></div><p>或者也可以直接修改个人文件夹下conda的配置文件.condarc为以下内容：</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">channels:
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 show_channel_urls: true
 </code></pre></div><h2 id="安装tensorflow">安装Tensorflow</h2>
 <h3 id="创建一个tensorflow环境">创建一个Tensorflow环境</h3>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda create -n 环境名称 python<span style="color:#2c5dcd">=</span>Python版本号
-conda cretae -n tensorflow python<span style="color:#2c5dcd">=</span>3.8.5
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda create -n 环境名称 <span style="color:#666;font-weight:bold;font-style:italic">python</span>=Python版本号
+conda cretae -n tensorflow <span style="color:#666;font-weight:bold;font-style:italic">python</span>=3.8.5
 </code></pre></div><h3 id="激活tensorflow环境">激活Tensorflow环境</h3>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda activate tensorflow
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda activate tensorflow
 </code></pre></div><h3 id="安装tensorflow-1">安装Tensorflow</h3>
 <p>在刚才创建的名为tensorsflow的环境中安装tensorflow。</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install tensorflow
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install tensorflow
 </code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-4.png" alt="使用pip安装tensorflow"></p>
 <p>如果下载速度很慢，可以上<a href="https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/tensorflow/">Links for tensorflow</a>直接下载。然后确保安装了wheel，</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install wheel
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install wheel
 </code></pre></div><p>就可以直接使用如下指令进行安装</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install <span style="color:#0c6">&#34;D:\Downloads\迅雷下载\tensorflow-2.4.0-cp38-cp38-win_amd64.whl&#34;</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install <span style="color:#666;font-style:italic">&#34;D:\Downloads\迅雷下载\tensorflow-2.4.0-cp38-cp38-win_amd64.whl&#34;</span>
 </code></pre></div><p>安装成功之后，在tensorflow环境下进入python解释器，输入<code>import tensorflow as tf</code>，没有异常，表示安装成功。注意，Pyhton的深度学习软件包tensorflow是在Anaconda名为tensorflow的环境下安装的，在基础环境base中是没有tensorflow的。</p>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-5.png" alt="安装成功并且验证"></p>
 <h3 id="退出tensorflow环境">退出tensorflow环境</h3>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">conda deactivate
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">conda deactivate
 </code></pre></div><section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -184,9 +184,9 @@ conda cretae -n tensorflow python<span style="color:#2c5dcd">=</span>3.8.5
     
 <nav id="article-nav">
     
-    <a href="/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" id="article-nav-newer" class="article-nav-link-wrap">
         <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            C&#43;&#43;面经
+            C&#43;&#43;面经📚
         </div>
     </a>
     

@@ -128,7 +128,7 @@
 <p><code>strlen</code> 函数是计算字符串长度的函数，返回从开始到'\0&rsquo;之间的字符个数。</p>
 <h2 id="c语言参数压栈顺序">C语言参数压栈顺序</h2>
 <p>从右到左。</p>
-<h3 id="c拷贝赋值构造函数的形参是否能进行值传递">C++拷贝赋值构造函数的形参是否能进行值传递</h3>
+<h2 id="c拷贝赋值构造函数的形参是否能进行值传递">C++拷贝赋值构造函数的形参是否能进行值传递</h2>
 <p>不能。如果是这种情况下，调用拷贝构造函数的时候，首先要将实参传递给形参，这个传递的时候又要调用拷贝构造函数。如此循环，无法完成拷贝，栈也会满。</p>
 <h2 id="c如何处理返回值">C++如何处理返回值</h2>
 <p>生成一个临时变量，把它的引用作为函数参数传入函数内。</p>
@@ -321,15 +321,59 @@
 <h2 id="c的四种强制类型转换">C++的四种强制类型转换</h2>
 <p>四种强制类型转换操作符分别为：static_cast、dynamic_cast、const_cast、reinterpret_cast。</p>
 <h3 id="static_cast">static_cast</h3>
-<p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把int换成char，float换成int等。以及派生类的指针转换成基类指针。</p>
+<p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把int换成char，float换成int，比如<strong>非 <code>const</code></strong> 转<code> const</code> ，<code>void *</code> 转指针。</p>
+<p>还可用于多态向上转换，即派生类的指针转换成基类指针；如果是向下转换，能成功，但是不安全，结果未知。</p>
 <h3 id="dynamic_cast">dynamic_cast</h3>
-<p>用于<strong>动态类型转换</strong>。具体的说，就是在基类指针到派生类指针，或者派生类到基类指针的转换。
-dynamic_cast能够提供运行时类型检查，只用于含有虚函数的类。
-dynamic_cast如果不能转换返回NULL。</p>
+<p>用于<strong>动态类型转换</strong>。具体的说，只能用于含有<strong>虚函数</strong>的类，用于类层次间的向上和向下转化，就是在基类指针到派生类指针，或者派生类到基类指针的转换。
+<code>dynamic_cast</code> 能够提供运行时类型检查。
+向下转化时，如果是非法的，对于指针返回 <code>nullptr</code>，对于引用抛异常。</p>
+<p>向上转换：指的是派生类向基类的转换。</p>
+<p>向下转换：指的是基类向派生类的转换。</p>
 <h3 id="const_cast">const_cast</h3>
-<p>用于<strong>去除const常量属性</strong>，使其可以修改 ，也就是说，原本定义为const的变量在定义后就不能进行修改的，但是使用const_cast操作之后，可以通过这个指针或变量进行修改; 另外还有volatile属性的转换。</p>
+<p>用于<strong>去除const常量属性</strong>，使其可以修改，也就是说，原本定义为const的变量在定义后就不能进行修改的，但是使用const_cast操作之后，可以通过这个指针或变量进行修改；另外还有volatile属性的转换。</p>
 <h3 id="reinterpret_cast">reinterpret_cast</h3>
-<p>几乎什么都可以转，用在任意的指针之间的转换，引用之间的转换，指针和足够大的int型之间的转换，整数到指针的转换等。但是<strong>不够安全</strong>。</p>
+<p>几乎什么都可以转，用在任意的指针之间的转换，引用之间的转换，指针和足够大的int型之间的转换，整数到指针的转换等。但是<strong>不够安全</strong>，可能会出问题，尽量少用。</p>
+<h3 id="c的强制转换">C的强制转换</h3>
+<p>C的强制转换表面上看起来功能强大什么都能转，但是转化不够明确，不能进行错误检查，<strong>容易出错</strong>。</p>
+<h2 id="指针和引用的区别">指针和引用的区别</h2>
+<h3 id="内存">内存</h3>
+<ul>
+<li>
+<p>指针有自己的一块空间，而引用只是一个别名；</p>
+</li>
+<li>
+<p>在 32 位机器上，使用 <code>sizeof</code> 计算一个指针的大小，结果是 4 字节，在 64 位机器上结果是 8 字节；而使用 <code>sizeof</code> 计算引用的大小，结果是被引用的对象的大小；</p>
+</li>
+<li>
+<p>如果返回动态内存分配的对象或者内存，必须使用指针，引用可能引起内存泄露。</p>
+</li>
+</ul>
+<h3 id="初始化">初始化</h3>
+<ul>
+<li>
+<p>指针可以被初始化为 <code>nullptr</code>，而引用必须被初始化且必须是一个已有对象的引用；</p>
+</li>
+<li>
+<p>指针在使用中可以指向其它对象，但是引用只能是一个对象的引用，不能改变。</p>
+</li>
+</ul>
+<h3 id="参数传递">参数传递</h3>
+<ul>
+<li>作为参数传递时，指针需要被<strong>解引用</strong>才可以被当作指向的对象使用；引用是变量的另一个<strong>别名</strong>，它没有自己的存储数据的内存位置，它访问的是另一个变量的内存位置。对引用变量作出的任何更改，实际上都是对它所引用的变量内存位置中存储数据的更改。</li>
+</ul>
+<h3 id="修饰符">修饰符</h3>
+<ul>
+<li>指针可以被 <code>const</code> 修饰，但引用不行。</li>
+</ul>
+<h3 id="运算符">运算符</h3>
+<ul>
+<li>
+<p>指针可以有多级指针（**p），而引用至多一级；</p>
+</li>
+<li>
+<p>指针和引用使用自增自减运算符运算符的意义不一样。指针的自增自减是根据指针的类型的大小修改指针中存储的地址。引用的自增自减和变量的自增自减相同。</p>
+</li>
+</ul>
 <h2 id="引用作为函数参数以及返回值的好处">引用作为函数参数以及返回值的好处</h2>
 <p>对比值传递，引用传参的好处：</p>
 <ol>
@@ -337,14 +381,15 @@ dynamic_cast如果不能转换返回NULL。</p>
 <p>在函数内部可以对此参数进行修改；</p>
 </li>
 <li>
-<p>提高函数调用和运行的效率（因为没有了传值和生成副本的时间和空间消耗）。</p>
+<p><strong>提高</strong>函数调用和运行的<strong>效率</strong>（因为没有了传值和生成副本的时间和空间消耗）。</p>
 </li>
 </ol>
-<p>最大的好处就是在内存中不产生返回值的副本。</p>
-<p>但有以下限制：</p>
+<p>函数返回引用的好处：</p>
+<p>​	在内存中<strong>不产生返回值的副本</strong>。</p>
+<p>函数返回引用的限制：</p>
 <ol>
 <li>不能返回局部变量的引用。因为函数返回以后局部变量就会被销毁；</li>
-<li>不能返回函数内部new分配的内存的引用。虽然不存在局部变量的被动销毁问题，可对于这种情况（返回函数内部new分配内存的引用），又面临其它尴尬局面。例如，被函数返回的引用只是作为一个临时变量出现，而没有被赋予一个实际的变量，那么这个引用所指向的空间（由new分配）就无法释放，造成内存泄漏；</li>
+<li>不能返回函数内部 <code>new</code> 分配的内存的引用。虽然不存在局部变量的被动销毁问题，可对于这种情况（返回函数内部new分配内存的引用），又面临其它尴尬局面。例如，被函数返回的引用只是作为一个<strong>临时变量</strong>出现，而没有被赋予一个实际的变量，那么这个引用所指向的空间（由new分配）就无法释放，造成内存泄漏；</li>
 <li>可以返回类成员的引用，但是最好是const。因为如果其他对象可以获得该属性的非常量的引用，那么对该属性的单纯赋值就会破坏业务规则的完整性。</li>
 </ol>
 <h2 id="c对象的生命周期">C++对象的生命周期</h2>
@@ -448,7 +493,7 @@ cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#2c5dcd">*</
 </ul>
 </li>
 </ul>
-<h3 id="array普通数组增强版">array，普通数组增强版</h3>
+<h3 id="stdarray普通数组增强版">std::array，普通数组增强版</h3>
 <p>定于于头文件 <code>array</code>。</p>
 <p><code>std::array</code> 是封装<strong>固定大小</strong>数组的容器，<strong>无法动态的扩展或收缩</strong>，在使用该容器的过程无法借由增加或移除元素而改变其大小，它只允许<strong>访问</strong>或者<strong>替换</strong>存储的元素。在<strong>栈</strong>上分配内存。介于传统数组和 <code>vector</code> 之间，封装了一些函数，比传统数组方便，但又没必要使用 <code>vector</code>。此容器是一个<strong>聚合</strong>类型，其语义等同于保有一个 C 风格数组 <code>T[N]</code> 作为其唯一非静态数据成员的结构体，它不会自动退化成指针（或被隐式的转换成指针），定义时需要指定类型和大小。该结构体结合了 C 风格数组的性能、可访问性与容器的优点，比如可获取大小、支持赋值、<strong>随机访问</strong>迭代器等。</p>
 <p>初始化</p>
@@ -490,7 +535,7 @@ cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#2c5dcd">*</
     <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
-</code></pre></div><h3 id="vector封装的动态数组">vector，封装的动态数组</h3>
+</code></pre></div><h3 id="stdvector封装的动态数组">std::vector，封装的动态数组</h3>
 <p>定义于头文件 <code>&lt;vector&gt;</code>。</p>
 <p><code>std::vector</code> 是封装<strong>动态数组</strong>的<strong>序列</strong>容器。<code>vector</code> 的存储是自动管理的，按需扩张收缩。<code>vector</code> 通常占用多于静态数组的空间，因为要分配更多内存以管理将来的增长，如果没有剩余空间了，则会重新配置原有元素个数的<strong>两倍空间</strong>，然后将原空间元素通过<strong>复制</strong>的方式（内存拷贝）初始化<strong>新空间</strong>，再向新空间增加元素，最后<strong>析构并释放原空间</strong>，<strong>之前的迭代器会失效</strong>。在<strong>堆</strong>上分配内存。</p>
 <p><code>vector</code> 上的常见操作复杂度（效率）如下：</p>
@@ -514,7 +559,7 @@ std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</
 </span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>values1{<span style="color:#5918bb;font-weight:bold">1</span>, <span style="color:#5918bb;font-weight:bold">2</span>, <span style="color:#5918bb;font-weight:bold">3</span>, <span style="color:#5918bb;font-weight:bold">4</span>, <span style="color:#5918bb;font-weight:bold">5</span>};
 std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>values2(std<span style="color:#2c5dcd">::</span>begin(values1), std<span style="color:#2c5dcd">::</span>begin(values1) <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">3</span>); <span style="color:#0080ff;font-style:italic">// values2 保存 {1, 2, 3}
 </span><span style="color:#0080ff;font-style:italic"></span>
-</code></pre></div><h3 id="list双向链表">list，双向链表</h3>
+</code></pre></div><h3 id="stdlist双向链表">std::list，双向链表</h3>
 <p>定义于头文件 <code>&lt;list&gt;</code>。</p>
 <p><code>std::list</code>，又称双向链表容器，环状，是支持<strong>常数时间</strong>从容器<strong>任何位置插入和移除</strong>元素的容器。<strong>不支持快速随机访问</strong>。它通常实现为双向链表。在<strong>堆</strong>上分配内存，每插入一个元数都会分配空间（不是内存拷贝），每删除一个元素都会释放空间。</p>
 <p><code>list</code> 上的常见操作复杂度（效率）如下：</p>
@@ -558,9 +603,9 @@ std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</
     <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
-</code></pre></div><h3 id="forward_list单链表">forward_list，单链表</h3>
+</code></pre></div><h3 id="stdforward_list单链表">std::forward_list，单链表</h3>
 <p><code>std::forward_list</code> 是支持从容器中的任何位置快速插入和移除元素的容器。不支持快速随机访问，也是标准库容器中唯一一个不提供 <code>size()</code> 方法的容器。。它实现为单链表，且实质上与其在 C 中实现相比无任何开销。与 <code>std::list</code> 相比，此容器在不需要双向迭代时提供更有效地利用空间的存储。</p>
-<h3 id="deque两端都可以扩充的双端队列">deque，两端都可以扩充的双端队列</h3>
+<h3 id="stddeque两端都可以扩充的双端队列">std::deque，两端都可以扩充的双端队列</h3>
 <p>定义于头文件 <code>&lt;deque&gt;</code>。</p>
 <p><code>std::deque</code> （double-ended queue）是有下标的<strong>顺序</strong>容器，它允许在其首尾两端快速插入及删除。另外，在 deque 任一端插入或删除不会非法化指向其余元素的指针或引用。</p>
 <p>与 <code>std::vector</code> 相反，<code>deque</code> 的元素<strong>不是相接存储</strong>的：典型实现用单独分配的固定大小数组的序列，外加额外的登记，这表示下标访问必须进行<strong>二次指针解引用</strong>，与之相比 <code>vector</code> 的下标访问只进行一次。</p>
@@ -593,7 +638,7 @@ std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</
     <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
-</code></pre></div><h3 id="set集合">set，集合</h3>
+</code></pre></div><h3 id="stdset集合">std::set，集合</h3>
 <p>包含在头文件 <code>set</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
 	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,                                <span style="color:#0080ff;font-style:italic">// 键 key 和值 value 的类型
@@ -631,7 +676,7 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
     <span style="color:#0c6">&#34;peach&#34;</span>
 };
 
-</code></pre></div><h3 id="multiset">multiset，</h3>
+</code></pre></div><h3 id="stdmultiset">std::multiset，</h3>
 <p>定义头文件 <code>&lt;set&gt;</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
 	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,                                <span style="color:#0080ff;font-style:italic">// 键 key 和值 value 的类型
@@ -640,7 +685,7 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
 </span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">multiset</span>;
 </code></pre></div><p><code>std::multiset</code> 是含有 <code>Key</code> 类型对象<strong>有序</strong>集的容器。不同于 <code>set</code> ，它<strong>允许多个键拥有等价的值</strong>。用键比较函数 <code>Compare</code> 进行排序。搜索、插入和移除操作拥有<strong>对数复杂度</strong>。<strong>红黑树</strong>。</p>
 <p>高级用法http://c.biancheng.net/view/545.html</p>
-<h3 id="unordered_set">unordered_set</h3>
+<h3 id="stdunordered_set">std::unordered_set</h3>
 <p>定义于头文件 <code>&lt;unodered_set&gt;</code>，类模板定义：</p>
 <div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
     <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>, 								   <span style="color:#0080ff;font-style:italic">//容器中存储元素的类型
@@ -652,7 +697,7 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
 <p>在内部，元素并<strong>不以任何特别顺序排序</strong>，而是组织进<strong>桶</strong>（本质就是链表）中。元素被放进哪个桶完全依赖其值的<strong>哈希</strong>。这允许对单独元素的快速访问，因为哈希一旦确定，就准确指代元素被放入的桶。</p>
 <p>不可修改容器元素（即使通过非 <code>const</code> 迭代器），因为修改可能更改元素的哈希，并破坏容器。</p>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P91Q02449C2.jpg" alt="unordered_set 容器组织数据的方式"></p>
-<h3 id="unordered_multiset">unordered_multiset</h3>
+<h3 id="stdunordered_multiset">std::unordered_multiset</h3>
 <p>定义于头文件 <code>&lt;unordered_set&gt;</code>，类模板定义：</p>
 <div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
     <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>, 								   <span style="color:#0080ff;font-style:italic">//容器中存储元素的类型
@@ -720,7 +765,7 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
     <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
-</code></pre></div><h3 id="unordered_map">unordered_map</h3>
+</code></pre></div><h3 id="stdunordered_map">std::unordered_map</h3>
 <p>定于于头文件 <code>&lt;unordered_map&gt;</code>，声明为：</p>
 <div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
     <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,
@@ -802,11 +847,8 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
         <li><a href="#strlen">strlen</a></li>
       </ol>
     </li>
-    <li><a href="#c语言参数压栈顺序">C语言参数压栈顺序</a>
-      <ol>
-        <li><a href="#c拷贝赋值构造函数的形参是否能进行值传递">C++拷贝赋值构造函数的形参是否能进行值传递</a></li>
-      </ol>
-    </li>
+    <li><a href="#c语言参数压栈顺序">C语言参数压栈顺序</a></li>
+    <li><a href="#c拷贝赋值构造函数的形参是否能进行值传递">C++拷贝赋值构造函数的形参是否能进行值传递</a></li>
     <li><a href="#c如何处理返回值">C++如何处理返回值</a></li>
     <li><a href="#隐式类型转换">隐式类型转换</a></li>
     <li><a href="#自增自减">自增、自减</a>
@@ -857,6 +899,16 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
         <li><a href="#dynamic_cast">dynamic_cast</a></li>
         <li><a href="#const_cast">const_cast</a></li>
         <li><a href="#reinterpret_cast">reinterpret_cast</a></li>
+        <li><a href="#c的强制转换">C的强制转换</a></li>
+      </ol>
+    </li>
+    <li><a href="#指针和引用的区别">指针和引用的区别</a>
+      <ol>
+        <li><a href="#内存">内存</a></li>
+        <li><a href="#初始化">初始化</a></li>
+        <li><a href="#参数传递">参数传递</a></li>
+        <li><a href="#修饰符">修饰符</a></li>
+        <li><a href="#运算符">运算符</a></li>
       </ol>
     </li>
     <li><a href="#引用作为函数参数以及返回值的好处">引用作为函数参数以及返回值的好处</a></li>
@@ -879,18 +931,18 @@ std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</spa
     <li><a href="#stl">STL</a>
       <ol>
         <li><a href="#容器">容器</a></li>
-        <li><a href="#array普通数组增强版">array，普通数组增强版</a></li>
-        <li><a href="#vector封装的动态数组">vector，封装的动态数组</a></li>
-        <li><a href="#list双向链表">list，双向链表</a></li>
-        <li><a href="#forward_list单链表">forward_list，单链表</a></li>
-        <li><a href="#deque两端都可以扩充的双端队列">deque，两端都可以扩充的双端队列</a></li>
-        <li><a href="#set集合">set，集合</a></li>
-        <li><a href="#multiset">multiset，</a></li>
-        <li><a href="#unordered_set">unordered_set</a></li>
-        <li><a href="#unordered_multiset">unordered_multiset</a></li>
+        <li><a href="#stdarray普通数组增强版">std::array，普通数组增强版</a></li>
+        <li><a href="#stdvector封装的动态数组">std::vector，封装的动态数组</a></li>
+        <li><a href="#stdlist双向链表">std::list，双向链表</a></li>
+        <li><a href="#stdforward_list单链表">std::forward_list，单链表</a></li>
+        <li><a href="#stddeque两端都可以扩充的双端队列">std::deque，两端都可以扩充的双端队列</a></li>
+        <li><a href="#stdset集合">std::set，集合</a></li>
+        <li><a href="#stdmultiset">std::multiset，</a></li>
+        <li><a href="#stdunordered_set">std::unordered_set</a></li>
+        <li><a href="#stdunordered_multiset">std::unordered_multiset</a></li>
         <li><a href="#stdmap">std::map</a></li>
         <li><a href="#stdmultimap">std::multimap</a></li>
-        <li><a href="#unordered_map">unordered_map</a></li>
+        <li><a href="#stdunordered_map">std::unordered_map</a></li>
         <li><a href="#stdunordered_multimap">std::unordered_multimap</a></li>
         <li><a href="#__gnu_cxxhash_map">__gnu_cxx::hash_map</a></li>
         <li><a href="#__gnu_cxxslist">__gnu_cxx::slist</a></li>

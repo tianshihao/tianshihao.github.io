@@ -821,7 +821,7 @@ a.article-title:hover,
 .article-entry pre,
 .article-entry .highlight {
   font-size: 14px;
-  background: #ffffff;
+  background: white;
   line-height: 18px;
 }
 

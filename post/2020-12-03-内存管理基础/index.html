@@ -146,18 +146,18 @@
 </tbody>
 </table>
 <h3 id="示例">示例</h3>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff;font-style:italic">/* c 风格, 分配方式 1. */</span>
-<span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#2c5dcd">*</span> mem <span style="color:#2c5dcd">=</span> malloc(<span style="color:#5918bb;font-weight:bold">1024</span>);
-<span style="color:#0080ff;font-style:italic">/* c 风格, 分配方式 2.*/</span>
-<span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#2c5dcd">*</span> mem <span style="color:#2c5dcd">=</span> calloc(<span style="color:#5918bb;font-weight:bold">1024</span>);
-<span style="color:#0080ff;font-style:italic">/* C 风格, 回收内存. */</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">/* c 风格, 分配方式 1. */</span>
+<span style="font-weight:bold;text-decoration:underline">void</span> * mem = malloc(1024);
+<span style="color:#888;font-style:italic">/* c 风格, 分配方式 2.*/</span>
+<span style="font-weight:bold;text-decoration:underline">void</span> * mem = calloc(1024);
+<span style="color:#888;font-style:italic">/* C 风格, 回收内存. */</span>
 free(mem);
 
-<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>; <span style="color:#0080ff;font-style:italic">// cpp new
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">delete</span> iptr;          <span style="color:#0080ff;font-style:italic">// cpp delete
-</span><span style="color:#0080ff;font-style:italic"></span>
-<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iarrptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>[<span style="color:#5918bb;font-weight:bold">1024</span>]; <span style="color:#0080ff;font-style:italic">// cpp new T[]
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">delete</span>[] iarrptr;              <span style="color:#0080ff;font-style:italic">// cpp delete[] T
+<span style="font-weight:bold;text-decoration:underline">int</span> * iptr = <span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>; <span style="color:#888;font-style:italic">// cpp new
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">delete</span> iptr;          <span style="color:#888;font-style:italic">// cpp delete
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">int</span> * iarrptr = <span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>[1024]; <span style="color:#888;font-style:italic">// cpp new T[]
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">delete</span>[] iarrptr;              <span style="color:#888;font-style:italic">// cpp delete[] T
 </span></code></pre></div><h3 id="注意-1">注意</h3>
 <ol>
 <li>不用堆内存时，一定要及时调用回收API回收内存。</li>
@@ -194,21 +194,21 @@ free(mem);
 <li>解引用</li>
 <li>加减</li>
 </ol>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> ptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>;
-<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iptr <span style="color:#2c5dcd">=</span> ptr;       <span style="color:#0080ff;font-style:italic">// 1. 相同类型的指针直接赋值.
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span> c <span style="color:#2c5dcd">=</span> (<span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span>)ptr; <span style="color:#0080ff;font-style:italic">// 2. 不同类型的指针需要强制转换.
-</span><span style="color:#0080ff;font-style:italic"></span>
-<span style="color:#5918bb;font-weight:bold">int</span> i <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd">*</span>ptr; <span style="color:#0080ff;font-style:italic">// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
-</span><span style="color:#0080ff;font-style:italic"></span>
-<span style="color:#0080ff;font-style:italic">// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
-</span><span style="color:#0080ff;font-style:italic">// sizeof(int) == 4;
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> arrPtr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>[<span style="color:#5918bb;font-weight:bold">4</span>];
-<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> testPtr <span style="color:#2c5dcd">=</span> arrPtr;
-printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr); <span style="color:#0080ff;font-style:italic">// 可将指针作为无符号整型输出.
-</span><span style="color:#0080ff;font-style:italic"></span>testPtr <span style="color:#2c5dcd">=</span> testPtr <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">1</span>;
-printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr);
-testPtr <span style="color:#2c5dcd">=</span> testPtr <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">1</span>;
-printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr);
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> * ptr = <span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>;
+<span style="font-weight:bold;text-decoration:underline">int</span> * iptr = ptr;       <span style="color:#888;font-style:italic">// 1. 相同类型的指针直接赋值.
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">char</span> * c = (<span style="font-weight:bold;text-decoration:underline">char</span> *)ptr; <span style="color:#888;font-style:italic">// 2. 不同类型的指针需要强制转换.
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">int</span> i = *ptr; <span style="color:#888;font-style:italic">// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
+</span><span style="color:#888;font-style:italic"></span>
+<span style="color:#888;font-style:italic">// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
+</span><span style="color:#888;font-style:italic">// sizeof(int) == 4;
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span> * arrPtr = <span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>[4];
+<span style="font-weight:bold;text-decoration:underline">int</span> * testPtr = arrPtr;
+printf(<span style="color:#666;font-style:italic">&#34;%u</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>, testPtr); <span style="color:#888;font-style:italic">// 可将指针作为无符号整型输出.
+</span><span style="color:#888;font-style:italic"></span>testPtr = testPtr + 1;
+printf(<span style="color:#666;font-style:italic">&#34;%u</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>, testPtr);
+testPtr = testPtr + 1;
+printf(<span style="color:#666;font-style:italic">&#34;%u</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>, testPtr);
 </code></pre></div><h3 id="指针指向指针的指针指向指针的指针的指针">指针，指向指针的指针，指向指针的指针的指针</h3>
 <h2 id="视频链接">视频链接</h2>
 <ol>

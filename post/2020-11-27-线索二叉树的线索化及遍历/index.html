@@ -90,14 +90,14 @@
   若结点有左子树，则其lchild域指示其左子，否则令lchild域指示其前驱；若结点有右子树，则其rchild域指示其右子，否则令rchild域指示其后继。<br>
   为了避免混淆，需要增加两个标志域LTag和RTag，标志域为0表示结点后接指针，标志位为1表示结点后接线索。</p>
 <h2 id="2-数据结构">2. 数据结构</h2>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#2c5dcd;font-weight:bold">typedef</span> <span style="color:#2c5dcd;font-weight:bold">struct</span> BiThrNode
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="font-weight:bold;text-decoration:underline">typedef</span> <span style="font-weight:bold;text-decoration:underline">struct</span> BiThrNode
 {
     ElemType data;
-    <span style="color:#2c5dcd;font-weight:bold">struct</span> BiThrNode <span style="color:#2c5dcd">*</span>lchild, <span style="color:#2c5dcd">*</span>rchild;
+    <span style="font-weight:bold;text-decoration:underline">struct</span> BiThrNode *lchild, *rchild;
     PointerTag LTag, RTag;
-} BiThrNode, <span style="color:#2c5dcd">*</span>BiThrTree;
+} BiThrNode, *BiThrTree;
 </code></pre></div><p>  其中，PointerTag的定义为</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#2c5dcd;font-weight:bold">typedef</span> <span style="color:#2c5dcd;font-weight:bold">enum</span> PointerTag
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="font-weight:bold;text-decoration:underline">typedef</span> <span style="font-weight:bold;text-decoration:underline">enum</span> PointerTag
 {
     Link,
     Thread
@@ -105,39 +105,39 @@
 </code></pre></div><p>  Link == 0 表示指针，Thread == 1表示线索。</p>
 <h1 id="二线索化">二、线索化</h1>
 <p>线索化的实质是将二叉链表中的空指针改为指向前驱或后继的线索，而前驱或后继的信息只能在遍历时得到，所以线索化的过程即为在遍历过程中修改空指针的过程。所以为了记录遍历过程中访问结点的先后关系，附设一个指针pre始终指向刚刚访问过的结点，即若指针p指向当前访问的结点，则pre指向它的刚访问过的结点。</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#ff8000;font-weight:bold">InThreading</span>(BiThrTree p, BiThrTree <span style="color:#2c5dcd">*</span>pre)
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">InThreading</span>(BiThrTree p, BiThrTree *pre)
 {
-    <span style="color:#2c5dcd;font-weight:bold">if</span> (p)
+    <span style="font-weight:bold;text-decoration:underline">if</span> (p)
     {
-        <span style="color:#0080ff;font-style:italic">// 左子树线索化.
-</span><span style="color:#0080ff;font-style:italic"></span>        InThreading(p<span style="color:#2c5dcd">-&gt;</span>lchild, pre);
+        <span style="color:#888;font-style:italic">// 左子树线索化.
+</span><span style="color:#888;font-style:italic"></span>        InThreading(p-&gt;lchild, pre);
 
-        <span style="color:#0080ff;font-style:italic">// 前驱线索.
-</span><span style="color:#0080ff;font-style:italic"></span>        <span style="color:#0080ff;font-style:italic">// 若当前结点无左子，则修改标志域并使得 lchild 指向 p 的前驱.
-</span><span style="color:#0080ff;font-style:italic"></span>        <span style="color:#2c5dcd;font-weight:bold">if</span> (<span style="color:#2c5dcd">!</span>(p<span style="color:#2c5dcd">-&gt;</span>lchild))
+        <span style="color:#888;font-style:italic">// 前驱线索.
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// 若当前结点无左子，则修改标志域并使得 lchild 指向 p 的前驱.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (!(p-&gt;lchild))
         {
-            p<span style="color:#2c5dcd">-&gt;</span>LTag <span style="color:#2c5dcd">=</span> Thread;
-            p<span style="color:#2c5dcd">-&gt;</span>lchild <span style="color:#2c5dcd">=</span> (<span style="color:#2c5dcd">*</span>pre);
+            p-&gt;LTag = Thread;
+            p-&gt;lchild = (*pre);
         }
 
-        <span style="color:#0080ff;font-style:italic">// 后继线索.
-</span><span style="color:#0080ff;font-style:italic"></span>        <span style="color:#2c5dcd;font-weight:bold">if</span> (<span style="color:#2c5dcd">!</span>((<span style="color:#2c5dcd">*</span>pre)<span style="color:#2c5dcd">-&gt;</span>rchild))
+        <span style="color:#888;font-style:italic">// 后继线索.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (!((*pre)-&gt;rchild))
         {
-            (<span style="color:#2c5dcd">*</span>pre)<span style="color:#2c5dcd">-&gt;</span>RTag <span style="color:#2c5dcd">=</span> Thread;
+            (*pre)-&gt;RTag = Thread;
 
-            <span style="color:#0080ff;font-style:italic">// 将前驱结点的后继结点设置为当前结点.
-</span><span style="color:#0080ff;font-style:italic"></span>            (<span style="color:#2c5dcd">*</span>pre)<span style="color:#2c5dcd">-&gt;</span>rchild <span style="color:#2c5dcd">=</span> p;
+            <span style="color:#888;font-style:italic">// 将前驱结点的后继结点设置为当前结点.
+</span><span style="color:#888;font-style:italic"></span>            (*pre)-&gt;rchild = p;
         }
 
-        <span style="color:#0080ff;font-style:italic">// 更新 pre, 使其始终指向刚访问过的结点.
-</span><span style="color:#0080ff;font-style:italic"></span>        (<span style="color:#2c5dcd">*</span>pre) <span style="color:#2c5dcd">=</span> p;
+        <span style="color:#888;font-style:italic">// 更新 pre, 使其始终指向刚访问过的结点.
+</span><span style="color:#888;font-style:italic"></span>        (*pre) = p;
 
-        <span style="color:#0080ff;font-style:italic">// 右子树线索化.
-</span><span style="color:#0080ff;font-style:italic"></span>        InThreading(p<span style="color:#2c5dcd">-&gt;</span>rchild ,pre);
+        <span style="color:#888;font-style:italic">// 右子树线索化.
+</span><span style="color:#888;font-style:italic"></span>        InThreading(p-&gt;rchild ,pre);
     }
 
-    <span style="color:#2c5dcd;font-weight:bold">return</span>;
-} <span style="color:#0080ff;font-style:italic">// InThreading
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+} <span style="color:#888;font-style:italic">// InThreading
 </span></code></pre></div><p>  我这里在学习的时候遇到一个问题：刚访问过的结点pre的后继线索设置失败。书中的伪代码未说明pre是否为全局变量，而数据结构中也没有存储pre，所以我先将pre作为一个局部变量定义并值传递给了InThreading，乍一看没什么问题，但是仔细debug之后发现，在调用这个递归形式的算法时，系统会维护一个函数调用栈，每进入一层新的递归，系统就会保存当前调用的返回地址，并压入新的调用的返回地址。在执行完子函数后，子函数的返回地址会被弹出栈，此时，之前做的一切修改就都不见了，pre也不会得到更新。</p>
 <p>  改进方法有两个：
     1. 将pre设置为全局变量；
@@ -145,37 +145,37 @@
 <p>  本文采用了第二种方法。</p>
 <h1 id="三遍历">三、遍历</h1>
 <p>  线索化之后，可以很方便地得到结点在遍历所得线性序列中的前驱和后继，也可以很方便地得到线性序列。</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">Status <span style="color:#ff8000;font-weight:bold">InOrderTraverse_Thr</span>(BiThrTree T, Status (<span style="color:#2c5dcd">*</span>Visit)(ElemType e))
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">Status <span style="color:#666;font-weight:bold;font-style:italic">InOrderTraverse_Thr</span>(BiThrTree T, Status (*Visit)(ElemType e))
 {
-    <span style="color:#0080ff;font-style:italic">// p 指向根结点.
-</span><span style="color:#0080ff;font-style:italic"></span>    BiThrNode <span style="color:#2c5dcd">*</span>p <span style="color:#2c5dcd">=</span> T<span style="color:#2c5dcd">-&gt;</span>lchild;
+    <span style="color:#888;font-style:italic">// p 指向根结点.
+</span><span style="color:#888;font-style:italic"></span>    BiThrNode *p = T-&gt;lchild;
 
-    <span style="color:#0080ff;font-style:italic">// 空树或遍历结束时.
-</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">while</span> (p <span style="color:#2c5dcd">!=</span> T)
+    <span style="color:#888;font-style:italic">// 空树或遍历结束时.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">while</span> (p != T)
     {
-        <span style="color:#2c5dcd;font-weight:bold">while</span> (p<span style="color:#2c5dcd">-&gt;</span>LTag <span style="color:#2c5dcd">!=</span> Thread)
+        <span style="font-weight:bold;text-decoration:underline">while</span> (p-&gt;LTag != Thread)
         {
-            p <span style="color:#2c5dcd">=</span> p<span style="color:#2c5dcd">-&gt;</span>lchild;
+            p = p-&gt;lchild;
         }
 
-        <span style="color:#2c5dcd;font-weight:bold">if</span> (<span style="color:#2c5dcd">!</span>Visit(p<span style="color:#2c5dcd">-&gt;</span>data))
+        <span style="font-weight:bold;text-decoration:underline">if</span> (!Visit(p-&gt;data))
         {
-            <span style="color:#2c5dcd;font-weight:bold">return</span> ERROR;
+            <span style="font-weight:bold;text-decoration:underline">return</span> ERROR;
         }
 
-        <span style="color:#0080ff;font-style:italic">// 访问后继结点.
-</span><span style="color:#0080ff;font-style:italic"></span>        <span style="color:#0080ff;font-style:italic">// 找到最左叶结点, 就可以轻松地访问其后继结点.
-</span><span style="color:#0080ff;font-style:italic"></span>        <span style="color:#2c5dcd;font-weight:bold">while</span> ((p<span style="color:#2c5dcd">-&gt;</span>RTag <span style="color:#2c5dcd">==</span> Thread) <span style="color:#2c5dcd">&amp;&amp;</span> (p<span style="color:#2c5dcd">-&gt;</span>rchild <span style="color:#2c5dcd">!=</span> T))
+        <span style="color:#888;font-style:italic">// 访问后继结点.
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// 找到最左叶结点, 就可以轻松地访问其后继结点.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">while</span> ((p-&gt;RTag == Thread) &amp;&amp; (p-&gt;rchild != T))
         {
-            p <span style="color:#2c5dcd">=</span> p<span style="color:#2c5dcd">-&gt;</span>rchild;
-            Visit(p<span style="color:#2c5dcd">-&gt;</span>data);
+            p = p-&gt;rchild;
+            Visit(p-&gt;data);
         }
 
-        p <span style="color:#2c5dcd">=</span> p<span style="color:#2c5dcd">-&gt;</span>rchild;
+        p = p-&gt;rchild;
     }
 
-    <span style="color:#2c5dcd;font-weight:bold">return</span> OK;
-} <span style="color:#0080ff;font-style:italic">// InOrderTraverse_Thr
+    <span style="font-weight:bold;text-decoration:underline">return</span> OK;
+} <span style="color:#888;font-style:italic">// InOrderTraverse_Thr
 </span></code></pre></div><p>参考文献</p>
 <ol>
 <li>数据结构:C语言版/严蔚敏,吴伟民编著. ——北京：清华大学出版社，2007</li>

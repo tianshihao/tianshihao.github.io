@@ -144,9 +144,9 @@
 <h3 id="静态存储持续性外部链接性">静态存储持续性、外部链接性</h3>
 <p>链接性为外部的变量称为<strong>外部变量</strong>，或<strong>常规外部变量</strong>，它们的存储持续性为静态，作用域为整个文件。</p>
 <p>单定义规则（One Definition Rule, ODR）：变量只能有一次定义。为了满足这种需求，C++提供了两种变量声明。一种是定义声明（defining declaration）或简称为定义（definition），它给变量分配内存空间；另一种是引用声明（referencing declaration）或简称为声明（declaration），它不给变量分配内存空间，因为它引用已有的变量。引用声明使用关键字<code>extern</code>，且不进行初始化；否则，声明变为定义，导致分配内存空间。</p>
-<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">double</span> up; <span style="color:#0080ff;font-style:italic">// 定义，up是0
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">extern</span> <span style="color:#5918bb;font-weight:bold">int</span> blem; <span style="color:#0080ff;font-style:italic">// blem在其它地方定义
-</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">extern</span> <span style="color:#5918bb;font-weight:bold">char</span> gr <span style="color:#2c5dcd">=</span> <span style="color:#0c6">&#39;z&#39;</span>; <span style="color:#0080ff;font-style:italic">// 因为是初始化了所以是定义
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">double</span> up; <span style="color:#888;font-style:italic">// 定义，up是0
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">extern</span> <span style="font-weight:bold;text-decoration:underline">int</span> blem; <span style="color:#888;font-style:italic">// blem在其它地方定义
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">extern</span> <span style="font-weight:bold;text-decoration:underline">char</span> gr = <span style="color:#666;font-style:italic">&#39;z&#39;</span>; <span style="color:#888;font-style:italic">// 因为是初始化了所以是定义
 </span></code></pre></div><p>在多个文件中使用外部变量，只需要在一个文件中包含该外部变量的定义（单定义规则），但在使用该变量的其他所有文件中，都必须使用extern声明它。</p>
 <p>如果在函数中声明了一个与外部变量同名的变量，这种声明将被视为一个自动变量的定义，当程序执行自动变量所属的函数时，该变量将位于作用域内，还将隐藏同名的全局变量。当然可以使用C++的作用域解析符（::）来访问被隐藏的外部变量，放在变量名前时，该运算符表示使用变量的全局版本。</p>
 <p>另外可以使用<code>extern</code>在函数中重新声明外部变量，该声明是可选的。它指出该函数被设计成使用外部变量。</p>

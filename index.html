@@ -59,12 +59,12 @@
                 
                 
                 <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/">C&#43;&#43;面经</a></h1>
+                    <h1 itemprop="name"><a class="article-title" href="/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/">数据结构和算法面经📚</a></h1>
                 </header>
                 
                 <div class="article-meta">
-                    <a href="/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" class="article-date">
-                        <time datetime='2021-01-15T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-15</time>
+                    <a href="/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/" class="article-date">
+                        <time datetime='2021-01-14T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-14</time>
                     </a>
                     
                     
@@ -72,12 +72,17 @@
                         <div class="article-category">
                             
                             
-                            <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
                             
                             
                             <span>&gt;</span>
                             
-                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E8%AF%95">面试</a>
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>
+                            
+                            
+                            <span>&gt;</span>
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E7%AE%97%E6%B3%95">算法</a>
                             
                         </div>
                     </div>
@@ -87,10 +92,75 @@
                 <div class="article-entry" itemprop="articleBody">
                     <p>
                         
-                    malloc原理 malloc函数用于动态分配内存。为了减少内存碎片和系统调用的开销，malloc其采用内存池的方式，先申请大块内存作为堆区，
+                    中序遍历的非递归写法 伪代码 初始化栈，工作指针指向根。 当指针不空或栈非空时， 当指针不空时， 沿着左子一路向左，先入栈，后向左。 否则， 栈顶元素出栈
                     </p>
                     <p class="article-more-link">
-                        <a href="/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/"></a>
+                        <a href="/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E7%AE%97%E6%B3%95">算法
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/">STL面经📚</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/" class="article-date">
+                        <time datetime='2021-01-09T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-09</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                            
+                            
+                            <span>&gt;</span>
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                            
+                            
+                            <span>&gt;</span>
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/stl">STL</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    1. 概述 STL六大部件：容器、算法、迭代器、函数对象（仿函数）、适配器和分配器。 1.1 容器，Container 一些封装数据结构的模板类，例如 vector 向量
+                    </p>
+                    <p class="article-more-link">
+                        <a href="/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/"></a>
                     </p>
                 </div>
 
@@ -104,12 +174,92 @@
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E9%9D%A2%E8%AF%95">面试
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E8%BF%AD%E4%BB%A3%E5%99%A8">迭代器
                             </a>
                         </li>
                         
                         <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E9%9D%A2%E7%BB%8F">面经
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/stl">STL
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/">C&#43;&#43;面经📚</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" class="article-date">
+                        <time datetime='2021-01-07T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-07</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                            
+                            
+                            <span>&gt;</span>
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>收集常见C++面试问题，包括内存管理、常用库函数、面向对象、STL、编译过程和小的语法知识。</p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/c&#43;&#43;">C&#43;&#43;
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%8C%87%E9%92%88">指针
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">内存管理
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E8%99%9A%E5%87%BD%E6%95%B0">虚函数
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%A4%9A%E6%80%81">多态
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/stl">STL
                             </a>
                         </li>
                         
@@ -502,40 +652,25 @@
             </div>
         </article>
         
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="/about/">About</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="/about/" class="article-date">
-                        <time datetime='2019-02-28T00:00:00.000&#43;00:00' itemprop="datePublished">2019-02-28</time>
-                    </a>
-                    
-                    
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    Written in Go, Hugo is an open source static site generator available under the Apache Licence 2.0. Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.
-Hugo makes use of a variety of open source projects including:
- https://github.
-                    </p>
-                    <p class="article-more-link">
-                        <a href="/about/"></a>
-                    </p>
-                </div>
-
-                
-            </div>
-        </article>
-        
 
         
+
+<nav id="page-nav">
+    
+    
+    
+    <span class="page-number current">1</span>
+    
+    
+    
+    <a href="/page/2/">2</a>
+    
+    
+
+    
+    <a href="/page/2/" rel="next" class="extend next"> &raquo;</a>
+    
+</nav>
 
     </section>
     <footer id="footer">

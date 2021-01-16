@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C&#43;&#43;面经📚 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="C&#43;&#43;常见面试问题总结">
+
+    <meta property="og:title" content="C&#43;&#43;面经📚" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">C&#43;&#43;面经📚</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" class="article-date">
+                <time datetime='2021-01-07T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-07</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>收集常见C++面试问题，包括内存管理、常用库函数、面向对象、STL、编译过程和小的语法知识。</p>
+<h2 id="1-malloc-原理">1. malloc() 原理</h2>
+<p><code>malloc()</code> 函数用于动态分配内存。为了减少内存碎片和系统调用的开销，<code>malloc()</code> 其采用<strong>内存池</strong>的方式，先申请大块内存作为堆区，然后将堆区分为多个内存块，以<strong>块</strong>作为内存管理的基本单位。当用户申请内存时，直接从堆区分配一块合适的空闲块。<code>malloc()</code> 采用<strong>隐式链表结构</strong>将堆区分成连续的、大小不一的块，包含已分配块和未分配块；同时 <code>malloc()</code> 采用<strong>显式链表结构</strong>来管理所有的<strong>空闲块</strong>，即使用一个<strong>双向链表</strong>将<strong>空闲块</strong>连接起来，每一个空闲块记录了一个连续的、未分配的地址。</p>
+<p>当进行内存分配时，malloc会通过隐式链表遍历所有的空闲块，选择满足要求的块进行分配；当进行内存合并时，<code>malloc()</code> 采用边界标记法，根据每个块的前后块是否已经分配来决定是否进行块合并。</p>
+<p><code>malloc()</code> 在申请内存时，一般会通过 <code>brk()</code> 或者 <code>mmap()</code> 系统调用进行申请。其中当申请内存<strong>小于128K</strong>时，会使用系统函数 <code>brk()</code> 在<strong>堆</strong>区中分配；而当申请内存大于128K时，会使用系统函数 <code>mmap()</code> 在<strong>映射区</strong>分配。</p>
+<h2 id="2-malloccallocrealloc-和-alloca">2. malloc()、calloc()、realloc() 和 alloca()</h2>
+<h3 id="21-mallocmemory-allocation">2.1 malloc()，<strong>m</strong>emory <strong>alloc</strong>ation</h3>
+<p>函数原型是 <code>void* malloc(size_t size);</code></p>
+<p>分配 <code>size</code> 字节的未初始化内存。</p>
+<p>若分配成功，则返回任何拥有基础对齐的对象类型对齐的指针。</p>
+<p>若 <code>size</code> 为零，则 <code>malloc()</code> 的行为是<strong>实现定义</strong>的。例如可返回空指针。亦可返回非空指针；但不应当解引用这种指针，而且应将它传递给 <code>free()</code> 以避免内存泄漏。</p>
+<h3 id="22-callocclear-allocation">2.2 calloc()，<strong>c</strong>lear <strong>alloc</strong>ation</h3>
+<p>函数原型是 <code>void* calloc(size_t num, size_t size);</code></p>
+<p>为 <code>num</code> 个对象的数组分配内存，并初始化所有分配存储中的字节为零。</p>
+<p>若分配成功，会返回指向分配内存块最低为（首位）字节的指针，它为任何类型适当地对齐。</p>
+<p>若 <code>size</code> 为零，则行为是<strong>实现定义</strong>的（可返回空指针，或返回不可用于访问存储的非空指针）。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> *p1 = calloc(4, <span style="font-weight:bold;text-decoration:underline">sizeof</span>(<span style="font-weight:bold;text-decoration:underline">int</span>)); <span style="color:#888;font-style:italic">// 分配并清零 4 个 int 的数组
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span> *p2 = calloc(1, <span style="font-weight:bold;text-decoration:underline">sizeof</span>(<span style="font-weight:bold;text-decoration:underline">int</span>[4])); <span style="color:#888;font-style:italic">// 等价， 直接命名数组类型
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span> *p3 = calloc(4, <span style="font-weight:bold;text-decoration:underline">sizeof</span> *p3); <span style="color:#888;font-style:italic">// 等价，免去重复类型名
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><h3 id="23-reallocreset-allocation">2.3 realloc()，<strong>re</strong>set <strong>alloc</strong>ation</h3>
+<p>函数原型是 <code>void* realloc(void *ptr, size_t new_size);</code></p>
+<p>重新分配给定的内存区域。它必须是之前为 <code>malloc()</code>、 <code>calloc()</code>或 <code>realloc()</code> 所分配，并且仍未被 <code>free()</code> 或 <code>realloc()</code> 的调用所释放。否则，结果<strong>未定义</strong>。</p>
+<p>重新分配按以下二者之一执行：</p>
+<ol>
+<li>可能的话，扩张或收缩 <code>ptr</code> 所指向的已存在内存。内容在新旧大小中的较小范围内保持不变。若扩张范围，则数组新增部分的内容是未定义的。</li>
+<li>分配一个大小 <code>new_size</code> 字节的新内存块，并复制大小等于新旧大小中较小者的内存区域，然后释放旧内存块。</li>
+</ol>
+<p>若无足够内存，则不释放旧内存块，并返回空指针。</p>
+<p>若 <code>ptr</code> 是 <code>NULL</code>，则行为与调用 <code>malloc(new_size)</code> 相同。</p>
+<p>若 <code>new_size</code> 为零，则行为是<strong>实现定义</strong>的（可返回空指针，此情况下可能释放或可能不释放旧内存，或返回不会用于访问存储的非空指针）。</p>
+<h3 id="24-alloca不常用">2.4 alloca()，不常用</h3>
+<p>在栈上申请内存。程序在出栈的时候，会自动释放内存。但是需要注意的是，<code>alloca()</code> 不具可移植性, 而且在没有传统堆栈的机器上很难实现。<code>alloca()</code> 不宜使用在必须广泛移植的程序中。C99 中支持变长数组 (VLA)，可以用来替代 <code>alloca()</code>。</p>
+<h2 id="3-c内存管理">3. C++内存管理</h2>
+<p>32bit CPU 可寻址 4G 线性空间，每个进程都有独立的 4G 逻辑地址，其中 0-3G 是<strong>用户态</strong>空间，3-4G 是<strong>内核</strong>空间。</p>
+<p>C++ 中的<strong>虚拟内存</strong>分为堆、栈、映射区、数据段、BSS 段和代码段，共 6 个部分。</p>
+<h3 id="31-动态区域">3.1 动态区域</h3>
+<ol>
+<li>堆（Heap）：使用 <code>new</code> 或 <code>malloc()</code> 在堆区动态分配内存，这些内存不用时，需要使用 <code>delete</code> 或 <code>free()</code> 手动释放内存空间。堆区地址<strong>由小到大</strong>增长。</li>
+<li>映射区（Memory Mapping Segment）：存储<strong>动态链接库</strong>以及调用 <strong><code>mmap()</code></strong> 函数进行<strong>文件映射</strong>。映射区地址<strong>由大到小</strong>增长。</li>
+<li>栈（Stack）：由程序自动向操作系统申请以及回收的内存，速度快，方便，但程序员无法控制。如果分配失败，则会提示<strong>栈溢出</strong>错误。<code>const</code> 局部变量也存储在栈区。栈区的地址<strong>由大到小</strong>增长。栈区中存储函数的返回地址、参数、局部变量、返回值、自动变量。</li>
+</ol>
+<h3 id="32静态区域">3.2静态区域</h3>
+<ol>
+<li>数据段（Data Segment）：存储程序中<strong>已初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>。</li>
+<li>BSS 段（BSS Segment）：存储<strong>未初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>，以及所有被<strong>初始化为 0</strong> 的<strong>全部变量</strong>和<strong>静态变量</strong>。</li>
+<li>代码段（Text Segment）：分为只读存储区和文本区。<strong>只读存储区存储字符串常量</strong>，<strong>文本区存储程序的机器代码</strong>。</li>
+</ol>
+<h2 id="4-野指针">4. 野指针</h2>
+<p>或称悬空指针、悬挂指针、迷途指针，指的是<strong>不指向任何合法的对象</strong>的指针。可以使用智能指针来避免出现野指针。</p>
+<h3 id="41-可能出现野指针的原因">4.1 可能出现野指针的原因</h3>
+<ol>
+<li>指针定义的时候未初始化，严格地说，编程语言中每个指针在初始化前都是野指针；</li>
+<li>指针指向动态分配的内存空间，在内存空间被释放后，没有将指针置为空指针；</li>
+<li>指针操作超过了变量的作用范围。不要返回指向栈内存的指针或引用，因为栈内存在函数结束时会被释放，也就是说指针指向的对象的生命周期已经结束，却仍通过旧指针访问该对象。</li>
+</ol>
+<h2 id="5-内存泄漏memory-leak的情形">5. 内存泄漏（Memory Leak）的情形</h2>
+<ol>
+<li>堆内存泄漏（Heap Leak）。使用了 <code>new</code> 或 <code>malloc()</code> 申请内存，在内存使用结束后却没有使用 <code>delete</code> 或 <code>free()</code> 释放内存，将导致申请的内存不会再次被使用，就会产生<strong>堆内存泄漏</strong>；</li>
+<li>系统资源泄漏（Resource Leak），主要指程序使用<strong>系统分配</strong>的资源，例如 <strong>Bitmap</strong>、handle、<strong>SOCKET</strong> 等，没有使用相应的函数释放，导致系统<strong>资源浪费</strong>，严重可导致系统<strong>效能降低</strong>，系统<strong>运行不稳定</strong>；</li>
+<li>没有将基类的析构函数定义为虚函数。当基类指针指向派生类对象时，如果基类析构函数不是虚的，将只会调用基类的析构函数，从而导致派生类的资源没有正确的释放，因此造成内存泄漏；</li>
+</ol>
+<h2 id="6-new-和-delete-是如何实现的">6. new 和 delete 是如何实现的</h2>
+<p>使用 <code>new</code> 创建对象时，首先会调用 <code>malloc()</code> 为对象分配存储空间，然后调用对象的构造函数；使用 <code>delete</code> 释放对象内存时，首先会调用对象的析构函数，然后调用 <code>free()</code> 释放内存。</p>
+<h2 id="7-new-与-malloc-的异同">7. new 与 malloc() 的异同</h2>
+<p><code>new</code> 和 <code>malloc()</code> 都会分配存储空间，但 <code>new</code> 还会调用对象的构造函数进行初始化，<code>malloc()</code> 需要给定空间大小，而 <code>new</code> 只需要对象名。</p>
+<h2 id="8-指针和引用的区别">8. 指针和引用的区别</h2>
+<h3 id="81-存储">8.1 存储</h3>
+<ul>
+<li>
+<p>指针有自己的一块空间，而引用只是一个别名；</p>
+</li>
+<li>
+<p>在 32 位机器上，使用 <code>sizeof</code> 计算一个指针的大小，结果是 4 字节，在 64 位机器上结果是 8 字节；而使用 <code>sizeof</code> 计算引用的大小，结果是被引用的对象的大小；</p>
+</li>
+<li>
+<p>如果返回动态内存分配的对象或者内存，必须使用指针，引用可能引起内存泄露。</p>
+</li>
+</ul>
+<h3 id="82-初始化">8.2 初始化</h3>
+<ul>
+<li>
+<p>指针可以被初始化为 <code>nullptr</code>，而引用必须被初始化且必须是一个已有对象的引用；</p>
+</li>
+<li>
+<p>指针在使用中可以指向其它对象，但是引用只能是一个对象的引用，不能改变。</p>
+</li>
+</ul>
+<h3 id="83-参数传递">8.3 参数传递</h3>
+<ul>
+<li>作为参数传递时，指针需要被<strong>解引用</strong>才可以被当作指向的对象使用；引用是变量的另一个<strong>别名</strong>，它没有自己的存储数据的内存位置，它访问的是另一个变量的内存位置。对引用变量作出的任何更改，实际上都是对它所引用的变量内存位置中存储数据的更改。</li>
+</ul>
+<h3 id="84-修饰符">8.4 修饰符</h3>
+<ul>
+<li>指针可以被 <code>const</code> 修饰，但引用不行。</li>
+</ul>
+<h3 id="85-运算符">8.5 运算符</h3>
+<ul>
+<li>指针可以有多级指针（<code>**p</code>），而引用至多一级；</li>
+<li>指针和引用使用自增自减运算符运算符的意义不一样。指针的自增自减是根据指针的类型的大小修改指针中存储的地址。引用的自增自减和变量的自增自减相同。</li>
+</ul>
+<h2 id="9-函数指针">9. 函数指针</h2>
+<p>函数指针是指向函数的指针变量。</p>
+<p>函数指针本身首先是一个指针变量，该指针变量指向一个具体的函数。这正如用指针变量可指向整型变量、字符型、数组一样，这里是指向函数。</p>
+<p>C 在编译时，每一个函数都有一个入口地址，该入口地址就是函数指针所指向的地址。有了指向函数的指针变量后，可用该指针变量调用函数，就如同用指针变量可引用其他类型变量一样，在这些概念上是大体一致的。</p>
+<h2 id="10-智能指针模板类">10. 智能指针模板类</h2>
+<p>C++11 提供三种智能指针模板类：<code>unique_ptr</code>、<code>shared_ptr</code> 和 <code>weak_ptr</code>。这三个智能指针模板都定义了类似指针的对象，可以将 <code>new</code> 获得（直接或间接）的地址赋给这种对象。当智能指针过期时，其析构函数将使用 <code>delete</code> 来释放内存。因此，如果将 <code>new</code> 返回的地址赋给这些对象，将无需记住稍后释放这些内存：在智能指针过期时，这些内存将自动被释放。</p>
+<h3 id="101-unique_ptr">10.1 unique_ptr</h3>
+<p><code>unique_ptr</code> “<strong>唯一</strong>”拥有其所指对象，同一时刻只能有一个 <code>unique_ptr</code> 指向给定对象（通过禁止拷贝语义、只有移动语义来实现）。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr&lt;string&gt; p1(<span style="font-weight:bold;text-decoration:underline">new</span> string(<span style="color:#666;font-style:italic">&#34;hello world&#34;</span>));
+unique_ptr&lt;string&gt; p2;
+p2 = p1;       <span style="color:#888;font-style:italic">// 编译器不允许
+</span><span style="color:#888;font-style:italic"></span>p2 = move(p1); <span style="color:#888;font-style:italic">// 编译器允许
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>另外 <code>unique_ptr</code> 还有更聪明的地方：当程序试图将一个 <code>unique_ptr</code> 赋值给另一个时，如果源 <code>unique_ptr</code> 是个临时右值，编译器允许这么做；如果源 <code>unique_ptr</code> 将存在一段时间，编译器将禁止这么做，比如：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr&lt;string&gt; p1(<span style="font-weight:bold;text-decoration:underline">new</span> string(<span style="color:#666;font-style:italic">&#34;hello world&#34;</span>));
+unique_ptr&lt;string&gt; p2;
+p2 = p1; <span style="color:#888;font-style:italic">// #1 not allowed
+</span><span style="color:#888;font-style:italic"></span>unique_ptr&lt;string&gt; p3;
+p3 = unique_ptr&lt;string&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> string(<span style="color:#666;font-style:italic">&#34;You&#34;</span>)); <span style="color:#888;font-style:italic">// #2 allowed
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><h3 id="102-shared_ptr">10.2 shared_ptr</h3>
+<p><code>shared_ptr</code> 实现<strong>共享式拥有</strong>概念。多个智能指针可以指向相同对象，该对象和其相关资源会在“最后一个引用被销毁”时候释放。从名字 share 就可以看出了资源可以被多个指针共享，它使用<strong>计数机制</strong>来表明资源被几个指针共享。可以通过成员函数 <code>use_count()</code> 来查看资源的所有者个数。除了可以通过 <code>new</code> 来构造，还可以通过传入 <code>auto_ptr</code>、<code>unique_ptr</code>、<code>weak_ptr</code> 来构造。当我们调用 <code>release()</code> 时，当前指针会释放资源所有权，计数减一。当引用计数等于 0 时，底层指针指向的资源会被释放。</p>
+<p><code>shared_ptr</code> 是为了解决 <code>auto_ptr</code> 在对象所有权上的局限性(<code>auto_ptr</code> 是独占的),在使用引用计数的机制上提供了可以共享所有权的智能指针。</p>
+<p>成员函数：</p>
+<ol>
+<li>
+<p><code>use_count()</code>，返回引用计数的个数；</p>
+</li>
+<li>
+<p><code>unique()</code>，返回是否是独占所有权（use_count() 是否为 1）；</p>
+</li>
+<li>
+<p><code>swap()</code>，交换两个 <code>shared_ptr</code> 对象(即交换所拥有的对象)；</p>
+</li>
+<li>
+<p><code>reset()</code>，放弃内部对象的所有权或拥有对象的变更,会引起原有对象的引用计数的减少；</p>
+</li>
+<li>
+<p><code>get()</code>，返回内部对象（指针），由于已经重载了 <code>()</code> 方法，因此和直接使用对象是一样的。如</p>
+</li>
+</ol>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;p(<span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>(1));
+cout &lt;&lt; *p &lt;&lt; endl;
+cout &lt;&lt; *p.get() &lt;&lt; endl;
+
+</code></pre></div><h3 id="103-weak_ptr">10.3 weak_ptr</h3>
+<p><code>weak_ptr</code> 是一种<strong>不控制对象生命周期</strong>的智能指针，它指向一个 <code>shared_ptr</code> 管理的对象。进行该对象的内存管理的是那个强引用的 <code>shared_ptr</code>。<code>weak_ptr</code> 只是提供了对管理对象的一个<strong>访问手段</strong>。<code>weak_ptr</code> 设计的目的是为配合 <code>shared_ptr</code> 而引入的一种智能指针来协助 <code>shared_ptr</code> 工作，它只可以从一个 <code>shared_ptr</code> 或另一个 <code>weak_ptr</code> 对象构造，<strong>它的构造和析构不会引起引用记数的增加或减少</strong>。<code>weak_ptr</code> 是用来解决 <code>shared_ptr</code> 相互引用时的死锁问题，如果说两个 <code>shared_ptr</code> 相互引用，那么这两个指针的引用计数永远不可能下降为 0，资源永远不会释放。它是对对象的一种<strong>弱引用</strong>，不会增加对象的引用计数，和 <code>shared_ptr</code> 之间可以相互转化，<code>shared_ptr</code> 可以直接赋值给它，它可以通过调用 <code>lock()</code> 函数来获得 <code>shared_ptr</code>。</p>
+<p>如果一块内存被 <code>shared_ptr</code> 和 <code>weak_ptr</code> 同时引用，当所有 <code>shared_ptr</code> 析构了之后，不管还有没有 <code>weak_ptr</code> 引用该内存，内存也会被释放。所以 <code>weak_ptr</code> 不保证它指向的内存一定是有效的，在使用之前需要检查 <code>weak_ptr</code> 是否为空指针。</p>
+<hr>
+<h2 id="11-strcpystrncpy-和strlen">11. strcpy()、strncpy() 和strlen()</h2>
+<h3 id="111-strcpy">11.1 strcpy()</h3>
+<p><code>strcpy()</code> 是字符串拷贝函数，原型是 <code>char *strcpy(char* dest, const char *src);</code>，从 <code>src</code> <strong>逐字节</strong>拷贝到 <code>dest</code>，直到遇到 <code>'\0'</code> 结束，因为<strong>没有指定长度</strong>，可能会导致<strong>拷贝越界</strong>，造成<strong>缓冲区溢出</strong>漏洞，安全版本是 <code>strncpy()</code> 函数。</p>
+<h3 id="112-strncpy">11.2 strncpy()</h3>
+<p><code>strncpy()</code>的函数原型是<code>char *strncpy(char *dest, const char *src, size_t count);</code>，复制 <code>src</code> 所指向的字符数组的至多 <code>count</code> 个字符（包含终止字符，但不包含后随空字符的任何字符）到 <code>dest</code> 所指向的字符数组。</p>
+<ul>
+<li>若在完全复制整个 <code>src</code> 数组前抵达 <code>count</code> ，<strong>则结果的字符数组不是空终止的</strong>。</li>
+<li>若在复制来自 <code>src</code> 的空终止字符后未抵达 <code>count</code> ，则写入<strong>额外的空字符</strong>到 <code>dest</code> ，直至写入总共 <code>count</code> 个字符。</li>
+<li>若字符数组重叠，若 <code>dest</code> 或 <code>src</code> 不是指向字符数组的指针（包含若 <code>dest</code> 或 <code>src</code> 为空指针），若 <code>dest</code> 所指向的数组大小小于 <code>count</code> ，或若 <code>src</code> 所指向的数组大小小于 <code>count</code> 且它不含空字符，则行为未定义。</li>
+</ul>
+<h3 id="113-strlen">11.3 strlen()</h3>
+<p><code>strlen()</code> 函数是计算字符串长度的函数，返回从开始到 <code>'\0'</code> 之间的字符个数。</p>
+<h2 id="12-sort">12. sort()</h2>
+<p><code>sort()</code> 内置改进的快速排序，时间复杂度为 <em>O(nlogn)</em>。</p>
+<hr>
+<h2 id="c面向对象的三大特性">C++面向对象的三大特性</h2>
+<ol>
+<li>
+<p>封装：封装隐藏了类的实现细节和成员数据，实现了代码模块化；</p>
+</li>
+<li>
+<p>继承：继承使得派生类可以复用基类的成员和方法，实现了代码重用；</p>
+</li>
+<li>
+<p>多态：多态则是“<strong>一个接口，多个实现</strong>”，通过基类调用派生类的成员元，实现了接口重用，如基类指针指向派生类对象。</p>
+<blockquote>
+<p>“多态核心理念就是通过基类访问派生类定义的函数。”</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="多态的实现重点考察">多态的实现（重点考察）</h2>
+<ol>
+<li>编译时多态<strong>函数重载</strong>和<strong>模板</strong>上，发生在<strong>编译期</strong>；</li>
+<li>运行时多态体现在<strong>虚函数</strong>上，发生在<strong>运行期</strong>。</li>
+</ol>
+<h2 id="c对象的生命周期">C++对象的生命周期</h2>
+<h3 id="全局对象">全局对象</h3>
+<p>程序一开始，其构造函数就先被执行（比程序进入点更早）；程序即将结束前，其析构函数将被执行。</p>
+<h3 id="局部对象">局部对象</h3>
+<p>当对象被定义时，其构造函数被执行；当程序流程离开该对象的生命周期时，其析构函数被执行。</p>
+<h3 id="静态对象static">静态对象（static）</h3>
+<p>当对象被定义时，其构造函数被执行；当程序结束时，其析构函数才被执行，但比全局对象的析构函数早一步执行。</p>
+<h3 id="以-new-方式创建出来的局部对象">以 new 方式创建出来的局部对象</h3>
+<p>当使用 <code>new</code> 定义对象时，其构造函数被执行；当使用 <code>delete</code> 删除对象时，其析构函数被执行。</p>
+<h2 id="虚函数的工作原理">虚函数的工作原理</h2>
+<p>通常，编译器处理虚函数的方法是：给每个对象添加一个隐藏成员。隐藏成员中保存了一个指向<strong>函数地址数组的指针</strong>。这种<strong>数组</strong>称为<strong>虚函数表</strong>（virtual function table，vtbl）。虚函数表中存储了为类对象进行声明的虚函数的地址。例如，基类对象包含一个指针，该指针指向基类中所有虚函数的地址表。派生类对象将包含一个指向独立地址表的指针。如果派生类提供了虚函数的新定义，该虚函数表将保存新函数的地址；如果派生类没有重新定义虚函数，该 vtbl 将保存函数原始版本的地址。如果派生类定义了新的虚函数，则该函数的地址也将被添加到 vtbl 中（参见图 13.5）。注意，无论类中包含的虚函数是 1 个还是 10 个，都只需要在对象中添加1个地址成员，只是表的大小不同而已。一个类的所有对象、所有示例，共享一个虚函数表。</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/%E4%B8%80%E7%A7%8D%E8%99%9A%E5%87%BD%E6%95%B0%E6%9C%BA%E5%88%B6.png" alt="一种虚函数机制"></p>
+<p>总之，使用虚函数时，在内存和执行速度方面有一定的成本，包括:</p>
+<ul>
+<li>
+<p>每个对象都将增大，增大量为存储地址的空间；</p>
+</li>
+<li>
+<p>对于每个类，编译器都创建一个虚函数地址表（数组）；</p>
+</li>
+<li>
+<p>对于每个函数调用，都需要执行一项额外的操作，即到表中查找地址。虽然非虚函数的效率比虚函数稍高,但不具备动态联编功能。</p>
+</li>
+</ul>
+<p>虽然非虚函数的效率比虚函数稍高，但不具备<strong>动态联编</strong>功能。</p>
+<h2 id="静态函数和虚函数的区别">静态函数和虚函数的区别</h2>
+<p>静态函数在编译时确定运行时机，虚函数在运行时进行动态绑定。</p>
+<p>虚函数因为用了虚函数表机制，调用的时候会增加一次内存开销。</p>
+<h2 id="重载overload覆盖override和改写overwrite的区别">重载（Overload）、覆盖（Override）和改写（Overwrite）的区别</h2>
+<table>
+<thead>
+<tr>
+<th>相较于原函数</th>
+<th>重载（Overload）</th>
+<th>覆盖（Override）</th>
+<th>改写（Overwrite）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>函数名</td>
+<td>相同</td>
+<td>相同</td>
+<td>相同</td>
+</tr>
+<tr>
+<td>参数列表</td>
+<td>不同，包括参数个数和<strong>参数类型</strong></td>
+<td>相同</td>
+<td>无所谓</td>
+</tr>
+<tr>
+<td>返回值</td>
+<td>无所谓</td>
+<td>相同</td>
+<td>无所谓</td>
+</tr>
+<tr>
+<td>范围</td>
+<td>同一作用域，例如全局或类</td>
+<td>不同类之间，例如基类和派生类</td>
+<td>不同类之间，例如基类和派生类</td>
+</tr>
+<tr>
+<td>关键字</td>
+<td>无</td>
+<td>需要原函数被 <code>virtual</code> 修饰，覆盖的函数可有可无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>说明</td>
+<td>编译时多态</td>
+<td>运行时多态</td>
+<td>如果派生类函数和基类函数参数列表相同、返回值相同且基类函数被 <code>virtual</code> 修饰，那么此时就是覆盖，其余所有情况均为改写。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="关键字-override-和-final">关键字 override 和 final</h2>
+<p>todo</p>
+<h2 id="构造函数的成员初始化列表">构造函数的成员初始化列表</h2>
+<p>在类或结构体的构造函数的参数列表后以冒号开头、逗号经行风格的一系列初始化字段。使用初始化列表会直接使用传入参数的复制构造函数进行初始化，<strong>省去了一次执行传入参数的默认构造函数的过程</strong>，否则会调用一次传入参数的默认构造函数。所以使用成员初始化列表效率会高一些。</p>
+<p>有以下三种情况必须使用成员初始化列表进行初始化：</p>
+<ol>
+<li><strong>常量成员的初始化</strong>，因为常量成员只能初始化，不能赋值；</li>
+<li><strong>引用</strong>类型；</li>
+<li><strong>没有默认构造函数的对象</strong>必须使用成员初始化列表进行初始化。</li>
+</ol>
+<h2 id="构造函数为什么不定义成虚函数">构造函数为什么不定义成虚函数</h2>
+<p>构造函数不能是虚函数。创建派生类对象时，将调用派生类的构造函数，而不是基类的构造函数，然后，派生类的构造函数将使用基类的一个构造函数，这种顺序不同于继承机制。因此，派生类不继承基类的构造函数，所以将类构造函数声明为虚的没什么意义。</p>
+<h2 id="什么时候调用复制构造函数">什么时候调用复制构造函数</h2>
+<ol>
+<li>对象以<strong>值传递</strong>的方式传入函数参数；</li>
+<li>对象以<strong>值传递</strong>的方式从<strong>函数返回</strong>；</li>
+<li>对象通过<strong>另一个对象</strong>进行<strong>初始化</strong>。</li>
+</ol>
+<h2 id="复制构造函数的参数是否能通过值传递">复制构造函数的参数是否能通过值传递</h2>
+<p>不能。如果这种情况下调用复制构造函数，首先要将实参传递给形参，而这个传递的过程又需要调用复制构造函数。如此循环往复，无法完成复制，栈也会满。</p>
+<h2 id="移动构造函数">移动构造函数</h2>
+<p>todo</p>
+<h2 id="析构函数为什么一般定义成虚函数">析构函数为什么一般定义成虚函数</h2>
+<p>析构函数应当是虚函数，除非类不用做基类。如果使用默认的静态联编，在使用 <code>delete</code> 语句删除指向派生类对象的基类指针指向的内存空间时，只会调用基类的析构函数而不调用派生类的析构函数，造成派生类对象析构不完全导致内存泄漏。</p>
+<p>通常应给基类提供一个虚析构函数，即使它并不需要析构函数。</p>
+<h2 id="析构函数的调用顺序">析构函数的调用顺序</h2>
+<p>派生类本身的析构函数、对象成员的析构函数、基类的析构函数。</p>
+<hr>
+<h2 id="静态库和动态库">静态库和动态库</h2>
+<p>静态库和动态库的区别来自于链接阶段如何处理库，链接成可执行程序。有静态链接方式和动态链接方式。</p>
+<h3 id="静态库">静态库</h3>
+<p>之所以称为静态库，是因为在链接阶段，会将汇编生成的目标文件 .o 与引用到的库一起链接打包到可执行文件中。因此对应的链接方式称为静态链接。静态库的特点如下：</p>
+<ol>
+<li>静态库对函数库的链接是放在编译时期完成的；</li>
+<li>程序在运行时与函数库再无关系，移植方便；</li>
+<li>浪费资源和空间，因为所有相关的目标文件与牵涉道德函数库被链接合成一个可执行文件。</li>
+</ol>
+<h3 id="动态库">动态库</h3>
+<p>动态库在程序编译时并不会被链接到目标代码中，而是在程序运行是才被载入。<strong>不同的应用程序如果调用相同的库，那么在内存里只需要有一份该共享库的实例</strong>，规避了空间浪费问题。动态库在程序运行时才被载入，也解决了静态库对程序的更新、部署和发布页会带来麻烦。用户只需要更新动态库即可，<strong>增量更新</strong>。动态库的特点如下：</p>
+<ol>
+<li>动态库把对一些库函数的链接载入<strong>推迟到程序运行的时期</strong>；</li>
+<li>可以实现进程之间的资源共享（因此动态库也称为共享库）；</li>
+<li>将一些程序升级变得简单；</li>
+<li>甚至可以真正做到链接载入完全由程序员在程序代码中控制。</li>
+</ol>
+<h3 id="二者的不同">二者的不同</h3>
+<p>二者的不同点在于代码被载入的时刻不同。</p>
+<ol>
+<li>静态库在程序编译时被链接到目标代码中，程序运行时将不再需要该静态库，因此程序体积较大；</li>
+<li>动态库在程序编译时并不会被链接到目标代码中，而是在程序运行时才被载入，程序运行时还需要动态库的存在，因此程序体积较小。</li>
+</ol>
+<p>动态库的好处是，不同的应用程序如果调用相同的库，那么在内存里只需要有一份该动态库也就是共享库的示例。带来好处的同时，也会有问题，比如经典的 DLL Hell 问题。</p>
+<h2 id="extern-c">extern &ldquo;C&rdquo;</h2>
+<p>C++ 调用 C 函数需要 <code>extern &quot;C&quot;</code>，因为 C 语言没有函数重载。</p>
+<hr>
+<h2 id="c语言参数压栈顺序">C语言参数压栈顺序</h2>
+<p>从右到左。</p>
+<h2 id="c语言函数调用">C语言函数调用</h2>
+<p>每一个函数调用都会分配<strong>函数栈</strong>，在栈内进行函数执行过程。调用前，先把<strong>返回地址压栈</strong>，然后把当前函数的 <strong><code>esp</code> 指针</strong>压栈。</p>
+<h2 id="c如何处理返回值">C++如何处理返回值</h2>
+<p>生成一个临时变量，把它的引用作为函数参数传入函数内。</p>
+<h2 id="隐式类型转换">隐式类型转换</h2>
+<p>首先，对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换，其次，对于只存在单个参数的构造函数的对象构造来说，函数调用可以直接使用该参数传入，编译器会自动调用其构造函数生成临时对象。</p>
+<h2 id="自增自减">自增、自减</h2>
+<p>以自增为例。</p>
+<h3 id="i">++i</h3>
+<p>先自增 1，再返回自身。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span>&amp; <span style="font-weight:bold;text-decoration:underline">int</span>::<span style="font-weight:bold;text-decoration:underline">operator</span>++()
+{
+    *<span style="font-weight:bold;text-decoration:underline">this</span> += 1;
+    <span style="font-weight:bold;text-decoration:underline">return</span> *<span style="font-weight:bold;text-decoration:underline">this</span>;
+}
+</code></pre></div><h3 id="i-1">i++</h3>
+<p>先保存旧值，再自增，最后返回旧值。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> <span style="font-weight:bold;text-decoration:underline">int</span>::<span style="font-weight:bold;text-decoration:underline">operator</span>(<span style="font-weight:bold;text-decoration:underline">int</span>)
+{
+    <span style="font-weight:bold;text-decoration:underline">int</span> oldValue = *<span style="font-weight:bold;text-decoration:underline">this</span>;
+    ++(*<span style="font-weight:bold;text-decoration:underline">this</span>);
+    <span style="font-weight:bold;text-decoration:underline">return</span> oldValue;
+}
+</code></pre></div><h2 id="static关键字的作用">static关键字的作用</h2>
+<h3 id="全局静态变量">全局静态变量</h3>
+<p>在全局变量前加上关键字 <code>static</code>，全局变量就变成了<strong>全局静态变量</strong>。</p>
+<p>存储：静态存储区，在整个<strong>程序运行期间一直存在</strong>。静态变量被初始化存储在数据段，未被初始化或初始化为零存储在 BSS 段。</p>
+<p>初始化：未经初始化的全局静态变量会被自动初始化为 0（自动对象的值是任意的，除非他被显式初始化）；</p>
+<p>作用域：全局静态变量在声明他的文件之外是不可见的，准确地说是从定义之处开始，到文件结尾。</p>
+<h3 id="局部静态变量">局部静态变量</h3>
+<p>在局部变量之前加上关键字 <code>static</code>，局部变量就成为一个局部静态变量。</p>
+<p>内存中的位置：静态存储区。静态变量被初始化存储在数据段，未被初始化或初始化为零存储在 BSS 段。</p>
+<p>初始化：未经初始化的全局静态变量会被自动初始化为 0（自动对象的值是任意的，除非他被显式初始化）；</p>
+<p>作用域：作用域仍为<strong>局部作用域</strong>，当定义它的函数或者语句块结束的时候，作用域结束。但是当局部静态变量离开作用域后，并没有销毁，而是<strong>仍然驻留在内存</strong>当中，只不过我们不能再对它进行访问，直到该函数再次被调用，并且值不变。</p>
+<h3 id="静态函数">静态函数</h3>
+<p>在函数返回类型前加 <code>static</code>，函数就定义为静态函数。函数的定义和声明在默认情况下都是 <code>extern</code> 的，但静态函数只是在声明他的文件当中可见，不能被其他文件所用。</p>
+<p>函数的实现使用 <code>static</code> 修饰，那么这个函数只可在本文件内使用，不会同其他文件中的同名函数引起冲突；</p>
+<h3 id="类的静态成员">类的静态成员</h3>
+<p>在类中，静态成员可以实现多个对象之间的数据共享，并且使用静态数据成员还不会破坏隐藏的原则，即保证了安全性。因此，静态成员是类的所有对象中共享的成员，而不是某个对象的成员。对多个对象来说，静态数据成员只存储一处，供所有对象共用。</p>
+<h3 id="类的静态函数">类的静态函数</h3>
+<p>静态成员函数和静态数据成员一样，它们都属于类的静态成员，它们都不是对象成员。因此，对静态成员的引用不需要用对象名。</p>
+<p><strong>在静态成员函数的实现中不能直接引用类中说明的非静态成员</strong>，可以引用类中说明的静态成员（这点非常重要）。如果静态成员函数中要引用非静态成员时，可通过对象来引用。从中可看出，调用静态成员函数使用如下格式：&lt;类名&gt;::&lt;静态成员函数名&gt;(&lt;参数表&gt;);</p>
+<h2 id="c的四种强制类型转换">C++的四种强制类型转换</h2>
+<p>四种强制类型转换操作符分别为：<code>static_cast</code>、<code>dynamic_cast</code>、<code>const_cast</code>、<code>reinterpret_cast</code>。</p>
+<h3 id="static_cast">static_cast</h3>
+<p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把 <code>int</code> 换成 <code>char</code>，<code>float</code> 换成 <code>int</code> ，比如<strong>非 <code>const</code></strong> 转<code> const</code> ，<code>void *</code> 转指针。</p>
+<p>还可用于多态向上转换，即派生类的指针转换成基类指针；如果是向下转换，能成功，但是不安全，结果未知。</p>
+<h3 id="dynamic_cast">dynamic_cast</h3>
+<p>用于<strong>动态类型转换</strong>。具体的说，只能用于含有<strong>虚函数</strong>的类，用于类层次间的向上和向下转化，就是在基类指针到派生类指针，或者派生类到基类指针的转换。
+<code>dynamic_cast</code> 能够提供运行时类型检查。
+向下转化时，如果是非法的，对于指针返回 <code>nullptr</code>，对于引用抛异常。</p>
+<p>向上转换：指的是派生类向基类的转换。</p>
+<p>向下转换：指的是基类向派生类的转换。</p>
+<h3 id="const_cast">const_cast</h3>
+<p>用于<strong>去除const常量属性</strong>，使其可以修改，也就是说，原本定义为 <code>const</code> 的变量在定义后就不能进行修改的，但是使用 <code>const_cast</code> 操作之后，可以通过这个指针或变量进行修改；另外还有 <code>volatile</code> 属性的转换。</p>
+<h3 id="reinterpret_cast">reinterpret_cast</h3>
+<p>几乎什么都可以转，用在任意的指针之间的转换，引用之间的转换，指针和足够大的 <code>int</code> 型之间的转换，整数到指针的转换等。但是<strong>不够安全</strong>，可能会出问题，尽量少用。</p>
+<h3 id="c的强制转换">C的强制转换</h3>
+<p>C的强制转换表面上看起来功能强大什么都能转，但是转化不够明确，不能进行错误检查，<strong>容易出错</strong>。</p>
+<h2 id="引用和数组的区别">引用和数组的区别</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指针</th>
+<th style="text-align:center">数组</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">保存数据的<strong>地址</strong></td>
+<td style="text-align:center">保存数据</td>
+</tr>
+<tr>
+<td style="text-align:center">间接访问数据，首先获得指针的内容，然后将其作为地址，从该地址中提取数据</td>
+<td style="text-align:center"><strong>直接</strong>访问数据，</td>
+</tr>
+<tr>
+<td style="text-align:center">通常用于<strong>动态</strong>的数据结构</td>
+<td style="text-align:center">通常用于固定数目且数据类型相同的元素</td>
+</tr>
+<tr>
+<td style="text-align:center">通过 <code>malloc()</code> 分配内存，<code>free()</code> 释放内存</td>
+<td style="text-align:center"><strong>隐式</strong>的分配和删除</td>
+</tr>
+<tr>
+<td style="text-align:center">通常<strong>指向匿名</strong>数据，操作匿名函数</td>
+<td style="text-align:center">自身即为数据名</td>
+</tr>
+</tbody>
+</table>
+<h2 id="引用作为函数参数以及返回值的好处">引用作为函数参数以及返回值的好处</h2>
+<p>对比值传递，引用传参的好处：</p>
+<ol>
+<li>
+<p>在函数内部可以对此参数进行修改；</p>
+</li>
+<li>
+<p><strong>提高</strong>函数调用和运行的<strong>效率</strong>（因为没有了传值和生成副本的时间和空间消耗）。</p>
+</li>
+</ol>
+<p>函数返回引用的好处：</p>
+<p>​	在内存中<strong>不产生返回值的副本</strong>。</p>
+<p>函数返回引用的限制：</p>
+<ol>
+<li>不能返回局部变量的引用。因为函数返回以后局部变量就会被销毁；</li>
+<li>不能返回函数内部 <code>new</code> 分配的内存的引用。虽然不存在局部变量的被动销毁问题，可对于这种情况（返回函数内部 <code>new</code> 分配内存的引用），又面临其它尴尬局面。例如，被函数返回的引用只是作为一个<strong>临时变量</strong>出现，而没有被赋予一个实际的变量，那么这个引用所指向的空间（由new分配）就无法释放，造成内存泄漏；</li>
+<li>可以返回类成员的引用，但是最好是 <code>const</code>。因为如果其他对象可以获得该属性的非常量的引用，那么对该属性的单纯赋值就会破坏业务规则的完整性。</li>
+</ol>
+<h2 id="在-main-函数之前执行的函数">在 main() 函数之前执行的函数</h2>
+<h3 id="利用-__attribute__">利用 __attribute__</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">__attribute__((constructor))<span style="font-weight:bold;text-decoration:underline">void</span> before()
+{
+    printf(<span style="color:#666;font-style:italic">&#34;before main</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>);
+}
+
+</code></pre></div><h3 id="利用全局变量和构造函数的特点">利用全局变量和构造函数的特点</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">BeforeMain</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    BeforeMain();
+};
+
+BeforeMain::BeforeMain()
+{
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;From the class.&#34;</span> &lt;&lt; endl;
+}
+
+BeforeMain bM;
+
+</code></pre></div><p>以上两种方法也存在优先顺序，构造函数优先于 __attribute__。</p>
+<h2 id="const-修饰成员函数的目的">const 修饰成员函数的目的</h2>
+<p><code>const</code> 修饰的成员函数表明函数调用不会对对象做出任何更改，事实上，如果确认不会对对象做更改，就应该为函数加上 <code>const</code> 限定，这样无论 <code>const</code> 对象还是普通对象都可以调用该函数。</p>
+<h2 id="以下四行代码的区别">以下四行代码的区别</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *arr1 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
+<span style="font-weight:bold;text-decoration:underline">char</span> *arr2 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
+<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> arr3[] = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
+<span style="font-weight:bold;text-decoration:underline">char</span> arr4[] = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
+
+</code></pre></div><h3 id="const-char-arr1--123">const char *arr1 = &ldquo;123&rdquo;;</h3>
+<p>字符串 &ldquo;123&rdquo; 保存在<strong>常量区</strong>，<code>const</code> 本来是修饰 <code>arr1</code> 指向的值不能通过 <code>arr1</code> 去修改，但是字符串 &ldquo;123&rdquo; 在常量区，本来就不能改变，所以加不加 <code>const</code> 效果都一样。</p>
+<h3 id="char-arr2--123">char *arr2 = &ldquo;123&rdquo;;</h3>
+<p>字符串 &ldquo;123&rdquo; 保存在<strong>常量区</strong>，这个 <code>arr1</code> 指针指向的是同一个位置，同样不能通过 <code>arr2</code> 去修改 &ldquo;123&rdquo; 的值。</p>
+<h3 id="const-char-arr3--123">const char arr3[] = &ldquo;123&rdquo;;</h3>
+<p>这里 &ldquo;123&rdquo; 本来是在栈上的，但是<strong>编译器</strong>可能会做某些<strong>优化</strong>，将其放到<strong>常量区</strong>。经验证，不能修改。</p>
+<h3 id="char-arr4--123">char arr4[] = &ldquo;123&rdquo;;</h3>
+<p>字符串 &ldquo;123&rdquo; 保存在<strong>栈区</strong>，可以通过 <code>arr4</code> 去修改。</p>
+<h2 id="隐式类型转换-1">隐式类型转换</h2>
+<p>对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换</p>
+<h2 id="函数栈空间最大值">函数栈空间最大值</h2>
+<p>默认是 1M，但可以调整。</p>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-malloc-原理">1. malloc() 原理</a></li>
+    <li><a href="#2-malloccallocrealloc-和-alloca">2. malloc()、calloc()、realloc() 和 alloca()</a>
+      <ol>
+        <li><a href="#21-mallocmemory-allocation">2.1 malloc()，<strong>m</strong>emory <strong>alloc</strong>ation</a></li>
+        <li><a href="#22-callocclear-allocation">2.2 calloc()，<strong>c</strong>lear <strong>alloc</strong>ation</a></li>
+        <li><a href="#23-reallocreset-allocation">2.3 realloc()，<strong>re</strong>set <strong>alloc</strong>ation</a></li>
+        <li><a href="#24-alloca不常用">2.4 alloca()，不常用</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-c内存管理">3. C++内存管理</a>
+      <ol>
+        <li><a href="#31-动态区域">3.1 动态区域</a></li>
+        <li><a href="#32静态区域">3.2静态区域</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-野指针">4. 野指针</a>
+      <ol>
+        <li><a href="#41-可能出现野指针的原因">4.1 可能出现野指针的原因</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-内存泄漏memory-leak的情形">5. 内存泄漏（Memory Leak）的情形</a></li>
+    <li><a href="#6-new-和-delete-是如何实现的">6. new 和 delete 是如何实现的</a></li>
+    <li><a href="#7-new-与-malloc-的异同">7. new 与 malloc() 的异同</a></li>
+    <li><a href="#8-指针和引用的区别">8. 指针和引用的区别</a>
+      <ol>
+        <li><a href="#81-存储">8.1 存储</a></li>
+        <li><a href="#82-初始化">8.2 初始化</a></li>
+        <li><a href="#83-参数传递">8.3 参数传递</a></li>
+        <li><a href="#84-修饰符">8.4 修饰符</a></li>
+        <li><a href="#85-运算符">8.5 运算符</a></li>
+      </ol>
+    </li>
+    <li><a href="#9-函数指针">9. 函数指针</a></li>
+    <li><a href="#10-智能指针模板类">10. 智能指针模板类</a>
+      <ol>
+        <li><a href="#101-unique_ptr">10.1 unique_ptr</a></li>
+        <li><a href="#102-shared_ptr">10.2 shared_ptr</a></li>
+        <li><a href="#103-weak_ptr">10.3 weak_ptr</a></li>
+      </ol>
+    </li>
+    <li><a href="#11-strcpystrncpy-和strlen">11. strcpy()、strncpy() 和strlen()</a>
+      <ol>
+        <li><a href="#111-strcpy">11.1 strcpy()</a></li>
+        <li><a href="#112-strncpy">11.2 strncpy()</a></li>
+        <li><a href="#113-strlen">11.3 strlen()</a></li>
+      </ol>
+    </li>
+    <li><a href="#12-sort">12. sort()</a></li>
+    <li><a href="#c面向对象的三大特性">C++面向对象的三大特性</a></li>
+    <li><a href="#多态的实现重点考察">多态的实现（重点考察）</a></li>
+    <li><a href="#c对象的生命周期">C++对象的生命周期</a>
+      <ol>
+        <li><a href="#全局对象">全局对象</a></li>
+        <li><a href="#局部对象">局部对象</a></li>
+        <li><a href="#静态对象static">静态对象（static）</a></li>
+        <li><a href="#以-new-方式创建出来的局部对象">以 new 方式创建出来的局部对象</a></li>
+      </ol>
+    </li>
+    <li><a href="#虚函数的工作原理">虚函数的工作原理</a></li>
+    <li><a href="#静态函数和虚函数的区别">静态函数和虚函数的区别</a></li>
+    <li><a href="#重载overload覆盖override和改写overwrite的区别">重载（Overload）、覆盖（Override）和改写（Overwrite）的区别</a></li>
+    <li><a href="#关键字-override-和-final">关键字 override 和 final</a></li>
+    <li><a href="#构造函数的成员初始化列表">构造函数的成员初始化列表</a></li>
+    <li><a href="#构造函数为什么不定义成虚函数">构造函数为什么不定义成虚函数</a></li>
+    <li><a href="#什么时候调用复制构造函数">什么时候调用复制构造函数</a></li>
+    <li><a href="#复制构造函数的参数是否能通过值传递">复制构造函数的参数是否能通过值传递</a></li>
+    <li><a href="#移动构造函数">移动构造函数</a></li>
+    <li><a href="#析构函数为什么一般定义成虚函数">析构函数为什么一般定义成虚函数</a></li>
+    <li><a href="#析构函数的调用顺序">析构函数的调用顺序</a></li>
+    <li><a href="#静态库和动态库">静态库和动态库</a>
+      <ol>
+        <li><a href="#静态库">静态库</a></li>
+        <li><a href="#动态库">动态库</a></li>
+        <li><a href="#二者的不同">二者的不同</a></li>
+      </ol>
+    </li>
+    <li><a href="#extern-c">extern &ldquo;C&rdquo;</a></li>
+    <li><a href="#c语言参数压栈顺序">C语言参数压栈顺序</a></li>
+    <li><a href="#c语言函数调用">C语言函数调用</a></li>
+    <li><a href="#c如何处理返回值">C++如何处理返回值</a></li>
+    <li><a href="#隐式类型转换">隐式类型转换</a></li>
+    <li><a href="#自增自减">自增、自减</a>
+      <ol>
+        <li><a href="#i">++i</a></li>
+        <li><a href="#i-1">i++</a></li>
+      </ol>
+    </li>
+    <li><a href="#static关键字的作用">static关键字的作用</a>
+      <ol>
+        <li><a href="#全局静态变量">全局静态变量</a></li>
+        <li><a href="#局部静态变量">局部静态变量</a></li>
+        <li><a href="#静态函数">静态函数</a></li>
+        <li><a href="#类的静态成员">类的静态成员</a></li>
+        <li><a href="#类的静态函数">类的静态函数</a></li>
+      </ol>
+    </li>
+    <li><a href="#c的四种强制类型转换">C++的四种强制类型转换</a>
+      <ol>
+        <li><a href="#static_cast">static_cast</a></li>
+        <li><a href="#dynamic_cast">dynamic_cast</a></li>
+        <li><a href="#const_cast">const_cast</a></li>
+        <li><a href="#reinterpret_cast">reinterpret_cast</a></li>
+        <li><a href="#c的强制转换">C的强制转换</a></li>
+      </ol>
+    </li>
+    <li><a href="#引用和数组的区别">引用和数组的区别</a></li>
+    <li><a href="#引用作为函数参数以及返回值的好处">引用作为函数参数以及返回值的好处</a></li>
+    <li><a href="#在-main-函数之前执行的函数">在 main() 函数之前执行的函数</a>
+      <ol>
+        <li><a href="#利用-__attribute__">利用 __attribute__</a></li>
+        <li><a href="#利用全局变量和构造函数的特点">利用全局变量和构造函数的特点</a></li>
+      </ol>
+    </li>
+    <li><a href="#const-修饰成员函数的目的">const 修饰成员函数的目的</a></li>
+    <li><a href="#以下四行代码的区别">以下四行代码的区别</a>
+      <ol>
+        <li><a href="#const-char-arr1--123">const char *arr1 = &ldquo;123&rdquo;;</a></li>
+        <li><a href="#char-arr2--123">char *arr2 = &ldquo;123&rdquo;;</a></li>
+        <li><a href="#const-char-arr3--123">const char arr3[] = &ldquo;123&rdquo;;</a></li>
+        <li><a href="#char-arr4--123">char arr4[] = &ldquo;123&rdquo;;</a></li>
+      </ol>
+    </li>
+    <li><a href="#隐式类型转换-1">隐式类型转换</a></li>
+    <li><a href="#函数栈空间最大值">函数栈空间最大值</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/c&#43;&#43;">C&#43;&#43;
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%8C%87%E9%92%88">指针
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">内存管理
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E8%99%9A%E5%87%BD%E6%95%B0">虚函数
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%A4%9A%E6%80%81">多态
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/stl">STL
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            STL面经📚
+        </div>
+    </a>
+    
+    
+    <a href="/post/2020-12-29-%E5%9C%A8anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">在Anaconda环境下安装Tensorflow&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

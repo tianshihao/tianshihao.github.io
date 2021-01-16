@@ -6,14 +6,23 @@
     <description>Recent content in C&#43;&#43; on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 15 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/c++/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>C&#43;&#43;面经</title>
-      <link>https://tianshihao.github.io/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/</link>
-      <pubDate>Fri, 15 Jan 2021 00:00:00 +0000</pubDate>
+      <title>STL面经📚</title>
+      <link>https://tianshihao.github.io/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/</link>
+      <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://tianshihao.github.io/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/</guid>
-      <description>malloc原理 malloc函数用于动态分配内存。为了减少内存碎片和系统调用的开销，malloc其采用内存池的方式，先申请大块内存作为堆区，</description>
+      <guid>https://tianshihao.github.io/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/</guid>
+      <description>1. 概述 STL六大部件：容器、算法、迭代器、函数对象（仿函数）、适配器和分配器。 1.1 容器，Container 一些封装数据结构的模板类，例如 vector 向量</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;面经📚</title>
+      <link>https://tianshihao.github.io/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/</link>
+      <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/</guid>
+      <description>&lt;p&gt;收集常见C++面试问题，包括内存管理、常用库函数、面向对象、STL、编译过程和小的语法知识。&lt;/p&gt;</description>
     </item>
     
     <item>
