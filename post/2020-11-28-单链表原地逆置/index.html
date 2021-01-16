@@ -4,18 +4,17 @@
     <title>单链表原地逆置 // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="单链表原地逆置" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/" />
-    
+
+
+    <meta property="og:title" content="单链表原地逆置" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -78,7 +76,6 @@
                 </div>
             </div>
             
-            
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>给定一个带头结点的单链表，编写算法将其原地逆置。所谓“原地”是指空间复杂度为O(1)。有两种方法，头插法和冒泡法。这两种方法的时间复杂度均为O(n)。</p>
@@ -95,32 +92,31 @@
 <p><img src="https://images.cnblogs.com/cnblogs_com/tianshihao/1463810/o_2011281451552020-11-28-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%8E%9F%E5%9C%B0%E9%80%86%E7%BD%AE-4.png" alt="2020-11-28-单链表原地逆置-4"></p>
 <p>以此类推，直至保存后继的指针r为空，退出循环。</p>
 <h2 id="头插法的实现代码">头插法的实现代码</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Reverse_L1</span>(Linklist L)
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#ff8000;font-weight:bold">Reverse_L1</span>(Linklist L)
 {
-    <span style="color:#75715e">/* p 为工作指针, r 为 p 的后继, 以防断链. */</span>
-    LNode <span style="color:#f92672">*</span>p, <span style="color:#f92672">*</span>r;
+    <span style="color:#0080ff;font-style:italic">/* p 为工作指针, r 为 p 的后继, 以防断链. */</span>
+    LNode <span style="color:#2c5dcd">*</span>p, <span style="color:#2c5dcd">*</span>r;
 
-    <span style="color:#75715e">/* 从第一个元素开始. */</span>
-    p <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next;
+    <span style="color:#0080ff;font-style:italic">/* 从第一个元素开始. */</span>
+    p <span style="color:#2c5dcd">=</span> L<span style="color:#2c5dcd">-&gt;</span>next;
 
-    <span style="color:#75715e">/* 先将头结点剥离出来. */</span>
-    L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+    <span style="color:#0080ff;font-style:italic">/* 先将头结点剥离出来. */</span>
+    L<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">NULL</span>;
 
-    <span style="color:#75715e">/* 依次将元素摘下. */</span>
-    <span style="color:#66d9ef">while</span> (p <span style="color:#f92672">!=</span> NULL)
+    <span style="color:#0080ff;font-style:italic">/* 依次将元素摘下. */</span>
+    <span style="color:#2c5dcd;font-weight:bold">while</span> (p <span style="color:#2c5dcd">!=</span> <span style="color:#5918bb;font-weight:bold">NULL</span>)
     {
-        <span style="color:#75715e">/* 暂存 p 的后继. */</span>
-        r <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
-        <span style="color:#75715e">/* 用头插法插入 p. */</span>
-        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next;
-        L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> p;
-        <span style="color:#75715e">/* 更新 p, 指向下一个结点. */</span>
-        p <span style="color:#f92672">=</span> r;
+        <span style="color:#0080ff;font-style:italic">/* 暂存 p 的后继. */</span>
+        r <span style="color:#2c5dcd">=</span> p<span style="color:#2c5dcd">-&gt;</span>next;
+        <span style="color:#0080ff;font-style:italic">/* 用头插法插入 p. */</span>
+        p<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> L<span style="color:#2c5dcd">-&gt;</span>next;
+        L<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> p;
+        <span style="color:#0080ff;font-style:italic">/* 更新 p, 指向下一个结点. */</span>
+        p <span style="color:#2c5dcd">=</span> r;
     }
 
-    <span style="color:#66d9ef">return</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span>;
 }
-
 </code></pre></div><h1 id="冒泡法">冒泡法</h1>
 <p>我把这种方法称为“冒泡法”，是因为算法流程和冒泡排序类似，只不过在冒泡排序中是相邻的元素出现逆序才交换，而链表逆置则要求每对结点之间都要交换顺序。</p>
 <h2 id="思路-1">思路</h2>
@@ -132,41 +128,41 @@
 <p>上述步骤发生的前提是链表中除了头结点以外，至少有两个结点，而为了将判断是否继续循环和是否进入循环结合起来，应将指针r初始置为指向第一个结点的后继，p指向第一个结点，即<code>p=L-&gt;next,r=p-&gt;next</code>，指针pre无强制要求。</p>
 <p>注意初始p指向的结点在完成逆置之后将成为最后一个结点，所以应该在逆置之前将p的后继置为空，否则逆置之后p的后继会指向倒数第二个结点，而倒数第二个结点的后继指向倒数第一个结点，即逆置前的p，两个结点之间形成环。</p>
 <h2 id="冒泡法的实现代码">冒泡法的实现代码</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Reverse_L2</span>(Linklist L)
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#ff8000;font-weight:bold">Reverse_L2</span>(Linklist L)
 {
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * 三个指针, p 为要反转的结点, pre 为 p 前面的结点, r 是保存 p 后继的指针.
-</span><span style="color:#75715e">     * 初始状态 p 指向第一个元素, r 指向第二个元素.
-</span><span style="color:#75715e">     */</span>
-    LNode <span style="color:#f92672">*</span>pre <span style="color:#f92672">=</span> L, <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next, <span style="color:#f92672">*</span>r <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+    <span style="color:#0080ff;font-style:italic">/**
+</span><span style="color:#0080ff;font-style:italic">     * 三个指针, p 为要反转的结点, pre 为 p 前面的结点, r 是保存 p 后继的指针.
+</span><span style="color:#0080ff;font-style:italic">     * 初始状态 p 指向第一个元素, r 指向第二个元素.
+</span><span style="color:#0080ff;font-style:italic">     */</span>
+    LNode <span style="color:#2c5dcd">*</span>pre <span style="color:#2c5dcd">=</span> L, <span style="color:#2c5dcd">*</span>p <span style="color:#2c5dcd">=</span> L<span style="color:#2c5dcd">-&gt;</span>next, <span style="color:#2c5dcd">*</span>r <span style="color:#2c5dcd">=</span> p<span style="color:#2c5dcd">-&gt;</span>next;
 
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * 将要第一个结点后继链接断开. 因为它将成为逆置后链表的最后一个结点, 否则
-</span><span style="color:#75715e">     * 将在逆置后的链表中的最后一个元素和倒数第二个元素之间形成环.
-</span><span style="color:#75715e">     */</span>
-    p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+    <span style="color:#0080ff;font-style:italic">/**
+</span><span style="color:#0080ff;font-style:italic">     * 将要第一个结点后继链接断开. 因为它将成为逆置后链表的最后一个结点, 否则
+</span><span style="color:#0080ff;font-style:italic">     * 将在逆置后的链表中的最后一个元素和倒数第二个元素之间形成环.
+</span><span style="color:#0080ff;font-style:italic">     */</span>
+    p<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">NULL</span>;
 
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * 如果 r 不为空, 三个指针前进一个单位.
-</span><span style="color:#75715e">     * 否则链表只有一个结点, 直接执行 while 后的 L-&gt;next = p.
-</span><span style="color:#75715e">     * 循环中将 p 反转指向其前面的结点 pre, r 是 p 的后继.
-</span><span style="color:#75715e">     * 假设链表有 n 个元素, 则循环可将前 n - 1 个元素逆置,
-</span><span style="color:#75715e">     * 之后 p 指向第 n 个元素.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">while</span> (r <span style="color:#f92672">!=</span> NULL)
+    <span style="color:#0080ff;font-style:italic">/**
+</span><span style="color:#0080ff;font-style:italic">     * 如果 r 不为空, 三个指针前进一个单位.
+</span><span style="color:#0080ff;font-style:italic">     * 否则链表只有一个结点, 直接执行 while 后的 L-&gt;next = p.
+</span><span style="color:#0080ff;font-style:italic">     * 循环中将 p 反转指向其前面的结点 pre, r 是 p 的后继.
+</span><span style="color:#0080ff;font-style:italic">     * 假设链表有 n 个元素, 则循环可将前 n - 1 个元素逆置,
+</span><span style="color:#0080ff;font-style:italic">     * 之后 p 指向第 n 个元素.
+</span><span style="color:#0080ff;font-style:italic">     */</span>
+    <span style="color:#2c5dcd;font-weight:bold">while</span> (r <span style="color:#2c5dcd">!=</span> <span style="color:#5918bb;font-weight:bold">NULL</span>)
     {
-        <span style="color:#75715e">/* 指针依次进一. */</span>
-        pre <span style="color:#f92672">=</span> p;
-        p <span style="color:#f92672">=</span> r;
-        r <span style="color:#f92672">=</span> r<span style="color:#f92672">-&gt;</span>next;
-        <span style="color:#75715e">/* 逆置. */</span>
-        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> pre;
+        <span style="color:#0080ff;font-style:italic">/* 指针依次进一. */</span>
+        pre <span style="color:#2c5dcd">=</span> p;
+        p <span style="color:#2c5dcd">=</span> r;
+        r <span style="color:#2c5dcd">=</span> r<span style="color:#2c5dcd">-&gt;</span>next;
+        <span style="color:#0080ff;font-style:italic">/* 逆置. */</span>
+        p<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> pre;
     }
 
-    <span style="color:#75715e">/* 头结点指向逆置之后的第一个结点. */</span>
-    L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> p;
+    <span style="color:#0080ff;font-style:italic">/* 头结点指向逆置之后的第一个结点. */</span>
+    L<span style="color:#2c5dcd">-&gt;</span>next <span style="color:#2c5dcd">=</span> p;
 
-    <span style="color:#66d9ef">return</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span>;
 }
 
 </code></pre></div><h1 id="代码仓库">代码仓库</h1>
@@ -180,15 +176,15 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#思路">思路</a></li>
     <li><a href="#头插法的实现代码">头插法的实现代码</a></li>
-  </ul>
+  </ol>
 
-  <ul>
+  <ol>
     <li><a href="#思路-1">思路</a></li>
     <li><a href="#冒泡法的实现代码">冒泡法的实现代码</a></li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -226,7 +222,6 @@
     
 </nav>
 
-
 </article>
 
         
@@ -236,14 +231,11 @@
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -257,7 +249,6 @@
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

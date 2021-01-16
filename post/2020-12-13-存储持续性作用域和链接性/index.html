@@ -4,18 +4,17 @@
     <title>存储持续性、作用域和链接性 // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    <meta name="description" content="除了线程存储持续性，C&#43;&#43;使用三种不同的方案来存储数据，这些方案的区别就在于数据保留在内存中的时间。">
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="存储持续性、作用域和链接性" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/" />
-    
+<meta name="description" content="除了线程存储持续性，C&#43;&#43;使用三种不同的方案来存储数据，这些方案的区别就在于数据保留在内存中的时间。">
+
+    <meta property="og:title" content="存储持续性、作用域和链接性" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -77,7 +75,6 @@
                     
                 </div>
             </div>
-            
             
         </div>
         <div class="article-entry" itemprop="articleBody">
@@ -147,9 +144,9 @@
 <h3 id="静态存储持续性外部链接性">静态存储持续性、外部链接性</h3>
 <p>链接性为外部的变量称为<strong>外部变量</strong>，或<strong>常规外部变量</strong>，它们的存储持续性为静态，作用域为整个文件。</p>
 <p>单定义规则（One Definition Rule, ODR）：变量只能有一次定义。为了满足这种需求，C++提供了两种变量声明。一种是定义声明（defining declaration）或简称为定义（definition），它给变量分配内存空间；另一种是引用声明（referencing declaration）或简称为声明（declaration），它不给变量分配内存空间，因为它引用已有的变量。引用声明使用关键字<code>extern</code>，且不进行初始化；否则，声明变为定义，导致分配内存空间。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">double</span> up; <span style="color:#75715e">// 定义，up是0
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> blem; <span style="color:#75715e">// blem在其它地方定义
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">char</span> gr <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;z&#39;</span>; <span style="color:#75715e">// 因为是初始化了所以是定义
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">double</span> up; <span style="color:#0080ff;font-style:italic">// 定义，up是0
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">extern</span> <span style="color:#5918bb;font-weight:bold">int</span> blem; <span style="color:#0080ff;font-style:italic">// blem在其它地方定义
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">extern</span> <span style="color:#5918bb;font-weight:bold">char</span> gr <span style="color:#2c5dcd">=</span> <span style="color:#0c6">&#39;z&#39;</span>; <span style="color:#0080ff;font-style:italic">// 因为是初始化了所以是定义
 </span></code></pre></div><p>在多个文件中使用外部变量，只需要在一个文件中包含该外部变量的定义（单定义规则），但在使用该变量的其他所有文件中，都必须使用extern声明它。</p>
 <p>如果在函数中声明了一个与外部变量同名的变量，这种声明将被视为一个自动变量的定义，当程序执行自动变量所属的函数时，该变量将位于作用域内，还将隐藏同名的全局变量。当然可以使用C++的作用域解析符（::）来访问被隐藏的外部变量，放在变量名前时，该运算符表示使用变量的全局版本。</p>
 <p>另外可以使用<code>extern</code>在函数中重新声明外部变量，该声明是可选的。它指出该函数被设计成使用外部变量。</p>
@@ -176,23 +173,23 @@
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#自动存储持续性">自动存储持续性</a>
-      <ul>
+      <ol>
         <li><a href="#自动变量">自动变量</a></li>
         <li><a href="#寄存器变量">寄存器变量</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#静态持续变量">静态持续变量</a>
-      <ul>
+      <ol>
         <li><a href="#静态存储持续性外部链接性">静态存储持续性、外部链接性</a></li>
         <li><a href="#静态存储持续性内部链接性">静态存储持续性、内部链接性</a></li>
         <li><a href="#静态存储持续性无链接性">静态存储持续性、无链接性</a></li>
         <li><a href="#再谈const">再谈const</a></li>
         <li><a href="#函数的链接性">函数的链接性</a></li>
-      </ul>
+      </ol>
     </li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -230,7 +227,6 @@
     
 </nav>
 
-
 </article>
 
         
@@ -240,14 +236,11 @@
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -261,7 +254,6 @@
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

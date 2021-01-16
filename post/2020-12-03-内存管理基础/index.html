@@ -4,18 +4,17 @@
     <title>内存管理基础 // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    <meta name="description" content="C&#43;&#43;中可以访问的内存通常分为三类。">
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="内存管理基础" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2020-12-03-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%9F%BA%E7%A1%80/" />
-    
+<meta name="description" content="C&#43;&#43;中可以访问的内存通常分为三类。">
+
+    <meta property="og:title" content="内存管理基础" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-12-03-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%9F%BA%E7%A1%80/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -77,7 +75,6 @@
                     
                 </div>
             </div>
-            
             
         </div>
         <div class="article-entry" itemprop="articleBody">
@@ -149,18 +146,18 @@
 </tbody>
 </table>
 <h3 id="示例">示例</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/* c 风格, 分配方式 1. */</span>
-<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> mem <span style="color:#f92672">=</span> malloc(<span style="color:#ae81ff">1024</span>);
-<span style="color:#75715e">/* c 风格, 分配方式 2.*/</span>
-<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> mem <span style="color:#f92672">=</span> calloc(<span style="color:#ae81ff">1024</span>);
-<span style="color:#75715e">/* C 风格, 回收内存. */</span>
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff;font-style:italic">/* c 风格, 分配方式 1. */</span>
+<span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#2c5dcd">*</span> mem <span style="color:#2c5dcd">=</span> malloc(<span style="color:#5918bb;font-weight:bold">1024</span>);
+<span style="color:#0080ff;font-style:italic">/* c 风格, 分配方式 2.*/</span>
+<span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#2c5dcd">*</span> mem <span style="color:#2c5dcd">=</span> calloc(<span style="color:#5918bb;font-weight:bold">1024</span>);
+<span style="color:#0080ff;font-style:italic">/* C 风格, 回收内存. */</span>
 free(mem);
 
-<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>; <span style="color:#75715e">// cpp new
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span> iptr;          <span style="color:#75715e">// cpp delete
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iarrptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">1024</span>]; <span style="color:#75715e">// cpp new T[]
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span>[] iarrptr;              <span style="color:#75715e">// cpp delete[] T
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>; <span style="color:#0080ff;font-style:italic">// cpp new
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">delete</span> iptr;          <span style="color:#0080ff;font-style:italic">// cpp delete
+</span><span style="color:#0080ff;font-style:italic"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iarrptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>[<span style="color:#5918bb;font-weight:bold">1024</span>]; <span style="color:#0080ff;font-style:italic">// cpp new T[]
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd;font-weight:bold">delete</span>[] iarrptr;              <span style="color:#0080ff;font-style:italic">// cpp delete[] T
 </span></code></pre></div><h3 id="注意-1">注意</h3>
 <ol>
 <li>不用堆内存时，一定要及时调用回收API回收内存。</li>
@@ -197,21 +194,21 @@ free(mem);
 <li>解引用</li>
 <li>加减</li>
 </ol>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>;
-<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> iptr <span style="color:#f92672">=</span> ptr;       <span style="color:#75715e">// 1. 相同类型的指针直接赋值.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> c <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)ptr; <span style="color:#75715e">// 2. 不同类型的指针需要强制转换.
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>ptr; <span style="color:#75715e">// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
-</span><span style="color:#75715e">// sizeof(int) == 4;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> arrPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">4</span>];
-<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span> testPtr <span style="color:#f92672">=</span> arrPtr;
-printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr); <span style="color:#75715e">// 可将指针作为无符号整型输出.
-</span><span style="color:#75715e"></span>testPtr <span style="color:#f92672">=</span> testPtr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr);
-testPtr <span style="color:#f92672">=</span> testPtr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, testPtr);
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> ptr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>;
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> iptr <span style="color:#2c5dcd">=</span> ptr;       <span style="color:#0080ff;font-style:italic">// 1. 相同类型的指针直接赋值.
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span> c <span style="color:#2c5dcd">=</span> (<span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span>)ptr; <span style="color:#0080ff;font-style:italic">// 2. 不同类型的指针需要强制转换.
+</span><span style="color:#0080ff;font-style:italic"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> i <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd">*</span>ptr; <span style="color:#0080ff;font-style:italic">// 3. 解引用, 将内存 ptr 指向的内存中的内容赋值给变量 i.
+</span><span style="color:#0080ff;font-style:italic"></span>
+<span style="color:#0080ff;font-style:italic">// 4. 加减. 指针的加减单位是以指针类型为依据的, int 在内存中占用 4 个字节, testPtr 加减每次的单位也是 4.
+</span><span style="color:#0080ff;font-style:italic">// sizeof(int) == 4;
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> arrPtr <span style="color:#2c5dcd">=</span> <span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>[<span style="color:#5918bb;font-weight:bold">4</span>];
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span> testPtr <span style="color:#2c5dcd">=</span> arrPtr;
+printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr); <span style="color:#0080ff;font-style:italic">// 可将指针作为无符号整型输出.
+</span><span style="color:#0080ff;font-style:italic"></span>testPtr <span style="color:#2c5dcd">=</span> testPtr <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">1</span>;
+printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr);
+testPtr <span style="color:#2c5dcd">=</span> testPtr <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">1</span>;
+printf(<span style="color:#0c6">&#34;%u</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>, testPtr);
 </code></pre></div><h3 id="指针指向指针的指针指向指针的指针的指针">指针，指向指针的指针，指向指针的指针的指针</h3>
 <h2 id="视频链接">视频链接</h2>
 <ol>
@@ -225,35 +222,35 @@ printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n<
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#静态变量区">静态变量区</a>
-      <ul>
+      <ol>
         <li><a href="#特点">特点</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#调用栈">调用栈</a>
-      <ul>
+      <ol>
         <li><a href="#特点-1">特点</a></li>
         <li><a href="#问题">问题</a></li>
         <li><a href="#注意">注意</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#堆">堆</a>
-      <ul>
+      <ol>
         <li><a href="#特点-2">特点</a></li>
         <li><a href="#分配">分配</a></li>
         <li><a href="#示例">示例</a></li>
         <li><a href="#注意-1">注意</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#指针">指针</a>
-      <ul>
+      <ol>
         <li><a href="#基本操作">基本操作</a></li>
         <li><a href="#指针指向指针的指针指向指针的指针的指针">指针，指向指针的指针，指向指针的指针的指针</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#视频链接">视频链接</a></li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -296,7 +293,6 @@ printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n<
     
 </nav>
 
-
 </article>
 
         
@@ -306,14 +302,11 @@ printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n<
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -327,7 +320,6 @@ printf(<span style="color:#e6db74">&#34;%u</span><span style="color:#ae81ff">\n<
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

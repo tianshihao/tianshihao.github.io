@@ -4,18 +4,17 @@
     <title>在Anaconda环境下安装Tensorflow // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="在Anaconda环境下安装Tensorflow" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2020-12-29-%E5%9C%A8anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/" />
-    
+
+
+    <meta property="og:title" content="在Anaconda环境下安装Tensorflow" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-12-29-%E5%9C%A8anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -83,7 +81,6 @@
                 </div>
             </div>
             
-            
         </div>
         <div class="article-entry" itemprop="articleBody">
             <h2 id="安装anaconda">安装Anaconda</h2>
@@ -92,8 +89,8 @@
 <p>注意在安装过程中的“Advanced Options”有两个选项，推荐勾选第二项：“Register Anaconda as my default Python”。</p>
 <h3 id="添加环境变量">添加环境变量</h3>
 <p>添加Anaconda安装根目录.\和.\Scripts\到系统变量。例如</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\M</span>yUsername<span style="color:#ae81ff">\a</span>naconda3
-C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\M</span>yUsername<span style="color:#ae81ff">\a</span>naconda3<span style="color:#ae81ff">\S</span>cripts
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">C:<span style="color:#c5060b;font-weight:bold">\U</span>sers<span style="color:#c5060b;font-weight:bold">\M</span>yUsername<span style="color:#c5060b;font-weight:bold">\a</span>naconda3
+C:<span style="color:#c5060b;font-weight:bold">\U</span>sers<span style="color:#c5060b;font-weight:bold">\M</span>yUsername<span style="color:#c5060b;font-weight:bold">\a</span>naconda3<span style="color:#c5060b;font-weight:bold">\S</span>cripts
 </code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-2.png" alt="添加环境变量"></p>
 <h3 id="激活环境">激活环境</h3>
 <p>在常用的终端——例如PowerShell——输入<code>conda activate</code>激活环境，使用<code>conda deactivate</code>退出环境。</p>
@@ -101,32 +98,32 @@ C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\M</span>
 <p>conda是一个提供包管理与环境管理的工具，包管理与pip类似，环境管理则允许用户安装不同版本的python环境并可以快速切换。Anaconda是一个开源的Python发行版本，包含了conda、Python以及Python的库numpy、pandas等，就是个Python全家桶。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <h3 id="为anaconda添加国内镜像源2">为Anaconda添加国内镜像源<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></h3>
 <p>TUNA提供了Anaconda仓库的镜像，运行以下指令可以添加：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 conda config --set show_channel_urls yes
 </code></pre></div><p>或者也可以直接修改个人文件夹下conda的配置文件.condarc为以下内容：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">channels:
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 show_channel_urls: true
 </code></pre></div><h2 id="安装tensorflow">安装Tensorflow</h2>
 <h3 id="创建一个tensorflow环境">创建一个Tensorflow环境</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda create -n 环境名称 python<span style="color:#f92672">=</span>Python版本号
-conda cretae -n tensorflow python<span style="color:#f92672">=</span>3.8.5
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda create -n 环境名称 python<span style="color:#2c5dcd">=</span>Python版本号
+conda cretae -n tensorflow python<span style="color:#2c5dcd">=</span>3.8.5
 </code></pre></div><h3 id="激活tensorflow环境">激活Tensorflow环境</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda activate tensorflow
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">conda activate tensorflow
 </code></pre></div><h3 id="安装tensorflow-1">安装Tensorflow</h3>
 <p>在刚才创建的名为tensorsflow的环境中安装tensorflow。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install tensorflow
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install tensorflow
 </code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-4.png" alt="使用pip安装tensorflow"></p>
 <p>如果下载速度很慢，可以上<a href="https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/tensorflow/">Links for tensorflow</a>直接下载。然后确保安装了wheel，</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install wheel
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install wheel
 </code></pre></div><p>就可以直接使用如下指令进行安装</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install <span style="color:#e6db74">&#34;D:\Downloads\迅雷下载\tensorflow-2.4.0-cp38-cp38-win_amd64.whl&#34;</span>
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install <span style="color:#0c6">&#34;D:\Downloads\迅雷下载\tensorflow-2.4.0-cp38-cp38-win_amd64.whl&#34;</span>
 </code></pre></div><p>安装成功之后，在tensorflow环境下进入python解释器，输入<code>import tensorflow as tf</code>，没有异常，表示安装成功。注意，Pyhton的深度学习软件包tensorflow是在Anaconda名为tensorflow的环境下安装的，在基础环境base中是没有tensorflow的。</p>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2020-12-29-%E5%9C%A8Anaconda%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85Tensorflow-5.png" alt="安装成功并且验证"></p>
 <h3 id="退出tensorflow环境">退出tensorflow环境</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">conda deactivate
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">conda deactivate
 </code></pre></div><section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -145,24 +142,24 @@ conda cretae -n tensorflow python<span style="color:#f92672">=</span>3.8.5
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#安装anaconda">安装Anaconda</a>
-      <ul>
+      <ol>
         <li><a href="#下载anaconda">下载Anaconda</a></li>
         <li><a href="#添加环境变量">添加环境变量</a></li>
         <li><a href="#激活环境">激活环境</a></li>
         <li><a href="#为anaconda添加国内镜像源2">为Anaconda添加国内镜像源</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#安装tensorflow">安装Tensorflow</a>
-      <ul>
+      <ol>
         <li><a href="#创建一个tensorflow环境">创建一个Tensorflow环境</a></li>
         <li><a href="#激活tensorflow环境">激活Tensorflow环境</a></li>
         <li><a href="#安装tensorflow-1">安装Tensorflow</a></li>
         <li><a href="#退出tensorflow环境">退出tensorflow环境</a></li>
-      </ul>
+      </ol>
     </li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -200,7 +197,6 @@ conda cretae -n tensorflow python<span style="color:#f92672">=</span>3.8.5
     
 </nav>
 
-
 </article>
 
         
@@ -210,14 +206,11 @@ conda cretae -n tensorflow python<span style="color:#f92672">=</span>3.8.5
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -231,7 +224,6 @@ conda cretae -n tensorflow python<span style="color:#f92672">=</span>3.8.5
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

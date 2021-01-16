@@ -4,18 +4,17 @@
     <title>名称空间 // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="名称空间" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/" />
-    
+
+
+    <meta property="og:title" content="名称空间" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -78,70 +76,69 @@
                 </div>
             </div>
             
-            
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jack
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">namespace</span> Jack
 {
-    <span style="color:#66d9ef">double</span> pail; <span style="color:#75715e">// variable declaration
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fetch</span>(); <span style="color:#75715e">// function prototype
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pal; <span style="color:#75715e">// variable declaration
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Well</span> {...}; <span style="color:#75715e">// structure declaration
-</span><span style="color:#75715e"></span>}
-<span style="color:#66d9ef">namespace</span> Jill
+    <span style="color:#5918bb;font-weight:bold">double</span> pail; <span style="color:#0080ff;font-style:italic">// variable declaration
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#ff8000;font-weight:bold">fetch</span>(); <span style="color:#0080ff;font-style:italic">// function prototype
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#5918bb;font-weight:bold">int</span> pal; <span style="color:#0080ff;font-style:italic">// variable declaration
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">struct</span> <span style="text-decoration:underline">Well</span> {...}; <span style="color:#0080ff;font-style:italic">// structure declaration
+</span><span style="color:#0080ff;font-style:italic"></span>}
+<span style="color:#2c5dcd;font-weight:bold">namespace</span> Jill
 {
-    <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">bucket</span>(<span style="color:#66d9ef">double</span> n){...} <span style="color:#75715e">// function prototype
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> fetch; <span style="color:#75715e">// variable declaration
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pal <span style="color:#75715e">// variable declaration
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Hill</span> {...}; <span style="color:#75715e">// structure declaration
-</span><span style="color:#75715e"></span>}
+    <span style="color:#5918bb;font-weight:bold">double</span> <span style="color:#ff8000;font-weight:bold">bucket</span>(<span style="color:#5918bb;font-weight:bold">double</span> n){...} <span style="color:#0080ff;font-style:italic">// function prototype
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#5918bb;font-weight:bold">double</span> fetch; <span style="color:#0080ff;font-style:italic">// variable declaration
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#5918bb;font-weight:bold">int</span> pal <span style="color:#0080ff;font-style:italic">// variable declaration
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">struct</span> <span style="text-decoration:underline">Hill</span> {...}; <span style="color:#0080ff;font-style:italic">// structure declaration
+</span><span style="color:#0080ff;font-style:italic"></span>}
 </code></pre></div><p>名称空间可以是全局的，也可以位于另一个名称空间中，但不能位于代码块中。因此，在默认情况下，在名称空间中声明的名称的链接性为外部的（除非它引用了常量）。</p>
 <p>除了用户定义的名称空间外，还存在另一个名称空间——全局名称空间（global namespace）。它对应于文件级声明区域，因此前面所说的全局变量现在被描述位于全局名称空间中。</p>
 <p>名称空间中的声明和定义规则同全局声明和定义规则相同 。</p>
 <p>名称空间是开放的（open），即可以把名称加入到已有的名称空间中。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jill
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">namespace</span> Jill
 {
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">goose</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>);
+    <span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span> <span style="color:#ff8000;font-weight:bold">goose</span>(<span style="color:#2c5dcd;font-weight:bold">const</span> <span style="color:#5918bb;font-weight:bold">char</span> <span style="color:#2c5dcd">*</span>);
 }
 </code></pre></div><p>可以在名称空间声明的后面，即该文件后面（或另外一个文件中）再次使用Jack名称空间来提供函数的代码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">namespace</span> Jack
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">namespace</span> Jack
 {
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fetch</span>()
+    <span style="color:#5918bb;font-weight:bold">void</span> <span style="color:#ff8000;font-weight:bold">fetch</span>()
     {
         ...
     }
 }
 </code></pre></div><p>访问给定名称空间中的名称的方法是，通过作用域解析符<code>::</code>，使用名称空间来<strong>限定</strong>该名称：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#f92672">::</span>pail <span style="color:#f92672">=</span> <span style="color:#ae81ff">12.34</span>; <span style="color:#75715e">// use a variable
-</span><span style="color:#75715e"></span>Jill<span style="color:#f92672">::</span>Hill mole; <span style="color:#75715e">// create a type Hill structure
-</span><span style="color:#75715e"></span>Jack<span style="color:#f92672">::</span>fetch(); <span style="color:#75715e">// use a function
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#2c5dcd">::</span>pail <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">12.34</span>; <span style="color:#0080ff;font-style:italic">// use a variable
+</span><span style="color:#0080ff;font-style:italic"></span>Jill<span style="color:#2c5dcd">::</span>Hill mole; <span style="color:#0080ff;font-style:italic">// create a type Hill structure
+</span><span style="color:#0080ff;font-style:italic"></span>Jack<span style="color:#2c5dcd">::</span>fetch(); <span style="color:#0080ff;font-style:italic">// use a function
 </span></code></pre></div><p>未被装饰的名称（如pail）称为未限定的名称（unqualified name）；包含名称空间的名称（如Jack::pail）称为限定的名称（qualified name）。</p>
 <h2 id="using声明和using编译指令">using声明和using编译指令</h2>
 <h3 id="using声明">using声明</h3>
 <p>我们并不希望每次使用每次时都对它进行限定,因此C++提供了两种机制(using声明和using编译指令)来简化对名称空间中名称的使用。<code>using</code>声明使特定的标识符可用，<code>using</code>编译指令是整个名称空间可用。</p>
 <p>using声明由被限定的名称和它前面的关键字using组成：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> Jill<span style="color:#f92672">::</span>fetch; <span style="color:#75715e">// a using declaration
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">using</span> Jill<span style="color:#2c5dcd">::</span>fetch; <span style="color:#0080ff;font-style:italic">// a using declaration
 </span></code></pre></div><p>将using声明添加到它所属的声明区域之后，便可以使用<code>fetch</code>代替<code>Jill::fetch</code>。另外,和其它局部变量一样,使用了using声明之后的名称会覆盖同名的全局变量。</p>
 <h3 id="using编译指令">using编译指令</h3>
 <p>using编译指令可使所有的名称都可用。using编译指令由名称空间名和它前面的关键字<code>using namespace</code>组成，它使名称空间中的所有名称都可用，而不需要使用作用域解析运算符：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> Jack; <span style="color:#75715e">// make all names in Jack available
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">using</span> <span style="color:#2c5dcd;font-weight:bold">namespace</span> Jack; <span style="color:#0080ff;font-style:italic">// make all names in Jack available
 </span></code></pre></div><p>在全局使用<code>using</code>编译指令，将使该名称空间的名称全局可用。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;    // places nemes in namespace std</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;  <span style="color:#75715e">// make names available globally
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;    // places nemes in namespace std</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span><span style="color:#2c5dcd;font-weight:bold">using</span> <span style="color:#2c5dcd;font-weight:bold">namespace</span> std;  <span style="color:#0080ff;font-style:italic">// make names available globally
 </span></code></pre></div><p>在函数中使用<code>using</code>编译指令，将使其中的名称在该函数中可用。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> Jack; <span style="color:#75715e">// make names available in main()
-</span><span style="color:#75715e"></span>    ...
+    <span style="color:#2c5dcd;font-weight:bold">using</span> <span style="color:#2c5dcd;font-weight:bold">namespace</span> Jack; <span style="color:#0080ff;font-style:italic">// make names available in main()
+</span><span style="color:#0080ff;font-style:italic"></span>    ...
 }
 </code></pre></div><p>另外using声明和using编译指令增加了名称冲突的可能性：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> Jack<span style="color:#f92672">::</span>pal;
-<span style="color:#66d9ef">using</span> Jill<span style="color:#f92672">::</span>pal;
-pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>; <span style="color:#75715e">// which one? now have a conflict
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">using</span> Jack<span style="color:#2c5dcd">::</span>pal;
+<span style="color:#2c5dcd;font-weight:bold">using</span> Jill<span style="color:#2c5dcd">::</span>pal;
+pal <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">4</span>; <span style="color:#0080ff;font-style:italic">// which one? now have a conflict
 </span></code></pre></div><p>事实上，编译器不允许同时使用上述两个using声明，因为这将导致二义性。在代码中使用作用域解析运算符，则不会存在二义性：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
-Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Jack<span style="color:#2c5dcd">::</span>pal <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">3</span>;
+Jill<span style="color:#2c5dcd">::</span>pal <span style="color:#2c5dcd">=</span> <span style="color:#5918bb;font-weight:bold">10</span>;
 </code></pre></div><p><code>Jack::pal</code>和<code>Jill::pal</code>是不同的标识符，表示不同的内存单元。</p>
         </div>
 
@@ -150,14 +147,14 @@ Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#using声明和using编译指令">using声明和using编译指令</a>
-      <ul>
+      <ol>
         <li><a href="#using声明">using声明</a></li>
         <li><a href="#using编译指令">using编译指令</a></li>
-      </ul>
+      </ol>
     </li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -195,7 +192,6 @@ Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span
     
 </nav>
 
-
 </article>
 
         
@@ -205,14 +201,11 @@ Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -226,7 +219,6 @@ Jill<span style="color:#f92672">::</span>pal <span style="color:#f92672">=</span
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

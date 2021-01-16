@@ -4,18 +4,17 @@
     <title>C&#43;&#43;面经 // 水上书</title>
 
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    <meta name="description" content="C&#43;&#43;面经总结">
-    
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <meta property="og:title" content="C&#43;&#43;面经" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh" />
-    <meta property="og:url" content="https://tianshihao.github.io/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" />
-    
+<meta name="description" content="C&#43;&#43;面经总结">
+
+    <meta property="og:title" content="C&#43;&#43;面经" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-15-c&#43;&#43;%E9%9D%A2%E7%BB%8F/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -38,13 +37,13 @@
             <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
             <nav id="main-nav">
                 
-                <a class="main-nav-link" href="/post/">文章</a>
+                <a class="main-nav-link" href="/post">文章</a>
                 
-                <a class="main-nav-link" href="/categories/">分类</a>
+                <a class="main-nav-link" href="/categories">分类</a>
                 
-                <a class="main-nav-link" href="/tags/">标签</a>
+                <a class="main-nav-link" href="/tags">标签</a>
                 
-                <a class="main-nav-link" href="/about/">关于</a>
+                <a class="main-nav-link" href="/about">关于</a>
                 
             </nav>
             <nav id="sub-nav">
@@ -54,7 +53,6 @@
         </div>
     </div>
 </header>
-
     <section id="main" class="outer">
         <article class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -83,7 +81,6 @@
                 </div>
             </div>
             
-            
         </div>
         <div class="article-entry" itemprop="articleBody">
             <h2 id="malloc原理">malloc原理</h2>
@@ -101,9 +98,9 @@
 <p>为<code>num</code>个对象的数组分配内存，并初始化所有分配存储中的字节为零。</p>
 <p>若分配成功，会返回指向分配内存块最低为（首位）字节的指针，它为任何类型适当地对齐。</p>
 <p>若<code>size</code>为零，则行为是<strong>实现定义</strong>的（可返回空指针，或返回不可用于访问存储的非空指针）。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>p1 <span style="color:#f92672">=</span> calloc(<span style="color:#ae81ff">4</span>, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>)); <span style="color:#75715e">// 分配并清零 4 个 int 的数组
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>p2 <span style="color:#f92672">=</span> calloc(<span style="color:#ae81ff">1</span>, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">4</span>])); <span style="color:#75715e">// 等价， 直接命名数组类型
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>p3 <span style="color:#f92672">=</span> calloc(<span style="color:#ae81ff">4</span>, <span style="color:#66d9ef">sizeof</span> <span style="color:#f92672">*</span>p3); <span style="color:#75715e">// 等价，免去重复类型名
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span>p1 <span style="color:#2c5dcd">=</span> calloc(<span style="color:#5918bb;font-weight:bold">4</span>, <span style="color:#2c5dcd;font-weight:bold">sizeof</span>(<span style="color:#5918bb;font-weight:bold">int</span>)); <span style="color:#0080ff;font-style:italic">// 分配并清零 4 个 int 的数组
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span>p2 <span style="color:#2c5dcd">=</span> calloc(<span style="color:#5918bb;font-weight:bold">1</span>, <span style="color:#2c5dcd;font-weight:bold">sizeof</span>(<span style="color:#5918bb;font-weight:bold">int</span>[<span style="color:#5918bb;font-weight:bold">4</span>])); <span style="color:#0080ff;font-style:italic">// 等价， 直接命名数组类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#2c5dcd">*</span>p3 <span style="color:#2c5dcd">=</span> calloc(<span style="color:#5918bb;font-weight:bold">4</span>, <span style="color:#2c5dcd;font-weight:bold">sizeof</span> <span style="color:#2c5dcd">*</span>p3); <span style="color:#0080ff;font-style:italic">// 等价，免去重复类型名
 </span></code></pre></div><h3 id="realloc-reset-allocation">realloc, <strong>re</strong>set <strong>alloc</strong>ation</h3>
 <p>函数原型是<code>void* realloc(void *ptr, size_t new_size);</code></p>
 <p>重新分配给定的内存区域。它必须是之前为<code>malloc()</code>、<code>calloc()</code>或 <code>realloc()</code> 所分配，并且仍未被<code>free()</code>或 <code>realloc()</code> 的调用所释放。否则，结果<strong>未定义</strong>。</p>
@@ -363,16 +360,16 @@ dynamic_cast如果不能转换返回NULL。</p>
 <p>C++11提供三种智能指针模板类：unique_ptr、shared_ptr和weak_ptr。这三个智能指针模板都定义了类似指针的对象，可以将new获得（直接或间接）的地址赋给这种对象。当智能指针过期时，其析构函数将使用delete来释放内存。因此，如果将new返回的地址赋给这些对象，将无需记住稍后释放这些内存：在智能指针过期时，这些内存将自动被释放。</p>
 <h3 id="unique_ptr">unique_ptr</h3>
 <p>unique_ptr“<strong>唯一</strong>”拥有其所指对象，同一时刻只能有一个unique_ptr指向给定对象（通过禁止拷贝语义、只有移动语义来实现）。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> p1(<span style="color:#66d9ef">new</span> string(<span style="color:#e6db74">&#34;hello world&#34;</span>));
-unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> p2;
-p2 <span style="color:#f92672">=</span> p1;       <span style="color:#75715e">// 编译器不允许
-</span><span style="color:#75715e"></span>p2 <span style="color:#f92672">=</span> move(p1); <span style="color:#75715e">// 编译器允许
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span> p1(<span style="color:#2c5dcd;font-weight:bold">new</span> string(<span style="color:#0c6">&#34;hello world&#34;</span>));
+unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span> p2;
+p2 <span style="color:#2c5dcd">=</span> p1;       <span style="color:#0080ff;font-style:italic">// 编译器不允许
+</span><span style="color:#0080ff;font-style:italic"></span>p2 <span style="color:#2c5dcd">=</span> move(p1); <span style="color:#0080ff;font-style:italic">// 编译器允许
 </span></code></pre></div><p>另外unique_ptr还有更聪明的地方：当程序试图将一个unique_ptr赋值给另一个时，如果源unique_ptr是个临时右值，编译器允许这么做；如果源unique_ptr将存在一段时间，编译器将禁止这么做，比如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> p1(<span style="color:#66d9ef">new</span> string(<span style="color:#e6db74">&#34;hello world&#34;</span>));
-unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> p2;
-p2 <span style="color:#f92672">=</span> p1; <span style="color:#75715e">// #1 not allowed
-</span><span style="color:#75715e"></span>unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> p3;
-p3 <span style="color:#f92672">=</span> unique_ptr<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> string(<span style="color:#e6db74">&#34;You&#34;</span>)); <span style="color:#75715e">// #2 allowed
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span> p1(<span style="color:#2c5dcd;font-weight:bold">new</span> string(<span style="color:#0c6">&#34;hello world&#34;</span>));
+unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span> p2;
+p2 <span style="color:#2c5dcd">=</span> p1; <span style="color:#0080ff;font-style:italic">// #1 not allowed
+</span><span style="color:#0080ff;font-style:italic"></span>unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span> p3;
+p3 <span style="color:#2c5dcd">=</span> unique_ptr<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;</span>(<span style="color:#2c5dcd;font-weight:bold">new</span> string(<span style="color:#0c6">&#34;You&#34;</span>)); <span style="color:#0080ff;font-style:italic">// #2 allowed
 </span></code></pre></div><h3 id="shared_ptr">shared_ptr</h3>
 <p>shared_ptr实现<strong>共享式拥有</strong>概念。多个智能指针可以指向相同对象，该对象和其相关资源会在“最后一个引用被销毁”时候释放。从名字share就可以看出了资源可以被多个指针共享，它使用<strong>计数机制</strong>来表明资源被几个指针共享。可以通过成员函数use_count()来查看资源的所有者个数。除了可以通过new来构造，还可以通过传入auto_ptr、unique_ptr、weak_ptr来构造。当我们调用release()时，当前指针会释放资源所有权，计数减一。当计数等于0时，资源会被释放。</p>
 <p>shared_ptr是为了解决auto_ptr在对象所有权上的局限性(auto_ptr 是独占的),在使用引用计数的机制上提供了可以共享所有权的智能指针。</p>
@@ -394,9 +391,9 @@ p3 <span style="color:#f92672">=</span> unique_ptr<span style="color:#f92672">&l
 <p>get()，返回内部对象（指针），由于已经重载了()方法，因此和直接使用对象是一样的。如</p>
 </li>
 </ol>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>p(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">1</span>));
-cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">&lt;&lt;</span> endl;
-cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p.get() <span style="color:#f92672">&lt;&lt;</span> endl;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>p(<span style="color:#2c5dcd;font-weight:bold">new</span> <span style="color:#5918bb;font-weight:bold">int</span>(<span style="color:#5918bb;font-weight:bold">1</span>));
+cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#2c5dcd">*</span>p <span style="color:#2c5dcd">&lt;&lt;</span> endl;
+cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#2c5dcd">*</span>p.get() <span style="color:#2c5dcd">&lt;&lt;</span> endl;
 </code></pre></div><h3 id="weak_ptr">weak_ptr</h3>
 <p>weak_ptr是一种<strong>不控制对象生命周期</strong>的智能指针，它指向一个shared_ptr管理的对象。进行该对象的内存管理的是那个强引用的shared_ptr。weak_ptr只是提供了对管理对象的一个<strong>访问手段</strong>。weak_ptr设计的目的是为配合shared_ptr而引入的一种智能指针来协助shared_ptr工作，它只可以从一个shared_ptr或另一个weak_ptr对象构造，<strong>它的构造和析构不会引起引用记数的增加或减少</strong>。weak_ptr是用来解决shared_ptr相互引用时的死锁问题，如果说两个shared_ptr相互引用，那么这两个指针的引用计数永远不可能下降为0，资源永远不会释放。它是对对象的一种<strong>弱引用</strong>，不会增加对象的引用计数，和shared_ptr之间可以相互转化，shared_ptr可以直接赋值给它，它可以通过调用lock函数来获得shared_ptr。</p>
 <p>如果一块内存被shared_ptr和weak_ptr同时引用，当所有shared_ptr析构了之后，不管还有没有weak_ptr引用该内存，内存也会被释放。所以weak_ptr不保证它指向的内存一定是有效的，在使用之前需要检查weak_ptr是否为空指针。</p>
@@ -455,42 +452,42 @@ cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</
 <p>定于于头文件 <code>array</code>。</p>
 <p><code>std::array</code> 是封装<strong>固定大小</strong>数组的容器，<strong>无法动态的扩展或收缩</strong>，在使用该容器的过程无法借由增加或移除元素而改变其大小，它只允许<strong>访问</strong>或者<strong>替换</strong>存储的元素。在<strong>栈</strong>上分配内存。介于传统数组和 <code>vector</code> 之间，封装了一些函数，比传统数组方便，但又没必要使用 <code>vector</code>。此容器是一个<strong>聚合</strong>类型，其语义等同于保有一个 C 风格数组 <code>T[N]</code> 作为其唯一非静态数据成员的结构体，它不会自动退化成指针（或被隐式的转换成指针），定义时需要指定类型和大小。该结构体结合了 C 风格数组的性能、可访问性与容器的优点，比如可获取大小、支持赋值、<strong>随机访问</strong>迭代器等。</p>
 <p>初始化</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">&gt;</span> values; <span style="color:#75715e">// 创建了一个 array 容器, 包含 10 个浮点型元素, array 不会初始化, 元素值不确定.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>arrya<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">&gt;</span> values {}; <span style="color:#75715e">// 初始化为 0 或和默认元素类型等效的值.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">&gt;</span> values {<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.5</span>, <span style="color:#ae81ff">2.0</span>}; <span style="color:#75715e">// 注意, 只初始化了前 4 个元素, 剩余元素都被初始化为 0.0.
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#2c5dcd">::</span>array<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span>, <span style="color:#5918bb;font-weight:bold">10</span><span style="color:#2c5dcd">&gt;</span> values; <span style="color:#0080ff;font-style:italic">// 创建了一个 array 容器, 包含 10 个浮点型元素, array 不会初始化, 元素值不确定.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>arrya<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span>, <span style="color:#5918bb;font-weight:bold">10</span><span style="color:#2c5dcd">&gt;</span> values {}; <span style="color:#0080ff;font-style:italic">// 初始化为 0 或和默认元素类型等效的值.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>array<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span>, <span style="color:#5918bb;font-weight:bold">10</span><span style="color:#2c5dcd">&gt;</span> values {<span style="color:#5918bb;font-weight:bold">0.5</span>, <span style="color:#5918bb;font-weight:bold">1.0</span>, <span style="color:#5918bb;font-weight:bold">1.5</span>, <span style="color:#5918bb;font-weight:bold">2.0</span>}; <span style="color:#0080ff;font-style:italic">// 注意, 只初始化了前 4 个元素, 剩余元素都被初始化为 0.0.
 </span></code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P911150226392.jpg" alt="初始化array容器"></p>
 <blockquote>
 <p>“由于 <code>array</code> 容器中包含了 <code>at()</code> 这样的成员函数，使得操作元素时比普通数组更安全。”</p>
 </blockquote>
 <p>代码示例</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;algorithm&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;array&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iterator&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;algorithm&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;array&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iterator&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;string&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    <span style="color:#75715e">// 用聚合初始化构造
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">3</span><span style="color:#f92672">&gt;</span> a1{{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}};  <span style="color:#75715e">// CWG 1270 重申前的 C++11 中要求双花括号
-</span><span style="color:#75715e"></span>                                       <span style="color:#75715e">// （ C++11 之后的版本和 C++14 起不要求）
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">3</span><span style="color:#f92672">&gt;</span> a2 <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}; <span style="color:#75715e">// = 后决不要求
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, <span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span> a3 <span style="color:#f92672">=</span> {std<span style="color:#f92672">::</span>string(<span style="color:#e6db74">&#34;a&#34;</span>), <span style="color:#e6db74">&#34;b&#34;</span>};
+    <span style="color:#0080ff;font-style:italic">// 用聚合初始化构造
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>array<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span>, <span style="color:#5918bb;font-weight:bold">3</span><span style="color:#2c5dcd">&gt;</span> a1{{<span style="color:#5918bb;font-weight:bold">1</span>, <span style="color:#5918bb;font-weight:bold">2</span>, <span style="color:#5918bb;font-weight:bold">3</span>}};  <span style="color:#0080ff;font-style:italic">// CWG 1270 重申前的 C++11 中要求双花括号
+</span><span style="color:#0080ff;font-style:italic"></span>                                       <span style="color:#0080ff;font-style:italic">// （ C++11 之后的版本和 C++14 起不要求）
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>array<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span>, <span style="color:#5918bb;font-weight:bold">3</span><span style="color:#2c5dcd">&gt;</span> a2 <span style="color:#2c5dcd">=</span> {<span style="color:#5918bb;font-weight:bold">1</span>, <span style="color:#5918bb;font-weight:bold">2</span>, <span style="color:#5918bb;font-weight:bold">3</span>}; <span style="color:#0080ff;font-style:italic">// = 后决不要求
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>array<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string, <span style="color:#5918bb;font-weight:bold">2</span><span style="color:#2c5dcd">&gt;</span> a3 <span style="color:#2c5dcd">=</span> {std<span style="color:#2c5dcd">::</span>string(<span style="color:#0c6">&#34;a&#34;</span>), <span style="color:#0c6">&#34;b&#34;</span>};
 
-    <span style="color:#75715e">// 支持容器操作
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>sort(a1.begin(), a1.end());
-    std<span style="color:#f92672">::</span>reverse_copy(a2.begin(), a2.end(),
-                      std<span style="color:#f92672">::</span>ostream_iterator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34; &#34;</span>));
+    <span style="color:#0080ff;font-style:italic">// 支持容器操作
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>sort(a1.begin(), a1.end());
+    std<span style="color:#2c5dcd">::</span>reverse_copy(a2.begin(), a2.end(),
+                      std<span style="color:#2c5dcd">::</span>ostream_iterator<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>(std<span style="color:#2c5dcd">::</span>cout, <span style="color:#0c6">&#34; &#34;</span>));
 
-    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;
+    std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#39;\n&#39;</span>;
 
-    <span style="color:#75715e">// 支持带范围 for 循环
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>s : a3)
+    <span style="color:#0080ff;font-style:italic">// 支持带范围 for 循环
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">for</span> (<span style="color:#2c5dcd;font-weight:bold">const</span> <span style="color:#2c5dcd;font-weight:bold">auto</span> <span style="color:#2c5dcd">&amp;</span>s : a3)
     {
-        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> s <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39; &#39;</span>;
+        std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> s <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#39; &#39;</span>;
     }
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
 </code></pre></div><h3 id="vector封装的动态数组">vector，封装的动态数组</h3>
@@ -504,19 +501,19 @@ cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</
 </ul>
 <p>应用场景：需要高效的随即存取，且不经常对非尾结点进行插入移除或不在乎插入和删除的效率。</p>
 <p>创建</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// 初始化
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> values; <span style="color:#75715e">// 声明一个空 vector 容器, 因为容器中没有元素, 所以没有为其分配空间.
-</span><span style="color:#75715e"></span>values.reserver(<span style="color:#ae81ff">20</span>); <span style="color:#75715e">// 在空容器的基础上, 调用 reverse 函数增加容器容量, 后续最好更新迭代器.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> primes {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">19</span>}; <span style="color:#75715e">// 在创建容器时初始化, 指定初始值和元素个数.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> values(<span style="color:#ae81ff">20</span>); <span style="color:#75715e">// 在创建容器时指定元素个数, 此时容器有 20 个元素, 默认初始值都为 0.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> values(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">1.0</span>); <span style="color:#75715e">// 若不想初始值为 0, 则也可以指定一个值. 20 个元素值都是 1.0.
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// 通过其它 vector 创建新的 vector
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> array[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>};
-std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>values(array, array <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>); <span style="color:#75715e">// values 将保存 {1, 2}
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>values1{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>};
-std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>values2(std<span style="color:#f92672">::</span>begin(values1), std<span style="color:#f92672">::</span>begin(values1) <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>); <span style="color:#75715e">// values2 保存 {1, 2, 3}
-</span><span style="color:#75715e"></span>
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff;font-style:italic">// 初始化
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span><span style="color:#2c5dcd">&gt;</span> values; <span style="color:#0080ff;font-style:italic">// 声明一个空 vector 容器, 因为容器中没有元素, 所以没有为其分配空间.
+</span><span style="color:#0080ff;font-style:italic"></span>values.reserver(<span style="color:#5918bb;font-weight:bold">20</span>); <span style="color:#0080ff;font-style:italic">// 在空容器的基础上, 调用 reverse 函数增加容器容量, 后续最好更新迭代器.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span> primes {<span style="color:#5918bb;font-weight:bold">2</span>, <span style="color:#5918bb;font-weight:bold">3</span>, <span style="color:#5918bb;font-weight:bold">5</span>, <span style="color:#5918bb;font-weight:bold">7</span>, <span style="color:#5918bb;font-weight:bold">11</span>, <span style="color:#5918bb;font-weight:bold">13</span>, <span style="color:#5918bb;font-weight:bold">17</span>, <span style="color:#5918bb;font-weight:bold">19</span>}; <span style="color:#0080ff;font-style:italic">// 在创建容器时初始化, 指定初始值和元素个数.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span><span style="color:#2c5dcd">&gt;</span> values(<span style="color:#5918bb;font-weight:bold">20</span>); <span style="color:#0080ff;font-style:italic">// 在创建容器时指定元素个数, 此时容器有 20 个元素, 默认初始值都为 0.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">double</span><span style="color:#2c5dcd">&gt;</span> values(<span style="color:#5918bb;font-weight:bold">20</span>, <span style="color:#5918bb;font-weight:bold">1.0</span>); <span style="color:#0080ff;font-style:italic">// 若不想初始值为 0, 则也可以指定一个值. 20 个元素值都是 1.0.
+</span><span style="color:#0080ff;font-style:italic"></span>
+<span style="color:#0080ff;font-style:italic">// 通过其它 vector 创建新的 vector
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#5918bb;font-weight:bold">int</span> array[]<span style="color:#2c5dcd">=</span>{<span style="color:#5918bb;font-weight:bold">1</span>,<span style="color:#5918bb;font-weight:bold">2</span>,<span style="color:#5918bb;font-weight:bold">3</span>};
+std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>values(array, array <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">2</span>); <span style="color:#0080ff;font-style:italic">// values 将保存 {1, 2}
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>values1{<span style="color:#5918bb;font-weight:bold">1</span>, <span style="color:#5918bb;font-weight:bold">2</span>, <span style="color:#5918bb;font-weight:bold">3</span>, <span style="color:#5918bb;font-weight:bold">4</span>, <span style="color:#5918bb;font-weight:bold">5</span>};
+std<span style="color:#2c5dcd">::</span>vector<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span>values2(std<span style="color:#2c5dcd">::</span>begin(values1), std<span style="color:#2c5dcd">::</span>begin(values1) <span style="color:#2c5dcd">+</span> <span style="color:#5918bb;font-weight:bold">3</span>); <span style="color:#0080ff;font-style:italic">// values2 保存 {1, 2, 3}
+</span><span style="color:#0080ff;font-style:italic"></span>
 </code></pre></div><h3 id="list双向链表">list，双向链表</h3>
 <p>定义于头文件 <code>&lt;list&gt;</code>。</p>
 <p><code>std::list</code>，又称双向链表容器，环状，是支持<strong>常数时间</strong>从容器<strong>任何位置插入和移除</strong>元素的容器。<strong>不支持快速随机访问</strong>。它通常实现为双向链表。在<strong>堆</strong>上分配内存，每插入一个元数都会分配空间（不是内存拷贝），每删除一个元素都会释放空间。</p>
@@ -529,36 +526,36 @@ std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</
 <p>应用场景：需要高效的插入和删除，而不关心随机访问。</p>
 <p>创建同 <code>vector</code>。</p>
 <p>代码示例</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;algorithm&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;list&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;algorithm&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;list&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    <span style="color:#75715e">// 创建含有整数的 list.
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>list<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> l <span style="color:#f92672">=</span> {<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">8</span>};
+    <span style="color:#0080ff;font-style:italic">// 创建含有整数的 list.
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>list<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span> l <span style="color:#2c5dcd">=</span> {<span style="color:#5918bb;font-weight:bold">7</span>, <span style="color:#5918bb;font-weight:bold">5</span>, <span style="color:#5918bb;font-weight:bold">16</span>, <span style="color:#5918bb;font-weight:bold">8</span>};
 
-    <span style="color:#75715e">// 添加整数到 list 开头.
-</span><span style="color:#75715e"></span>    l.push_front(<span style="color:#ae81ff">25</span>);
+    <span style="color:#0080ff;font-style:italic">// 添加整数到 list 开头.
+</span><span style="color:#0080ff;font-style:italic"></span>    l.push_front(<span style="color:#5918bb;font-weight:bold">25</span>);
 
-    <span style="color:#75715e">// 添加整数都 list 结尾.
-</span><span style="color:#75715e"></span>    l.push_back(<span style="color:#ae81ff">13</span>);
+    <span style="color:#0080ff;font-style:italic">// 添加整数都 list 结尾.
+</span><span style="color:#0080ff;font-style:italic"></span>    l.push_back(<span style="color:#5918bb;font-weight:bold">13</span>);
 
-    <span style="color:#75715e">// 搜索插入到 16 前的值.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>find(l.begin(), l.end(), <span style="color:#ae81ff">16</span>);
-    <span style="color:#66d9ef">if</span> (it <span style="color:#f92672">!=</span> l.end())
+    <span style="color:#0080ff;font-style:italic">// 搜索插入到 16 前的值.
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">auto</span> it <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>find(l.begin(), l.end(), <span style="color:#5918bb;font-weight:bold">16</span>);
+    <span style="color:#2c5dcd;font-weight:bold">if</span> (it <span style="color:#2c5dcd">!=</span> l.end())
     {
-        <span style="color:#75715e">// 在迭代器 it 前插入整数.
-</span><span style="color:#75715e"></span>        l.insert(it, <span style="color:#ae81ff">42</span>);
+        <span style="color:#0080ff;font-style:italic">// 在迭代器 it 前插入整数.
+</span><span style="color:#0080ff;font-style:italic"></span>        l.insert(it, <span style="color:#5918bb;font-weight:bold">42</span>);
     }
 
-    <span style="color:#75715e">// 迭代并打印 list 的值.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n : l)
+    <span style="color:#0080ff;font-style:italic">// 迭代并打印 list 的值.
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">for</span> (<span style="color:#5918bb;font-weight:bold">int</span> n : l)
     {
-        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> n <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+        std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> n <span style="color:#2c5dcd">&lt;&lt;</span> std<span style="color:#2c5dcd">::</span>endl;
     }
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
 </code></pre></div><h3 id="forward_list单链表">forward_list，单链表</h3>
@@ -578,31 +575,31 @@ std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</
 </ul>
 <p>应用场景：双端队列，需要随机存取，而且关心两端数据的插入和删除。</p>
 <p>代码示例</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;deque&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;deque&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    std<span style="color:#f92672">::</span>deque<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> d <span style="color:#f92672">=</span> {<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">8</span>};
+    std<span style="color:#2c5dcd">::</span>deque<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span> d <span style="color:#2c5dcd">=</span> {<span style="color:#5918bb;font-weight:bold">7</span>, <span style="color:#5918bb;font-weight:bold">5</span>, <span style="color:#5918bb;font-weight:bold">16</span>, <span style="color:#5918bb;font-weight:bold">8</span>};
 
-    d.push_front(<span style="color:#ae81ff">13</span>);
-    d.push_back(<span style="color:#ae81ff">25</span>);
+    d.push_front(<span style="color:#5918bb;font-weight:bold">13</span>);
+    d.push_back(<span style="color:#5918bb;font-weight:bold">25</span>);
 
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n : d)
+    <span style="color:#2c5dcd;font-weight:bold">for</span> (<span style="color:#5918bb;font-weight:bold">int</span> n : d)
     {
-        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> n <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> n <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>;
     }
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
 </code></pre></div><h3 id="set集合">set，集合</h3>
 <p>包含在头文件 <code>set</code>，类模板定义如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,                                <span style="color:#75715e">// 键 key 和值 value 的类型
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Compare</span> <span style="color:#f92672">=</span>std<span style="color:#f92672">::</span>less<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>,              <span style="color:#75715e">// 指定 set 容器内部的排序规则
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>     <span style="color:#75715e">// 指定分配器对象的类型
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">set</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,                                <span style="color:#0080ff;font-style:italic">// 键 key 和值 value 的类型
+</span><span style="color:#0080ff;font-style:italic"></span>	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Compare</span> <span style="color:#2c5dcd">=</span>std<span style="color:#2c5dcd">::</span>less<span style="color:#2c5dcd">&lt;</span>T<span style="color:#2c5dcd">&gt;</span>,              <span style="color:#0080ff;font-style:italic">// 指定 set 容器内部的排序规则
+</span><span style="color:#0080ff;font-style:italic"></span>	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>     <span style="color:#0080ff;font-style:italic">// 指定分配器对象的类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">set</span>;
 </code></pre></div><blockquote>
 <p>对于 set 类模板中的 3 个参数，后 2 个参数自带默认值，且几乎所有场景中只需使用前 2 个参数，第 3 个参数不会用到。</p>
 </blockquote>
@@ -613,56 +610,56 @@ std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</
 <p>对于初学者来说，切勿尝试直接修改 set 容器中已存储元素的值，这很有可能破坏 set 容器中元素的有序性，最正确的修改 set 容器中元素值的做法是：先删除该元素，然后再添加一个修改后的元素。</p>
 </blockquote>
 <p>创建</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> mySet; <span style="color:#75715e">// 调用默认构造函数, 创建空的 set 容器.
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// 在创建的同时初始化. 内部顺序为 &#34;apple&#34;, &#34;banana&#34;, &#34;peach&#34;.
-</span><span style="color:#75715e"></span>set<span style="color:#f92672">::</span>sed<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> fruit {
-    <span style="color:#e6db74">&#34;banana&#34;</span>,
-    <span style="color:#e6db74">&#34;apple&#34;</span>,
-    <span style="color:#e6db74">&#34;peach&#34;</span>
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> mySet; <span style="color:#0080ff;font-style:italic">// 调用默认构造函数, 创建空的 set 容器.
+</span><span style="color:#0080ff;font-style:italic"></span>
+<span style="color:#0080ff;font-style:italic">// 在创建的同时初始化. 内部顺序为 &#34;apple&#34;, &#34;banana&#34;, &#34;peach&#34;.
+</span><span style="color:#0080ff;font-style:italic"></span>set<span style="color:#2c5dcd">::</span>sed<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> fruit {
+    <span style="color:#0c6">&#34;banana&#34;</span>,
+    <span style="color:#0c6">&#34;apple&#34;</span>,
+    <span style="color:#0c6">&#34;peach&#34;</span>
 };
-std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> copySet(mySet);
-std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> copySet <span style="color:#f92672">=</span> mySet;
+std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> copySet(mySet);
+std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> copySet <span style="color:#2c5dcd">=</span> mySet;
 
-<span style="color:#75715e">// 支持取已有 set 容器中的部分元素, 来初始化新 set 容器, 例如一下, set 中包含 &#34;apple&#34; 和 &#34;peach&#34; 2 个 string 字符串.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> copySet(<span style="color:#f92672">++</span>mySet.begin(), mySet.end());
+<span style="color:#0080ff;font-style:italic">// 支持取已有 set 容器中的部分元素, 来初始化新 set 容器, 例如一下, set 中包含 &#34;apple&#34; 和 &#34;peach&#34; 2 个 string 字符串.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> copySet(<span style="color:#2c5dcd">++</span>mySet.begin(), mySet.end());
 
-<span style="color:#75715e">// 借助 set 类模板定义中第 2 个参数, 可以手动修改 set 容器中的排序规则. 内部顺序为 &#34;peach&#34;, &#34;banana&#34;, &#34;apple&#34;.
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, std<span style="color:#f92672">::</span>greater<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;&gt;</span> copySet {
-    <span style="color:#e6db74">&#34;banana&#34;</span>,
-    <span style="color:#e6db74">&#34;apple&#34;</span>,
-    <span style="color:#e6db74">&#34;peach&#34;</span>
+<span style="color:#0080ff;font-style:italic">// 借助 set 类模板定义中第 2 个参数, 可以手动修改 set 容器中的排序规则. 内部顺序为 &#34;peach&#34;, &#34;banana&#34;, &#34;apple&#34;.
+</span><span style="color:#0080ff;font-style:italic"></span>std<span style="color:#2c5dcd">::</span>set<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string, std<span style="color:#2c5dcd">::</span>greater<span style="color:#2c5dcd">&lt;</span>string<span style="color:#2c5dcd">&gt;&gt;</span> copySet {
+    <span style="color:#0c6">&#34;banana&#34;</span>,
+    <span style="color:#0c6">&#34;apple&#34;</span>,
+    <span style="color:#0c6">&#34;peach&#34;</span>
 };
 
 </code></pre></div><h3 id="multiset">multiset，</h3>
 <p>定义头文件 <code>&lt;set&gt;</code>，类模板定义如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,                                <span style="color:#75715e">// 键 key 和值 value 的类型
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Compare</span> <span style="color:#f92672">=</span>std<span style="color:#f92672">::</span>less<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>,              <span style="color:#75715e">// 指定 set 容器内部的排序规则
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>     <span style="color:#75715e">// 指定分配器对象的类型
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">multiset</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,                                <span style="color:#0080ff;font-style:italic">// 键 key 和值 value 的类型
+</span><span style="color:#0080ff;font-style:italic"></span>	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Compare</span> <span style="color:#2c5dcd">=</span>std<span style="color:#2c5dcd">::</span>less<span style="color:#2c5dcd">&lt;</span>T<span style="color:#2c5dcd">&gt;</span>,              <span style="color:#0080ff;font-style:italic">// 指定 set 容器内部的排序规则
+</span><span style="color:#0080ff;font-style:italic"></span>	<span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>     <span style="color:#0080ff;font-style:italic">// 指定分配器对象的类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">multiset</span>;
 </code></pre></div><p><code>std::multiset</code> 是含有 <code>Key</code> 类型对象<strong>有序</strong>集的容器。不同于 <code>set</code> ，它<strong>允许多个键拥有等价的值</strong>。用键比较函数 <code>Compare</code> 进行排序。搜索、插入和移除操作拥有<strong>对数复杂度</strong>。<strong>红黑树</strong>。</p>
 <p>高级用法http://c.biancheng.net/view/545.html</p>
 <h3 id="unordered_set">unordered_set</h3>
 <p>定义于头文件 <code>&lt;unodered_set&gt;</code>，类模板定义：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>, 								   <span style="color:#75715e">//容器中存储元素的类型
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hash</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,			 <span style="color:#75715e">//确定元素存储位置所用的哈希函数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KeyEqual</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>equal_to<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,	<span style="color:#75715e">//判断各个元素是否相等所用的函数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>	<span style="color:#75715e">//指定分配器对象的类型
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">unordered_set</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>, 								   <span style="color:#0080ff;font-style:italic">//容器中存储元素的类型
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Hash</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>hash<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,			 <span style="color:#0080ff;font-style:italic">//确定元素存储位置所用的哈希函数
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">KeyEqual</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>equal_to<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,	<span style="color:#0080ff;font-style:italic">//判断各个元素是否相等所用的函数
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>	<span style="color:#0080ff;font-style:italic">//指定分配器对象的类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">unordered_set</span>;
 </code></pre></div><p><code>unordered_set</code> 是含有 <code>Key</code> 类型唯一对象集合的关联容器。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
 <p>在内部，元素并<strong>不以任何特别顺序排序</strong>，而是组织进<strong>桶</strong>（本质就是链表）中。元素被放进哪个桶完全依赖其值的<strong>哈希</strong>。这允许对单独元素的快速访问，因为哈希一旦确定，就准确指代元素被放入的桶。</p>
 <p>不可修改容器元素（即使通过非 <code>const</code> 迭代器），因为修改可能更改元素的哈希，并破坏容器。</p>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P91Q02449C2.jpg" alt="unordered_set 容器组织数据的方式"></p>
 <h3 id="unordered_multiset">unordered_multiset</h3>
 <p>定义于头文件 <code>&lt;unordered_set&gt;</code>，类模板定义：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>, 								   <span style="color:#75715e">//容器中存储元素的类型
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hash</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,			 <span style="color:#75715e">//确定元素存储位置所用的哈希函数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KeyEqual</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>equal_to<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,	<span style="color:#75715e">//判断各个元素是否相等所用的函数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>	<span style="color:#75715e">//指定分配器对象的类型
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">unordered_multiset</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>, 								   <span style="color:#0080ff;font-style:italic">//容器中存储元素的类型
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Hash</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>hash<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,			 <span style="color:#0080ff;font-style:italic">//确定元素存储位置所用的哈希函数
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">KeyEqual</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>equal_to<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,	<span style="color:#0080ff;font-style:italic">//判断各个元素是否相等所用的函数
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>	<span style="color:#0080ff;font-style:italic">//指定分配器对象的类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">unordered_multiset</span>;
 </code></pre></div><p><code>unordered_multiset</code> 是关联容器，含有可能非唯一 <code>Key</code> 类型对象的集合。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
 <p>元素在内部并<strong>不以任何顺序排序</strong>，只是被组织到<strong>桶</strong>（本质就是链表）中。元素被放入哪个桶完全依赖其值的<strong>哈希</strong>。这允许快速访问单独的元素，因为一旦计算哈希，它就指代放置该元素的准确的桶。</p>
 <blockquote>
@@ -670,12 +667,12 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
 </blockquote>
 <h3 id="stdmap">std::map</h3>
 <p>定义于头文件 <code>&lt;map&gt;</code>，声明为：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Compare</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>less<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Key, T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>
-<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">map</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">T</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Compare</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>less<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>pair<span style="color:#2c5dcd">&lt;</span><span style="color:#2c5dcd;font-weight:bold">const</span> Key, T<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd">&gt;</span>
+<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">map</span>;
 </code></pre></div><p>关联容器，底层基于红黑树，具有<strong>自动排序</strong>功能。特点是增加和删除结点对迭代器的影响很小，搜索、移除和插入操作拥有<strong>对数复杂度</strong>。</p>
 <p>红黑树的存储空间比hash小，效率要查。</p>
 <p><code>map</code> 相较于 <code>unordered_map</code> 优势：</p>
@@ -688,93 +685,93 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
 </ol>
 <h3 id="stdmultimap">std::multimap</h3>
 <p>定义于头文件 <code>&lt;map&gt;</code>，其声明为：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,							<span style="color:#75715e">// 指定键的类型
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>,							<span style="color:#75715e">// 指定值的类型
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Compare</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>less<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>, 	<span style="color:#75715e">// 指定排序规则
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Key, T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span> <span style="color:#75715e">// 指定分配器对象的类型
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">multimap</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,							<span style="color:#0080ff;font-style:italic">// 指定键的类型
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">T</span>,							<span style="color:#0080ff;font-style:italic">// 指定值的类型
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Compare</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>less<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>, 	<span style="color:#0080ff;font-style:italic">// 指定排序规则
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>pair<span style="color:#2c5dcd">&lt;</span><span style="color:#2c5dcd;font-weight:bold">const</span> Key, T<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd">&gt;</span> <span style="color:#0080ff;font-style:italic">// 指定分配器对象的类型
+</span><span style="color:#0080ff;font-style:italic"></span><span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">multimap</span>;
 </code></pre></div><p><code>multimap</code> 是关联容器，底层基于<strong>红黑树</strong>，含有键值对的<strong>已排序</strong>列表，同时容许多个元素拥有同一键。按照应用到键的比较函数 <code>Compare</code> 排序。搜索、插入和移除操作拥有<strong>对数复杂度</strong>。</p>
 <p>拥有等价键的键值对的顺序就是<strong>插入顺序</strong>，且不会更改。(C++11 起)</p>
 <p>代码示例</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;map&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;map&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    <span style="color:#75715e">// 创建并初始化 multimap 容器
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>multimap<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> myMultimap{
-        {<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#ae81ff">10</span>},
-        {<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#ae81ff">20</span>},
-        {<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#ae81ff">15</span>},
-        {<span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#ae81ff">30</span>}};
+    <span style="color:#0080ff;font-style:italic">// 创建并初始化 multimap 容器
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>multimap<span style="color:#2c5dcd">&lt;</span><span style="color:#5918bb;font-weight:bold">char</span>, <span style="color:#5918bb;font-weight:bold">int</span><span style="color:#2c5dcd">&gt;</span> myMultimap{
+        {<span style="color:#0c6">&#39;a&#39;</span>, <span style="color:#5918bb;font-weight:bold">10</span>},
+        {<span style="color:#0c6">&#39;b&#39;</span>, <span style="color:#5918bb;font-weight:bold">20</span>},
+        {<span style="color:#0c6">&#39;b&#39;</span>, <span style="color:#5918bb;font-weight:bold">15</span>},
+        {<span style="color:#0c6">&#39;c&#39;</span>, <span style="color:#5918bb;font-weight:bold">30</span>}};
 
-    <span style="color:#75715e">// 输出 myMultimap 容器存储键值对的数量
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> myMultimap.size() <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    <span style="color:#0080ff;font-style:italic">// 输出 myMultimap 容器存储键值对的数量
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> myMultimap.size() <span style="color:#2c5dcd">&lt;&lt;</span> std<span style="color:#2c5dcd">::</span>endl;
 
-    <span style="color:#75715e">// 输出 myMultimap 容器中存储键为 &#39;b&#39; 的键值对的数量
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> myMultimap.count(<span style="color:#e6db74">&#39;b&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    <span style="color:#0080ff;font-style:italic">// 输出 myMultimap 容器中存储键为 &#39;b&#39; 的键值对的数量
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> myMultimap.count(<span style="color:#0c6">&#39;b&#39;</span>) <span style="color:#2c5dcd">&lt;&lt;</span> std<span style="color:#2c5dcd">::</span>endl;
 
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> iter <span style="color:#f92672">=</span> myMultimap.begin(); iter <span style="color:#f92672">!=</span> myMultimap.end(); <span style="color:#f92672">++</span>iter)
+    <span style="color:#2c5dcd;font-weight:bold">for</span> (<span style="color:#2c5dcd;font-weight:bold">auto</span> iter <span style="color:#2c5dcd">=</span> myMultimap.begin(); iter <span style="color:#2c5dcd">!=</span> myMultimap.end(); <span style="color:#2c5dcd">++</span>iter)
     {
-        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> iter<span style="color:#f92672">-&gt;</span>first <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> iter<span style="color:#f92672">-&gt;</span>second <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+        std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> iter<span style="color:#2c5dcd">-&gt;</span>first <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34; &#34;</span> <span style="color:#2c5dcd">&lt;&lt;</span> iter<span style="color:#2c5dcd">-&gt;</span>second <span style="color:#2c5dcd">&lt;&lt;</span> std<span style="color:#2c5dcd">::</span>endl;
     }
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
 </code></pre></div><h3 id="unordered_map">unordered_map</h3>
 <p>定于于头文件 <code>&lt;unordered_map&gt;</code>，声明为：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hash</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KeyEqual</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>equal_to<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span> std<span style="color:#f92672">::</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Key, T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>
-<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">unordered_map</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">T</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Hash</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>hash<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">KeyEqual</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>equal_to<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span> std<span style="color:#2c5dcd">::</span>pair<span style="color:#2c5dcd">&lt;</span><span style="color:#2c5dcd;font-weight:bold">const</span> Key, T<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd">&gt;</span>
+<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">unordered_map</span>;
 
 </code></pre></div><p><code>unodered_map</code> 是关联容器，函数由带唯一键的键-值pair。搜索、插入和移除操作拥有<strong>平均常数复杂度</strong>。</p>
 <p>元素在内部<strong>不</strong>以任何特定顺序<strong>排序</strong>，而是<strong>组织进桶</strong>中。元素放进哪个桶完全依赖其键的哈希。这允许对但<strong>单独元素的快速访问</strong>，因为一旦计算哈希，则它准确指代元素所放进的桶。</p>
 <p>注意 <code>unordered_map</code> 重载了运算符 <code>[]</code>，返回到映射到等于 <code>key</code> 的键的值的引用，若这种键不存在则进行插入。还可以更新既存值。</p>
 <p>代码示例</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unordered_map&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;iostream&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;string&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff">#include</span> <span style="color:#0080ff">&lt;unordered_map&gt;</span><span style="color:#0080ff">
+</span><span style="color:#0080ff"></span>
+<span style="color:#5918bb;font-weight:bold">int</span> <span style="color:#ff8000;font-weight:bold">main</span>()
 {
-    <span style="color:#75715e">// 创建三个 string 的 unordered_map, 映射到 string.
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>unordered_map<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> u <span style="color:#f92672">=</span> {
-        {<span style="color:#e6db74">&#34;RED&#34;</span>, <span style="color:#e6db74">&#34;#FF0000&#34;</span>},
-        {<span style="color:#e6db74">&#34;GREEN&#34;</span>, <span style="color:#e6db74">&#34;#00FF00&#34;</span>},
-        {<span style="color:#e6db74">&#34;BLUE&#34;</span>, <span style="color:#e6db74">&#34;#0000FF&#34;</span>}};
+    <span style="color:#0080ff;font-style:italic">// 创建三个 string 的 unordered_map, 映射到 string.
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>unordered_map<span style="color:#2c5dcd">&lt;</span>std<span style="color:#2c5dcd">::</span>string, std<span style="color:#2c5dcd">::</span>string<span style="color:#2c5dcd">&gt;</span> u <span style="color:#2c5dcd">=</span> {
+        {<span style="color:#0c6">&#34;RED&#34;</span>, <span style="color:#0c6">&#34;#FF0000&#34;</span>},
+        {<span style="color:#0c6">&#34;GREEN&#34;</span>, <span style="color:#0c6">&#34;#00FF00&#34;</span>},
+        {<span style="color:#0c6">&#34;BLUE&#34;</span>, <span style="color:#0c6">&#34;#0000FF&#34;</span>}};
 
-    <span style="color:#75715e">// 迭代并打印 unordered_map 的键和值.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>n : u)
+    <span style="color:#0080ff;font-style:italic">// 迭代并打印 unordered_map 的键和值.
+</span><span style="color:#0080ff;font-style:italic"></span>    <span style="color:#2c5dcd;font-weight:bold">for</span> (<span style="color:#2c5dcd;font-weight:bold">const</span> <span style="color:#2c5dcd;font-weight:bold">auto</span> <span style="color:#2c5dcd">&amp;</span>n : u)
     {
-        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Key: [&#34;</span> <span style="color:#f92672">&lt;&lt;</span> n.first <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;] Value: [&#34;</span> <span style="color:#f92672">&lt;&lt;</span> n.second <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;Key: [&#34;</span> <span style="color:#2c5dcd">&lt;&lt;</span> n.first <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;] Value: [&#34;</span> <span style="color:#2c5dcd">&lt;&lt;</span> n.second <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;]</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>;
     }
 
-    <span style="color:#75715e">// 添加新入口到 unordered_map.
-</span><span style="color:#75715e"></span>    u[<span style="color:#e6db74">&#34;BLACK&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;#000000&#34;</span>;
-    u[<span style="color:#e6db74">&#34;WHITE&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;#FFFFFF&#34;</span>;
+    <span style="color:#0080ff;font-style:italic">// 添加新入口到 unordered_map.
+</span><span style="color:#0080ff;font-style:italic"></span>    u[<span style="color:#0c6">&#34;BLACK&#34;</span>] <span style="color:#2c5dcd">=</span> <span style="color:#0c6">&#34;#000000&#34;</span>;
+    u[<span style="color:#0c6">&#34;WHITE&#34;</span>] <span style="color:#2c5dcd">=</span> <span style="color:#0c6">&#34;#FFFFFF&#34;</span>;
 
-    <span style="color:#75715e">// 用键输出值.
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;The HEX of color RED is: [&#34;</span> <span style="color:#f92672">&lt;&lt;</span> u[<span style="color:#e6db74">&#34;RED&#34;</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
-    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;The HEX of color BLACK is: [&#34;</span> <span style="color:#f92672">&lt;&lt;</span> u[<span style="color:#e6db74">&#34;BLACK&#34;</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+    <span style="color:#0080ff;font-style:italic">// 用键输出值.
+</span><span style="color:#0080ff;font-style:italic"></span>    std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;The HEX of color RED is: [&#34;</span> <span style="color:#2c5dcd">&lt;&lt;</span> u[<span style="color:#0c6">&#34;RED&#34;</span>] <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;]</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>;
+    std<span style="color:#2c5dcd">::</span>cout <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;The HEX of color BLACK is: [&#34;</span> <span style="color:#2c5dcd">&lt;&lt;</span> u[<span style="color:#0c6">&#34;BLACK&#34;</span>] <span style="color:#2c5dcd">&lt;&lt;</span> <span style="color:#0c6">&#34;]</span><span style="color:#c5060b;font-weight:bold">\n</span><span style="color:#0c6">&#34;</span>;
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#2c5dcd;font-weight:bold">return</span> <span style="color:#5918bb;font-weight:bold">0</span>;
 }
 
 </code></pre></div><h3 id="stdunordered_multimap">std::unordered_multimap</h3>
 <p><code>unordered_multimap</code> 是关联型容器，无序。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Key</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hash</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KeyEqual</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>equal_to<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>,
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>allocator<span style="color:#f92672">&lt;</span> std<span style="color:#f92672">::</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Key, T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>
-<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">unordered_multimap</span>;
+<div class="highlight"><pre style="color:#4d4d4d;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#2c5dcd;font-weight:bold">template</span><span style="color:#2c5dcd">&lt;</span>
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Key</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">T</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Hash</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>hash<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">KeyEqual</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>equal_to<span style="color:#2c5dcd">&lt;</span>Key<span style="color:#2c5dcd">&gt;</span>,
+    <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">Allocator</span> <span style="color:#2c5dcd">=</span> std<span style="color:#2c5dcd">::</span>allocator<span style="color:#2c5dcd">&lt;</span> std<span style="color:#2c5dcd">::</span>pair<span style="color:#2c5dcd">&lt;</span><span style="color:#2c5dcd;font-weight:bold">const</span> Key, T<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd">&gt;</span>
+<span style="color:#2c5dcd">&gt;</span> <span style="color:#2c5dcd;font-weight:bold">class</span> <span style="text-decoration:underline">unordered_multimap</span>;
 
 </code></pre></div><h3 id="__gnu_cxxhash_map">__gnu_cxx::hash_map</h3>
 <p>包含头文件 <code>&lt;ext/hash_map&gt;</code>，在名称空间 <code>__gnu_cxx</code> 中，需要使用语句 <code>using namespce __gnu_cxx</code>。</p>
@@ -788,44 +785,44 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
         <div class="article-toc" >
             <h3></h3>
             <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#malloc原理">malloc原理</a></li>
     <li><a href="#malloccallocrealloc和alloca">malloc、calloc、realloc和alloca</a>
-      <ul>
+      <ol>
         <li><a href="#malloc-memory-allocation">malloc, <strong>m</strong>emory <strong>alloc</strong>ation</a></li>
         <li><a href="#callocclear-allocation">calloc，<strong>c</strong>lear <strong>alloc</strong>ation</a></li>
         <li><a href="#realloc-reset-allocation">realloc, <strong>re</strong>set <strong>alloc</strong>ation</a></li>
         <li><a href="#alloca不常用">alloca，不常用</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#strcpystrncpy和strlen">strcpy、strncpy和strlen</a>
-      <ul>
+      <ol>
         <li><a href="#strcpy">strcpy</a></li>
         <li><a href="#strncpy">strncpy</a></li>
         <li><a href="#strlen">strlen</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#c语言参数压栈顺序">C语言参数压栈顺序</a>
-      <ul>
+      <ol>
         <li><a href="#c拷贝赋值构造函数的形参是否能进行值传递">C++拷贝赋值构造函数的形参是否能进行值传递</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#c如何处理返回值">C++如何处理返回值</a></li>
     <li><a href="#隐式类型转换">隐式类型转换</a></li>
     <li><a href="#自增自减">自增、自减</a>
-      <ul>
+      <ol>
         <li><a href="#i">i++</a></li>
         <li><a href="#i-1">++i</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#static关键字的作用">static关键字的作用</a>
-      <ul>
+      <ol>
         <li><a href="#全局静态变量">全局静态变量</a></li>
         <li><a href="#局部静态变量">局部静态变量</a></li>
         <li><a href="#静态函数">静态函数</a></li>
         <li><a href="#类的静态成员">类的静态成员</a></li>
         <li><a href="#类的静态函数">类的静态函数</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#函数指针">函数指针</a></li>
     <li><a href="#c的内存管理">C++的内存管理</a></li>
@@ -836,51 +833,51 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
     <li><a href="#c面向对象的三大特性">C++面向对象的三大特性</a></li>
     <li><a href="#多态的实现">多态的实现</a></li>
     <li><a href="#静态库和动态库">静态库和动态库</a>
-      <ul>
+      <ol>
         <li><a href="#静态库">静态库</a></li>
         <li><a href="#动态库">动态库</a></li>
         <li><a href="#二者的不同">二者的不同</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#虚函数的工作原理">虚函数的工作原理</a></li>
     <li><a href="#重载overload覆盖override和改写overwrite的区别">重载（Overload）、覆盖（Override）和改写（Overwrite）的区别</a></li>
     <li><a href="#构造函数为什么不定义成虚函数">构造函数为什么不定义成虚函数</a></li>
     <li><a href="#析构函数为什么一般定义成虚函数">析构函数为什么一般定义成虚函数</a>
-      <ul>
+      <ol>
         <li><a href="#析构函数的调用顺序">析构函数的调用顺序</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#fork函数">fork()函数</a></li>
     <li><a href="#构造函数">构造函数</a></li>
     <li><a href="#什么时候调用复制构造函数">什么时候调用复制构造函数</a></li>
     <li><a href="#成员初始化列表">成员初始化列表</a></li>
     <li><a href="#c的四种强制类型转换">C++的四种强制类型转换</a>
-      <ul>
+      <ol>
         <li><a href="#static_cast">static_cast</a></li>
         <li><a href="#dynamic_cast">dynamic_cast</a></li>
         <li><a href="#const_cast">const_cast</a></li>
         <li><a href="#reinterpret_cast">reinterpret_cast</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#引用作为函数参数以及返回值的好处">引用作为函数参数以及返回值的好处</a></li>
     <li><a href="#c对象的生命周期">C++对象的生命周期</a>
-      <ul>
+      <ol>
         <li><a href="#全局对象">全局对象</a></li>
         <li><a href="#局部对象">局部对象</a></li>
         <li><a href="#静态对象static">静态对象（static）</a></li>
         <li><a href="#以new方式创建出来的局部对象">以new方式创建出来的局部对象</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#智能指针模板类">智能指针模板类</a>
-      <ul>
+      <ol>
         <li><a href="#unique_ptr">unique_ptr</a></li>
         <li><a href="#shared_ptr">shared_ptr</a></li>
         <li><a href="#weak_ptr">weak_ptr</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#sort">sort</a></li>
     <li><a href="#stl">STL</a>
-      <ul>
+      <ol>
         <li><a href="#容器">容器</a></li>
         <li><a href="#array普通数组增强版">array，普通数组增强版</a></li>
         <li><a href="#vector封装的动态数组">vector，封装的动态数组</a></li>
@@ -897,9 +894,9 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
         <li><a href="#stdunordered_multimap">std::unordered_multimap</a></li>
         <li><a href="#__gnu_cxxhash_map">__gnu_cxx::hash_map</a></li>
         <li><a href="#__gnu_cxxslist">__gnu_cxx::slist</a></li>
-      </ul>
+      </ol>
     </li>
-  </ul>
+  </ol>
 </nav>
         </div>
         
@@ -941,7 +938,6 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
     
 </nav>
 
-
 </article>
 
         
@@ -951,14 +947,11 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
         <div id="footer-info" class="inner">
             &copy; 2021 水上书
             <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
         </div>
     </div>
     
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
     
     <script>
@@ -972,7 +965,6 @@ std<span style="color:#f92672">::</span>set<span style="color:#f92672">&lt;</spa
         });
     </script>
 </footer>
-
 </div>
 </body>
 </html>

@@ -478,7 +478,7 @@ a.article-title:hover,
 .article-entry h6 {
   font-weight: 600;
   line-height: 1.4em;
-  margin: 1em 0;
+  margin: 1.2em 0;
 }
 .article-entry ul,
 .article-entry ol,
@@ -804,16 +804,25 @@ a.article-title:hover,
   line-height: 1.4em;
   font-size: 0.85em;
 }
+
+/* highlight 是放置代码块的类. */
+/* .article-entry pre, */
+.article-entry .highlight {
+  display: block;
+  margin: 2em;
+  padding: 3em 5em 3em 2em;
+  box-shadow: 5px 5px 5px rgba(105,105,105, 0.5);
+  border-radius: 7px;
+  border: 2px solid black;
+}
+
 .article-entry pre,
 .article-entry .highlight {
-  margin: 0;
   font-size: 14px;
-  background: #23241f;
-  padding: 15px 0;
-  overflow: auto;
-  color: #fff;
-  line-height: 22.4px;
+  background: #ffffff;
+  line-height: 18px;
 }
+
 .article-entry .highlight .gutter pre,
 .article-entry .gist .gist-file .gist-data .line-numbers {
   color: #666;
@@ -823,6 +832,7 @@ a.article-title:hover,
 .article-entry code {
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace, '华文中宋';
 }
+/* 单行代码 */
 .article-entry code {
   background: #f2f2f2;
   padding: 0 0.3em;
