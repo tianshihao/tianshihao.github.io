@@ -88,9 +88,9 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <h2 id="1-概述">1. 概述</h2>
+            <h2 id="0-概述">0. 概述</h2>
 <p>STL六大部件：容器、算法、迭代器、函数对象（仿函数）、适配器和分配器。</p>
-<h3 id="11-容器container">1.1 容器，Container</h3>
+<h3 id="01-容器container">0.1 容器，Container</h3>
 <p>一些封装数据结构的模板类，例如 <code>vector</code> 向量容器、<code>list</code> 列表容器等。</p>
 <p>分为顺序容器和关联容器，顺序容器有</p>
 <ul>
@@ -115,31 +115,31 @@
 </ul>
 </li>
 </ul>
-<h3 id="12-算法algorithm">1.2 算法，Algorithm</h3>
+<h3 id="02-算法algorithm">0.2 算法，Algorithm</h3>
 <p>STL 提供了非常多（大约 100 个）的数据结构算法，它们都被设计成一个个的模板函数，这些算法在 <code>std</code> 命名空间中定义，其中大部分算法都包含在头文件 <code>&lt;algorithm&gt;</code> 中，少部分位于头文件 <code>&lt;numeric&gt;</code> 中。</p>
-<h3 id="13-迭代器iterator">1.3 迭代器，Iterator</h3>
+<h3 id="03-迭代器iterator">0.3 迭代器，Iterator</h3>
 <p>对容器中数据的读和写，是通过迭代器完成的，扮演着容器和算法之间的胶合剂。</p>
-<h3 id="14-函数对象function-objects">1.4 函数对象，Function Objects</h3>
+<h3 id="04-函数对象function-objects">0.4 函数对象，Function Objects</h3>
 <p>如果一个类将 <code>()</code> 运算符重载为成员函数，这个类就称为函数对象类，这个类的对象就是函数对象，故又称仿函数（Functor）。</p>
-<h3 id="15-适配器adapter">1.5 适配器，Adapter</h3>
+<h3 id="05-适配器adapter">0.5 适配器，Adapter</h3>
 <p>可以使一个类的接口（模板的参数）适配成用户指定的形式，从而让原本不能在一起工作的两个类工作在一起。值得一提的是，容器、迭代器和函数都有适配器。</p>
 <p>STL 提供了 3 种容器适配器，分别为 stack 栈适配器、queue 队列适配器以及 priority_queue 优先权队列适配器。</p>
-<h3 id="16-分配器allocator">1.6 分配器，Allocator</h3>
+<h3 id="06-分配器allocator">0.6 分配器，Allocator</h3>
 <p>为容器类模板提供自定义的内存申请和释放功能，由于往往只有高级用户才有改变内存分配策略的需求，因此内存分配器对于一般用户来说，并不常用。</p>
-<h2 id="2-容器">2. 容器</h2>
-<h3 id="21-stdvector封装的动态数组">2.1 std::vector，封装的动态数组</h3>
-<h4 id="211-概述">2.1.1 概述</h4>
+<h2 id="1-容器container">1. 容器，Container</h2>
+<h3 id="11-stdvector封装的动态数组">1.1 std::vector，封装的动态数组</h3>
+<h4 id="111-概述">1.1.1 概述</h4>
 <p>定义于头文件 <code>&lt;vector&gt;</code>。</p>
-<p><code>std::vector</code> 是封装<strong>动态数组</strong>的<strong>序列</strong>容器。<code>vector</code> 的存储是自动管理的，按需扩张收缩。<code>vector</code> 通常占用多于静态数组的空间，因为要分配更多内存以管理将来的增长，如果没有剩余空间了，则会重新配置原有元素个数的<strong>两倍空间</strong>，然后将原空间元素通过<strong>复制</strong>的方式（内存拷贝）初始化<strong>新空间</strong>，再向新空间增加元素，最后<strong>析构并释放原空间</strong>，<strong>之前的迭代器会失效</strong>。在<strong>堆</strong>上分配内存。</p>
-<h4 id="212-vector-上的常见操作复杂度效率">2.1.2 vector 上的常见操作复杂度（效率）</h4>
+<p><code>std::vector</code> 是封装<strong>动态数组</strong>的<strong>序列</strong>容器。<code>vector</code> 的存储是自动管理的，按需扩张收缩。<code>vector</code> 通常占用多于静态数组的空间，因为要分配更多内存以管理将来的增长，如果没有剩余空间了，则会重新配置原有元素个数的<strong>两倍空间</strong>，然后将原空间元素通过<strong>复制</strong>的方式（<strong>内存拷贝</strong>）初始化<strong>新空间</strong>，再向新空间增加元素，最后<strong>析构并释放原空间</strong>，<strong>之前的迭代器会失效</strong>。在<strong>堆</strong>上分配内存。</p>
+<h4 id="112-vector-上的常见操作复杂度效率">1.1.2 vector 上的常见操作复杂度（效率）</h4>
 <ul>
 <li>随机访问——常数 <em>O(1)</em></li>
 <li>在末尾插入或移除元素——均摊常数 <em>O(1)</em></li>
 <li>插入或移除元素——与到 <code>vector</code> 结尾的距离成线性 <em>O(n)</em></li>
 </ul>
-<h4 id="213-使用场景">2.1.3 使用场景</h4>
+<h4 id="113-使用场景">1.1.3 使用场景</h4>
 <p>需要高效的随机存取，且不经常对非尾结点进行插入、擦除或不在乎插入、擦除的效率。</p>
-<h4 id="214-迭代器非法化">2.1.4 迭代器非法化</h4>
+<h4 id="114-迭代器非法化">1.1.4 迭代器非法化</h4>
 <table>
 <thead>
 <tr>
@@ -186,7 +186,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="215-创建和初始化">2.1.5 创建和初始化</h4>
+<h4 id="115-创建和初始化">1.1.5 创建和初始化</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 初始化.
 </span><span style="color:#888;font-style:italic">// 声明一个空 vector 容器, 因为容器中没有元素, 所以没有为其分配空间.
 </span><span style="color:#888;font-style:italic"></span>std::vector&lt;<span style="font-weight:bold;text-decoration:underline">double</span>&gt; values;
@@ -207,8 +207,8 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 <span style="color:#888;font-style:italic">// values2 保存 {1, 2, 3}.
 </span><span style="color:#888;font-style:italic"></span>std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;values2(std::begin(values1), std::begin(values1) + 3);
 
-</code></pre></div><h3 id="22-stddeque两端都可以扩充的双端队列">2.2 std::deque，两端都可以扩充的双端队列</h3>
-<h4 id="221-概述">2.2.1 概述</h4>
+</code></pre></div><h3 id="12-stddeque两端都可以扩充的双端队列">1.2 std::deque，两端都可以扩充的双端队列</h3>
+<h4 id="121-概述">1.2.1 概述</h4>
 <p>定义于头文件 <code>&lt;deque&gt;</code>。</p>
 <p><code>std::deque</code> （double-ended queue）是有下标的<strong>顺序</strong>容器，它允许在其首尾两端快速插入及删除。另外，在 deque 任一端插入或删除不会非法化指向其余元素的指针或引用。</p>
 <p>与 <code>std::vector</code> 相反，<code>deque</code> 的元素<strong>不是相接存储</strong>的：典型实现用单独分配的固定大小数组的序列，外加额外的登记，这表示下标访问必须进行<strong>二次指针解引用</strong>，与之相比 <code>vector</code> 的下标访问只进行一次。</p>
@@ -217,15 +217,15 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 <p>能用 vector 尽量使用 vector，通过deque用来做队列即可。</p>
 </blockquote>
 <p><code>deque</code> 是<strong>分段连续</strong>。段内是连续的。<code>deque</code> 内部有一个<strong>中控器</strong>，（map并不是STL中的map）是一小块连续的空间，每个元素都是一个指针，维护每段缓冲区（比较大的连续线性空间）中的内容，缓冲区中存放大量真实数据。中控器维护的是每段<strong>缓冲区的地址</strong>，使得使用 <code>deque</code> 时像一片连续的内存空间。</p>
-<h4 id="222-deque-上常见操作的复杂度效率">2.2.2 deque 上常见操作的复杂度（效率）</h4>
+<h4 id="122-deque-上常见操作的复杂度效率">1.2.2 deque 上常见操作的复杂度（效率）</h4>
 <ul>
 <li>随机访问——常数 <em>O(1)</em></li>
 <li>在结尾或起始插入或移除元素——常数 <em>O(1)</em></li>
 <li>插入或移除元素——线性 <em>O(n)</em></li>
 </ul>
-<h4 id="223-使用场景">2.2.3 使用场景</h4>
+<h4 id="123-使用场景">1.2.3 使用场景</h4>
 <p>双端队列，需要随机存取，而且关心两端数据的插入和删除。</p>
-<h4 id="224-迭代器非法化">2.2.4 迭代器非法化</h4>
+<h4 id="124-迭代器非法化">1.2.4 迭代器非法化</h4>
 <table>
 <thead>
 <tr>
@@ -272,7 +272,7 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 <li>以较小的大小调用 <a href="https://zh.cppreference.com/w/cpp/container/deque/resize">resize</a> 不会非法化任何到未擦除元素的引用。</li>
 <li>以较大的大小调用 <a href="https://zh.cppreference.com/w/cpp/container/deque/resize">resize</a> 不会非法化任何到 deque 元素的引用。</li>
 </ul>
-<h4 id="225-示例">2.2.5 示例</h4>
+<h4 id="125-示例">1.2.5 示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;deque&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span>
@@ -291,22 +291,22 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="23-stdlist双向链表">2.3 std::list，双向链表</h3>
-<h4 id="231-概述">2.3.1 概述</h4>
+</code></pre></div><h3 id="13-stdlist双向链表">1.3 std::list，双向链表</h3>
+<h4 id="131-概述">1.3.1 概述</h4>
 <p>定义于头文件 <code>&lt;list&gt;</code>。</p>
 <p><code>std::list</code>，又称双向链表容器，环状，是支持<strong>常数时间</strong>从容器<strong>任何位置插入和移除</strong>元素的容器。<strong>不支持快速随机访问</strong>。它通常实现为双向链表。在<strong>堆</strong>上分配内存，每插入一个元数都会分配空间（不是内存拷贝），每删除一个元素都会释放空间。</p>
 <p>创建同 <code>vector</code>。</p>
-<h4 id="232-list-上的常见操作复杂度效率">2.3.2 list 上的常见操作复杂度（效率）</h4>
+<h4 id="132-list-上的常见操作复杂度效率">1.3.2 list 上的常见操作复杂度（效率）</h4>
 <ul>
 <li>随机访问——常数 <em>O(n)</em></li>
 <li>在末尾插入或移除元素——均摊常数 <em>O(1)</em></li>
 <li>插入或移除元素——与到 <code>list</code> 结尾的距离成线性 <em>O(1)</em></li>
 </ul>
-<h4 id="233-使用场景">2.3.3 使用场景</h4>
+<h4 id="133-使用场景">1.3.3 使用场景</h4>
 <p>需要高效的插入和删除，而不关心随机访问。</p>
-<h4 id="234-迭代器非法化">2.3.4 迭代器非法化</h4>
+<h4 id="134-迭代器非法化">1.3.4 迭代器非法化</h4>
 <p>在 list 内或在数个 list 间添加、移除和移动元素不会非法化迭代器或引用。<strong>迭代器仅在对应元素被删除时非法化</strong>。</p>
-<h4 id="235-示例">2.3.5 示例</h4>
+<h4 id="135-示例">1.3.5 示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;list&gt;</span><span style="color:#888;font-weight:bold">
@@ -339,11 +339,11 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="24-stdarray普通数组增强版">2.4 std::array，普通数组增强版</h3>
-<h4 id="241-概述">2.4.1 概述</h4>
+</code></pre></div><h3 id="14-stdarray普通数组增强版">1.4 std::array，普通数组增强版</h3>
+<h4 id="141-概述">1.4.1 概述</h4>
 <p>定于于头文件 <code>&lt;array&gt;</code>。</p>
 <p><code>std::array</code> 是封装<strong>固定大小</strong>数组的容器，<strong>无法动态的扩展或收缩</strong>，在使用该容器的过程无法借由增加或移除元素而改变其大小，它只允许<strong>访问</strong>或者<strong>替换</strong>存储的元素。在<strong>栈</strong>上分配内存。介于传统数组和 <code>vector</code> 之间，封装了一些函数，比传统数组方便，但又没必要使用 <code>vector</code>。此容器是一个<strong>聚合</strong>类型，其语义等同于保有一个 C 风格数组 <code>T[N]</code> 作为其唯一非静态数据成员的结构体，它不会自动退化成指针（或被隐式的转换成指针），定义时需要指定类型和大小。该结构体结合了 C 风格数组的性能、可访问性与容器的优点，比如可获取大小、支持赋值、<strong>随机访问</strong>迭代器等。</p>
-<h4 id="242-list-上的常见操作复杂度效率">2.4.2 list 上的常见操作复杂度（效率）</h4>
+<h4 id="142-list-上的常见操作复杂度效率">1.4.2 list 上的常见操作复杂度（效率）</h4>
 <ul>
 <li>随机访问——常数 <em>O(1)</em></li>
 <li>无法增加或移除元素</li>
@@ -351,13 +351,13 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 <blockquote>
 <p>“由于 <code>array</code> 容器中包含了 <code>at()</code> 这样的成员函数，使得操作元素时比普通数组<strong>更安全</strong>，且效率没有因此变差。”</p>
 </blockquote>
-<h4 id="243-使用场景">2.4.3 使用场景</h4>
+<h4 id="143-使用场景">1.4.3 使用场景</h4>
 <ul>
 <li>知道</li>
 </ul>
-<h4 id="244-迭代器非法化">2.4.4 迭代器非法化</h4>
+<h4 id="144-迭代器非法化">1.4.4 迭代器非法化</h4>
 <p>按照规则，指向 <code>array</code> 的迭代器在 <code>array</code> 的生存期间决不非法化。然而要注意，在 <code>swap</code> 时，迭代器将继续指向同一 <code>array</code> 的元素，并将改变元素的值。</p>
-<h4 id="245-创建和初始化">2.4.5 创建和初始化</h4>
+<h4 id="145-创建和初始化">1.4.5 创建和初始化</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 创建了一个 array 容器, 包含 10 个浮点型元素, array 不会初始化, 元素值不确定.
 </span><span style="color:#888;font-style:italic"></span>std::array&lt;<span style="font-weight:bold;text-decoration:underline">double</span>, 10&gt; values1;
 <span style="color:#888;font-style:italic">// 初始化为 0 或和默认元素类型等效的值.
@@ -368,7 +368,7 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 </span><span style="color:#888;font-style:italic"></span>vaules3.fill(0);
 
 </code></pre></div><p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P911150226392.jpg" alt="初始化array容器"></p>
-<h4 id="246-示例">2.4.6 示例</h4>
+<h4 id="146-示例">1.4.6 示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;array&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
@@ -399,24 +399,25 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="25-stdforward_list单链表">2.5 std::forward_list，单链表</h3>
-<h4 id="251-概述">2.5.1 概述</h4>
+</code></pre></div><h3 id="15-stdforward_list单链表">1.5 std::forward_list，单链表</h3>
+<h4 id="151-概述">1.5.1 概述</h4>
 <p>定义于头文件 <code>&lt;forward_list&gt;</code>。</p>
 <p><code>std::forward_list</code> 是支持从容器中的任何位置快速插入和移除元素的容器。不支持快速随机访问，也是标准库容器中唯一一个不提供 <code>size()</code> 方法的容器。。它实现为单链表，且实质上与其在 C 中实现相比无任何开销。与 <code>std::list</code> 相比，此容器在不需要双向迭代时提供更有效地利用空间的存储。</p>
-<h4 id="252-forward_list-上的常见操作复杂度效率">2.5.2 forward_list 上的常见操作复杂度（效率）</h4>
+<h4 id="152-forward_list-上的常见操作复杂度效率">1.5.2 forward_list 上的常见操作复杂度（效率）</h4>
 <ul>
 <li>随机访问——常数 <em>O(1)</em></li>
 <li>在末尾插入或移除元素——均摊常数 <em>O(1)</em></li>
 <li>插入或移除元素——与到 <code>forward_list</code> 结尾的距离成线性 <em>O(n)</em></li>
 </ul>
-<h4 id="253-使用场景">2.5.3 使用场景</h4>
+<h4 id="153-使用场景">1.5.3 使用场景</h4>
 <p>存储相同个数的同类型元素，单链表耗用的内存空间更少，空间利用率更高，并且对于实现某些操作单链表的执行效率也更高。</p>
 <blockquote>
 <p>效率高是选用 forward_list 而弃用 list 容器最主要的原因，换句话说，只要是 list 容器和 forward_list 容器都能实现的操作，应优先选择 forward_list 容器。</p>
 </blockquote>
-<h4 id="254-迭代器非法化">2.5.4 迭代器非法化</h4>
+<h4 id="154-迭代器非法化">1.5.4 迭代器非法化</h4>
 <p>在链表内或跨数个链表添加、移除和移动元素，不会非法化当前指代链表中其他元素的迭代器。然而，在从链表移除元素（通过 <code>erase_after</code>）时，指代对应元素的迭代器或引用会被非法化。</p>
-<h3 id="26-stdset集合">2.6 std::set，集合</h3>
+<h3 id="16-stdset集合">1.6 std::set，集合</h3>
+<h4 id="161-概述">1.6.1 概述</h4>
 <p>包含在头文件 <code>set</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
 	<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,                                <span style="color:#888;font-style:italic">// 键 key 和值 value 的类型
@@ -433,7 +434,16 @@ std::vector&lt;<span style="font-weight:bold;text-decoration:underline">int</spa
 <blockquote>
 <p>对于初学者来说，切勿尝试直接修改 set 容器中已存储元素的值，这很有可能破坏 set 容器中元素的有序性，最正确的修改 set 容器中元素值的做法是：先删除该元素，然后再添加一个修改后的元素。</p>
 </blockquote>
-<p>创建</p>
+<h4 id="162-set-上的常见操作复杂度效率">1.6.2 set 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——对数 <em>O(\(log_2n\))</em></li>
+<li>插入或移除元素——对数 <em>O(\(log_2n\))</em></li>
+</ul>
+<h4 id="163-使用场景">1.6.3 使用场景</h4>
+<p>快速查找，不允许重复键值。</p>
+<h4 id="164-迭代器非法化">1.6.4 迭代器非法化</h4>
+<p>如果迭代器所指向的元素被删除，则该迭代器失效。其它任何增加、删除元素的操作都不会使迭代器失效。</p>
+<h4 id="165-创建和初始化">1.6.5 创建和初始化</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std::set&lt;std::string&gt; mySet; <span style="color:#888;font-style:italic">// 调用默认构造函数, 创建空的 set 容器.
 </span><span style="color:#888;font-style:italic"></span>
 <span style="color:#888;font-style:italic">// 在创建的同时初始化. 内部顺序为 &#34;apple&#34;, &#34;banana&#34;, &#34;peach&#34;.
@@ -455,7 +465,8 @@ std::set&lt;std::string&gt; copySet = mySet;
     <span style="color:#666;font-style:italic">&#34;peach&#34;</span>
 };
 
-</code></pre></div><h3 id="27-stdmultiset">2.7 std::multiset，</h3>
+</code></pre></div><h3 id="17-stdmultiset可重复集合">1.7 std::multiset，可重复集合</h3>
+<h4 id="171-概述">1.7.1 概述</h4>
 <p>定义头文件 <code>&lt;set&gt;</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
 	<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,                                <span style="color:#888;font-style:italic">// 键 key 和值 value 的类型
@@ -465,35 +476,18 @@ std::set&lt;std::string&gt; copySet = mySet;
 
 </code></pre></div><p><code>std::multiset</code> 是含有 <code>Key</code> 类型对象<strong>有序</strong>集的容器。不同于 <code>set</code> ，它<strong>允许多个键拥有等价的值</strong>。用键比较函数 <code>Compare</code> 进行排序。搜索、插入和移除操作拥有<strong>对数复杂度</strong>。<strong>红黑树</strong>。</p>
 <p>高级用法http://c.biancheng.net/view/545.html</p>
-<h3 id="28-stdunordered_set">2.8 std::unordered_set</h3>
-<p>定义于头文件 <code>&lt;unodered_set&gt;</code>，类模板定义：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
-    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>, 								   <span style="color:#888;font-style:italic">//容器中存储元素的类型
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Hash</span> = std::hash&lt;Key&gt;,			 <span style="color:#888;font-style:italic">//确定元素存储位置所用的哈希函数
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">KeyEqual</span> = std::equal_to&lt;Key&gt;,	<span style="color:#888;font-style:italic">//判断各个元素是否相等所用的函数
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Allocator</span> = std::allocator&lt;Key&gt;	<span style="color:#888;font-style:italic">//指定分配器对象的类型
-</span><span style="color:#888;font-style:italic"></span>&gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_set</span>;
-
-</code></pre></div><p><code>unordered_set</code> 是含有 <code>Key</code> 类型唯一对象集合的关联容器。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
-<p>在内部，元素并<strong>不以任何特别顺序排序</strong>，而是组织进<strong>桶</strong>（本质就是链表）中。元素被放进哪个桶完全依赖其值的<strong>哈希</strong>。这允许对单独元素的快速访问，因为哈希一旦确定，就准确指代元素被放入的桶。</p>
-<p>不可修改容器元素（即使通过非 <code>const</code> 迭代器），因为修改可能更改元素的哈希，并破坏容器。</p>
-<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P91Q02449C2.jpg" alt="unordered_set 容器组织数据的方式"></p>
-<h3 id="29-stdunordered_multiset">2.9 std::unordered_multiset</h3>
-<p>定义于头文件 <code>&lt;unordered_set&gt;</code>，类模板定义：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
-    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>, 								   <span style="color:#888;font-style:italic">//容器中存储元素的类型
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Hash</span> = std::hash&lt;Key&gt;,			 <span style="color:#888;font-style:italic">//确定元素存储位置所用的哈希函数
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">KeyEqual</span> = std::equal_to&lt;Key&gt;,	<span style="color:#888;font-style:italic">//判断各个元素是否相等所用的函数
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Allocator</span> = std::allocator&lt;Key&gt;	<span style="color:#888;font-style:italic">//指定分配器对象的类型
-</span><span style="color:#888;font-style:italic"></span>&gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_multiset</span>;
-
-</code></pre></div><p><code>unordered_multiset</code> 是关联容器，含有可能非唯一 <code>Key</code> 类型对象的集合。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
-<p>元素在内部并<strong>不以任何顺序排序</strong>，只是被组织到<strong>桶</strong>（本质就是链表）中。元素被放入哪个桶完全依赖其值的<strong>哈希</strong>。这允许快速访问单独的元素，因为一旦计算哈希，它就指代放置该元素的准确的桶。</p>
-<blockquote>
-<p>可以这样认为，unordered_multiset 除了能存储相同值的元素外，它和 unordered_set 容器完全相同。</p>
-</blockquote>
-<h3 id="210-stdmap">2.10 std::map</h3>
-<p>定义于头文件 <code>&lt;map&gt;</code>，声明为：</p>
+<h4 id="172-multiset-上的常见操作复杂度效率">1.7.2 multiset 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——对数 <em>O(\(log_2n\))</em></li>
+<li>插入或移除元素——对数 <em>O(\(log_2n\))</em></li>
+</ul>
+<h4 id="173-使用场景">1.7.3 使用场景</h4>
+<p>快速查找，允许重复值。</p>
+<h4 id="174-迭代器非法化">1.7.4 迭代器非法化</h4>
+<p>如果迭代器所指向的元素被删除，则该迭代器失效。其它任何增加、删除元素的操作都不会使迭代器失效。</p>
+<h3 id="18-stdmap一对一映射">1.8 std::map，一对一映射</h3>
+<h4 id="181-概述">1.8.1 概述</h4>
+<p>定义于头文件 <code>&lt;map&gt;</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">T</span>,
@@ -511,8 +505,18 @@ std::set&lt;std::string&gt; copySet = mySet;
 <li>因为3，所以对 <code>map</code> 的遍历可以和修改 <code>map</code> 在一定程度上并行（一定程度上的不一致通常可以接受），而对 <code>unordered_map</code> 的遍历必须防止修改；</li>
 <li><code>map</code> 的迭代器可以双向遍历，这样可以很容易查找到当前 <code>map</code> 中刚好大于这个 <code>key</code> 的值，或者刚好小于这个 <code>key</code> 的值。</li>
 </ol>
-<h3 id="211-stdmultimap">2.11 std::multimap</h3>
-<p>定义于头文件 <code>&lt;map&gt;</code>，其声明为：</p>
+<h4 id="182-map-上的常见操作复杂度效率">1.8.2 map 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——对数 <em>O(\(log_2n\))</em></li>
+<li>插入或移除元素——对数 <em>O(\(log_2n\))</em></li>
+</ul>
+<h4 id="183-使用场景">1.8.3 使用场景</h4>
+<p>一对多映射，基于关键字快速查找，不允许重复值。</p>
+<h4 id="184-迭代器非法化">1.8.4 迭代器非法化</h4>
+<p>如果迭代器所指向的元素被删除，则该迭代器失效。其它任何增加、删除元素的操作都不会使迭代器失效。</p>
+<h3 id="19-stdmultimap一对多映射">1.9 std::multimap，一对多映射</h3>
+<h4 id="191-概述">1.9.1 概述</h4>
+<p>定义于头文件 <code>&lt;map&gt;</code>，类模板定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,							<span style="color:#888;font-style:italic">// 指定键的类型
 </span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">T</span>,							<span style="color:#888;font-style:italic">// 指定值的类型
@@ -522,7 +526,16 @@ std::set&lt;std::string&gt; copySet = mySet;
 
 </code></pre></div><p><code>multimap</code> 是关联容器，底层基于<strong>红黑树</strong>，含有键值对的<strong>已排序</strong>列表，同时容许多个元素拥有同一键。按照应用到键的比较函数 <code>Compare</code> 排序。搜索、插入和移除操作拥有<strong>对数复杂度</strong>。</p>
 <p>拥有等价键的键值对的顺序就是<strong>插入顺序</strong>，且不会更改。(C++11 起)</p>
-<p>代码示例</p>
+<h4 id="192-multimap-上的常见操作复杂度效率">1.9.2 multimap 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——对数 <em>O(\(log_2n\))</em></li>
+<li>插入或移除元素——对数 <em>O(\(log_2n\))</em></li>
+</ul>
+<h4 id="193-使用场景">1.9.3 使用场景</h4>
+<p>一对多映射，基于关键字快速查找，允许重复值。</p>
+<h4 id="194-迭代器非法化">1.9.4 迭代器非法化</h4>
+<p>如果迭代器所指向的元素被删除，则该迭代器失效。其它任何增加、删除元素的操作都不会使迭代器失效。</p>
+<h4 id="195-示例">1.9.5 示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;map&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span>
@@ -549,8 +562,55 @@ std::set&lt;std::string&gt; copySet = mySet;
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="212-stdunordered_map">2.12 std::unordered_map</h3>
-<p>定于于头文件 <code>&lt;unordered_map&gt;</code>，声明为：</p>
+</code></pre></div><h3 id="110-stdunordered_set无序-set">1.10 std::unordered_set，无序 set</h3>
+<h4 id="1101-概述">1.10.1 概述</h4>
+<p>定义于头文件 <code>&lt;unodered_set&gt;</code>，类模板定义：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
+    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>, 								   <span style="color:#888;font-style:italic">//容器中存储元素的类型
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Hash</span> = std::hash&lt;Key&gt;,			 <span style="color:#888;font-style:italic">//确定元素存储位置所用的哈希函数
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">KeyEqual</span> = std::equal_to&lt;Key&gt;,	<span style="color:#888;font-style:italic">//判断各个元素是否相等所用的函数
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Allocator</span> = std::allocator&lt;Key&gt;	<span style="color:#888;font-style:italic">//指定分配器对象的类型
+</span><span style="color:#888;font-style:italic"></span>&gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_set</span>;
+
+</code></pre></div><p><code>unordered_set</code> 是含有 <code>Key</code> 类型唯一对象集合的关联容器。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
+<p>在内部，元素并<strong>不以任何特别顺序排序</strong>，而是组织进<strong>桶</strong>（本质就是链表）中。元素被放进哪个桶完全依赖其值的<strong>哈希</strong>。这允许对单独元素的快速访问，因为哈希一旦确定，就准确指代元素被放入的桶。</p>
+<p>不可修改容器元素（即使通过非 <code>const</code> 迭代器），因为修改可能更改元素的哈希，并破坏容器。</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/2-1P91Q02449C2.jpg" alt="unordered_set 容器组织数据的方式"></p>
+<h4 id="1102-unordered_set-上的常见操作复杂度效率">1.10.2 unordered_set 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——平均常数复杂度 <em>O(\(n\))</em></li>
+<li>插入或移除元素——平均常数复杂度 <em>O(\(n\))</em></li>
+</ul>
+<blockquote>
+<p>如果采用合适的哈希函数，可能永远不会看到最坏情况。</p>
+</blockquote>
+<h4 id="1103-使用场景">1.10.3 使用场景</h4>
+<p>相比于 set 需要更快的访问。</p>
+<h3 id="111-stdunordered_multiset无序-multiset">1.11 std::unordered_multiset，无序 multiset</h3>
+<h4 id="1111-概述">1.11.1 概述</h4>
+<p>定义于头文件 <code>&lt;unordered_set&gt;</code>，类模板定义：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
+    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>, 								   <span style="color:#888;font-style:italic">//容器中存储元素的类型
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Hash</span> = std::hash&lt;Key&gt;,			 <span style="color:#888;font-style:italic">//确定元素存储位置所用的哈希函数
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">KeyEqual</span> = std::equal_to&lt;Key&gt;,	<span style="color:#888;font-style:italic">//判断各个元素是否相等所用的函数
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Allocator</span> = std::allocator&lt;Key&gt;	<span style="color:#888;font-style:italic">//指定分配器对象的类型
+</span><span style="color:#888;font-style:italic"></span>&gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_multiset</span>;
+
+</code></pre></div><p><code>unordered_multiset</code> 是关联容器，含有可能非唯一 <code>Key</code> 类型对象的集合。搜索、插入和移除拥有<strong>平均常数时间复杂度</strong>。</p>
+<p>元素在内部并<strong>不以任何顺序排序</strong>，只是被组织到<strong>桶</strong>（本质就是链表）中。元素被放入哪个桶完全依赖其值的<strong>哈希</strong>。这允许快速访问单独的元素，因为一旦计算哈希，它就指代放置该元素的准确的桶。</p>
+<blockquote>
+<p>可以这样认为，unordered_multiset 除了能存储相同值的元素外，它和 unordered_set 容器完全相同。</p>
+</blockquote>
+<h4 id="1112-unordered_multiset-上的常见操作复杂度效率">1.11.2 unordered_multiset 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——平均常数复杂度 <em>O(\(n\))</em></li>
+<li>插入或移除元素——平均常数复杂度 <em>O(\(n\))</em></li>
+</ul>
+<h4 id="1113-使用场景">1.11.3 使用场景</h4>
+<p>相比于 multiset 更快的访问。</p>
+<h3 id="112-stdunordered_map">1.12 std::unordered_map</h3>
+<h4 id="1121-概述">1.12.1 概述</h4>
+<p>定于于头文件 <code>&lt;unordered_map&gt;</code>，类模板定义：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">T</span>,
@@ -562,7 +622,14 @@ std::set&lt;std::string&gt; copySet = mySet;
 </code></pre></div><p><code>unodered_map</code> 是关联容器，函数由带唯一键的键-值pair。搜索、插入和移除操作拥有<strong>平均常数复杂度</strong>。</p>
 <p>元素在内部<strong>不</strong>以任何特定顺序<strong>排序</strong>，而是<strong>组织进桶</strong>中。元素放进哪个桶完全依赖其键的哈希。这允许对但<strong>单独元素的快速访问</strong>，因为一旦计算哈希，则它准确指代元素所放进的桶。</p>
 <p>注意 <code>unordered_map</code> 重载了运算符 <code>[]</code>，返回到映射到等于 <code>key</code> 的键的值的引用，若这种键不存在则进行插入。还可以更新既存值。</p>
-<p>代码示例</p>
+<h4 id="1122-unordered_map-上的常见操作复杂度效率">1.12.2 unordered_map 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——平均常数复杂度 <em>O(\(n\))</em></li>
+<li>插入或移除元素——平均常数复杂度 <em>O(\(n\))</em></li>
+</ul>
+<h4 id="1123-使用场景">1.12.3 使用场景</h4>
+<p>相比 map 更快的访问。</p>
+<h4 id="1124-示例">1.12.4 示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;unordered_map&gt;</span><span style="color:#888;font-weight:bold">
@@ -592,8 +659,9 @@ std::set&lt;std::string&gt; copySet = mySet;
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="213-stdunordered_multimap">2.13 std::unordered_multimap</h3>
-<p><code>unordered_multimap</code> 是关联型容器，无序。</p>
+</code></pre></div><h3 id="113-stdunordered_multimap">1.13 std::unordered_multimap</h3>
+<h4 id="1131-概述">1.13.1 概述</h4>
+<p><code>unordered_multimap</code> 是关联型容器，无序。类模板定义：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Key</span>,
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">T</span>,
@@ -602,10 +670,137 @@ std::set&lt;std::string&gt; copySet = mySet;
     <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Allocator</span> = std::allocator&lt; std::pair&lt;<span style="font-weight:bold;text-decoration:underline">const</span> Key, T&gt; &gt;
 &gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_multimap</span>;
 
-</code></pre></div><h3 id="214-__gnu_cxxhash_map">2.14 __gnu_cxx::hash_map</h3>
+</code></pre></div><h4 id="1132-unordered_multimap-上的常见操作复杂度效率">1.13.2 unordered_multimap 上的常见操作复杂度（效率）</h4>
+<ul>
+<li>随机访问——平均常数复杂度 <em>O(\(n\))</em></li>
+<li>插入或移除元素——平均常数复杂度 <em>O(\(n\))</em></li>
+</ul>
+<h4 id="1133-使用场景">1.13.3 使用场景</h4>
+<p>相比于 multimap 更快的访问。</p>
+<h3 id="114-__gnu_cxxhash_map">1.14 __gnu_cxx::hash_map</h3>
 <p>包含头文件 <code>&lt;ext/hash_map&gt;</code>，在名称空间 <code>__gnu_cxx</code> 中。</p>
-<h3 id="215-__gnu_cxxslist">2.15 __gnu_cxx::slist</h3>
+<h3 id="115-__gnu_cxxslist">1.15 __gnu_cxx::slist</h3>
 <p>包含在头文件 <code>&lt;ext/slist&gt;</code>，在名称空间 <code>__gnu_cxx</code> 中。</p>
+<h2 id="2-算法algorithm">2. 算法，Algorithm</h2>
+<h3 id="string-和-vector-中的-size-和-capacity">string 和 vector 中的 size() 和 capacity()</h3>
+<p><code>size()</code> 返回 <code>vector</code> 中的真实元素数量，而 <code>capacity()</code> 是 <code>vector</code> 的可容纳的元素数量，即预分配的内存空间。一个是真实，一个是最大上限。</p>
+<p>另外，拥有 <code>size()</code> 和 <code>capacity()</code> 的模板类有 <code>vector</code> 和 <code>string</code>。</p>
+<h3 id="resize-和-reserve-的区别">resize() 和 reserve() 的区别</h3>
+<h4 id="resize">resize()</h4>
+<p>其函数原型为</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">resize</span>(size_type count);									<span style="color:#888;font-style:italic">// (1)
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">resize</span>(size_type count, <span style="font-weight:bold;text-decoration:underline">const</span> value_type&amp; value);		 <span style="color:#888;font-style:italic">// (2)
+</span></code></pre></div><p>重设容器大小容纳 <code>count</code> 个元素。若当前大小大于 <code>count</code>，则减小容器为其首 <code>count</code> 个元素。若当前大小小于 <code>count</code>，1) 则后附额外的默认插入的元素；2）则后附额外的 <code>value</code> 的副本。</p>
+<h5 id="reserve">reserve()</h5>
+<p>其函数原型为</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">reserve</span>(size_type new_cap);
+</code></pre></div><p>增加 <code>vector</code> 的容量到大于或等于 <code>new_cap</code> 的值。</p>
+<ol>
+<li>若 <code>new_cap</code> 大于当前的 <code>capacity()</code>，则分配新存储空间，把之前 <code>vector</code> 中的对象通过复制构造函数复制过来，销毁之前的内存（包括所有迭代器，包含尾后迭代器和所有到元素的引用都被非法化）；</li>
+<li>否则该方法不做任何事情。<code>reverse()</code> 不更改 <code>vector</code> 的 <code>size</code>，也没有迭代器或引用被非法化。</li>
+</ol>
+<p>像这样理解：负责实际分配内存空间的 <code>resize()</code> 权限比 <code>reserve()</code> 高，<code>resize()</code> 的增加会同时修改 <code>capacity()</code>，而 <code>capacity()</code> 的增加仅修改 <code>capacity()</code>，不涉及内存，<code>capacity()</code> 的减少，当与 <code>size()</code> 冲突时，则什么也不做。</p>
+<h2 id="3-迭代器iterator">3. 迭代器，Iterator</h2>
+<h3 id="31--概述">3.1  概述</h3>
+<p>又称游标，用于提供一种方法顺序访问一个聚合对象中各个元素, 而又不需暴露该对象的内部表示。迭代器和指针非常类似，它是可以需要的任意类型，通过迭代器可以指向容器中的某个元素，如果需要，还可以对该元素进行读写操作。</p>
+<p>由于迭代器于聚合对象的耦合，在一定程度上限制了它的广泛应用，一般仅用于底层聚合类。</p>
+<p>常用的迭代器按照功能的强弱分为输入迭代器、输出迭代器、前向迭代器、双向迭代器、随机访问迭代器 5 种。</p>
+<h3 id="32-迭代器和指针的区别">3.2 迭代器和指针的区别</h3>
+<p>迭代器不是指针，是类模板，表现得像指针。本质是封装了原生指针，是指针概念的一种提升，提供比指针更高级的行为，相当于一种智能指针，可以根据不同类型的数据结构来实现不同的自增自减操作。</p>
+<p>迭代器返回的是对象的引用而不是对象的值，所以也需要通过 <code>*</code> 解引用才能获得指向对象的值。</p>
+<h3 id="33-迭代器产生的原因">3.3 迭代器产生的原因</h3>
+<p>迭代器的访问方式就是把不同集合的访问逻辑抽象出来，使得不用暴露内部的结构而达到循环遍历集合的效果。</p>
+<h3 id="34-如何正确使用迭代器删除元素">3.4 如何正确使用迭代器删除元素</h3>
+<p>考察迭代器失效的问题。</p>
+<ol>
+<li>
+<p>对于顺序容器 <code>vector</code>、<code>deque</code> ，使用 <code>erase()</code> 删除元素后，删除位置后面每个元素的迭代器都会失效，同时这些元素会向前移动一个位置，<code>erase()</code> 会返回下一个有效的迭代器。正确的删除方法是</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">if</span>()
+{
+    it = vector.erase(it);
+}
+<span style="font-weight:bold;text-decoration:underline">else</span>
+{
+    it++;
+}
+</code></pre></div></li>
+<li>
+<p>对于关联容器<code>set</code>、<code>map</code> ，使用 <code>erase()</code> 删除元素后，当前元素的迭代器失效，但由于其结构是红黑树，删除树中某一个结点，不会影响下一个元素的迭代器，所以只需在使用 <code>erase()</code> 之前记录下一个元素的迭代器即可。正确的删除方法是</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;map&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>   
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::map&lt;<span style="font-weight:bold;text-decoration:underline">int</span>, std::string&gt; c = {
+        {1, <span style="color:#666;font-style:italic">&#34;one&#34;</span>},
+        {2, <span style="color:#666;font-style:italic">&#34;two&#34;</span>},
+        {3, <span style="color:#666;font-style:italic">&#34;three&#34;</span>},
+        {4, <span style="color:#666;font-style:italic">&#34;four&#34;</span>},
+        {5, <span style="color:#666;font-style:italic">&#34;five&#34;</span>},
+        {6, <span style="color:#666;font-style:italic">&#34;six&#34;</span>}};
+   
+    <span style="color:#888;font-style:italic">// 从 c 擦除所有奇数
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">for</span> (<span style="font-weight:bold;text-decoration:underline">auto</span> it = c.begin(); it != c.end();)
+    {
+        <span style="font-weight:bold;text-decoration:underline">if</span> (it-&gt;first % 2 == 1)
+        {
+            it = c.erase(it);
+        }
+        <span style="font-weight:bold;text-decoration:underline">else</span>
+        {
+            ++it;
+        }
+    }
+    <span style="font-weight:bold;text-decoration:underline">for</span> (<span style="font-weight:bold;text-decoration:underline">auto</span> &amp;p : c)
+    {
+        std::cout &lt;&lt; p.second &lt;&lt; <span style="color:#666;font-style:italic">&#39; &#39;</span>;
+    }
+   
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+   
+</code></pre></div></li>
+<li>
+<p>对于 <code>list</code>，它使用了不连续的内存空间，并且它的 <code>erase()</code> 方法也会返回下一个有效的迭代器，因此，上面两种方法都可以使用。</p>
+</li>
+</ol>
+<p>我没有遇到错误删除时的问题，是新版本修复了？</p>
+<h2 id="4-函数对象function-objects">4. 函数对象，Function Objects</h2>
+<h2 id="5-适配器adapter">5. 适配器，Adapter</h2>
+<h3 id="容器适配器">容器适配器</h3>
+<h3 id="迭代器适配器">迭代器适配器</h3>
+<p>所谓迭代器适配器，其本质也是一个模板类，比较特殊的是，该模板类是借助 5 种基础迭代器实现的。</p>
+<blockquote>
+<p>本质上讲，迭代器适配器仍属于迭代器，可以理解为是基础迭代器的“翻新版”或者“升级版”。同时，“xxx 迭代器适配器”通常直接称为“xxx 迭代器”。</p>
+</blockquote>
+<p>在 C++11 标准中，迭代器适配器有 4 类，如下图所示。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>反向迭代器（<code>reverse_iterator</code>）</td>
+<td>又称“逆向迭代器”，其内部重新定义了递增运算符（<code>++</code>）和递减运算符（<code>--</code>），专门用来实现对容器的逆序遍历。</td>
+</tr>
+<tr>
+<td>安插型迭代器（inserter或者insert_iterator）</td>
+<td>通常用于在容器的任何位置添加新的元素，需要注意的是，此类迭代器不能被运用到元素个数固定的容器（比如 <code>array</code>）上。</td>
+</tr>
+<tr>
+<td>流迭代器（istream_iterator / ostream_iterator） 流缓冲区迭代器（istreambuf_iterator / ostreambuf_iterator）</td>
+<td>输入流迭代器用于从文件或者键盘读取数据；相反，输出流迭代器用于将数据输出到文件或者屏幕上。 输入流缓冲区迭代器用于从输入缓冲区中逐个读取数据；输出流缓冲区迭代器用于将数据逐个写入输出流缓冲区。</td>
+</tr>
+<tr>
+<td>移动迭代器（move_iterator）</td>
+<td>此类型迭代器是 C++ 11 标准中新添加的，可以将某个范围的类对象移动到目标范围，而不需要通过拷贝去移动。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-分配器alloctor">6. 分配器，Alloctor</h2>
 
         </div>
 
@@ -615,35 +810,57 @@ std::set&lt;std::string&gt; copySet = mySet;
             <h3></h3>
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#1-概述">1. 概述</a>
+    <li><a href="#0-概述">0. 概述</a>
       <ol>
-        <li><a href="#11-容器container">1.1 容器，Container</a></li>
-        <li><a href="#12-算法algorithm">1.2 算法，Algorithm</a></li>
-        <li><a href="#13-迭代器iterator">1.3 迭代器，Iterator</a></li>
-        <li><a href="#14-函数对象function-objects">1.4 函数对象，Function Objects</a></li>
-        <li><a href="#15-适配器adapter">1.5 适配器，Adapter</a></li>
-        <li><a href="#16-分配器allocator">1.6 分配器，Allocator</a></li>
+        <li><a href="#01-容器container">0.1 容器，Container</a></li>
+        <li><a href="#02-算法algorithm">0.2 算法，Algorithm</a></li>
+        <li><a href="#03-迭代器iterator">0.3 迭代器，Iterator</a></li>
+        <li><a href="#04-函数对象function-objects">0.4 函数对象，Function Objects</a></li>
+        <li><a href="#05-适配器adapter">0.5 适配器，Adapter</a></li>
+        <li><a href="#06-分配器allocator">0.6 分配器，Allocator</a></li>
       </ol>
     </li>
-    <li><a href="#2-容器">2. 容器</a>
+    <li><a href="#1-容器container">1. 容器，Container</a>
       <ol>
-        <li><a href="#21-stdvector封装的动态数组">2.1 std::vector，封装的动态数组</a></li>
-        <li><a href="#22-stddeque两端都可以扩充的双端队列">2.2 std::deque，两端都可以扩充的双端队列</a></li>
-        <li><a href="#23-stdlist双向链表">2.3 std::list，双向链表</a></li>
-        <li><a href="#24-stdarray普通数组增强版">2.4 std::array，普通数组增强版</a></li>
-        <li><a href="#25-stdforward_list单链表">2.5 std::forward_list，单链表</a></li>
-        <li><a href="#26-stdset集合">2.6 std::set，集合</a></li>
-        <li><a href="#27-stdmultiset">2.7 std::multiset，</a></li>
-        <li><a href="#28-stdunordered_set">2.8 std::unordered_set</a></li>
-        <li><a href="#29-stdunordered_multiset">2.9 std::unordered_multiset</a></li>
-        <li><a href="#210-stdmap">2.10 std::map</a></li>
-        <li><a href="#211-stdmultimap">2.11 std::multimap</a></li>
-        <li><a href="#212-stdunordered_map">2.12 std::unordered_map</a></li>
-        <li><a href="#213-stdunordered_multimap">2.13 std::unordered_multimap</a></li>
-        <li><a href="#214-__gnu_cxxhash_map">2.14 __gnu_cxx::hash_map</a></li>
-        <li><a href="#215-__gnu_cxxslist">2.15 __gnu_cxx::slist</a></li>
+        <li><a href="#11-stdvector封装的动态数组">1.1 std::vector，封装的动态数组</a></li>
+        <li><a href="#12-stddeque两端都可以扩充的双端队列">1.2 std::deque，两端都可以扩充的双端队列</a></li>
+        <li><a href="#13-stdlist双向链表">1.3 std::list，双向链表</a></li>
+        <li><a href="#14-stdarray普通数组增强版">1.4 std::array，普通数组增强版</a></li>
+        <li><a href="#15-stdforward_list单链表">1.5 std::forward_list，单链表</a></li>
+        <li><a href="#16-stdset集合">1.6 std::set，集合</a></li>
+        <li><a href="#17-stdmultiset可重复集合">1.7 std::multiset，可重复集合</a></li>
+        <li><a href="#18-stdmap一对一映射">1.8 std::map，一对一映射</a></li>
+        <li><a href="#19-stdmultimap一对多映射">1.9 std::multimap，一对多映射</a></li>
+        <li><a href="#110-stdunordered_set无序-set">1.10 std::unordered_set，无序 set</a></li>
+        <li><a href="#111-stdunordered_multiset无序-multiset">1.11 std::unordered_multiset，无序 multiset</a></li>
+        <li><a href="#112-stdunordered_map">1.12 std::unordered_map</a></li>
+        <li><a href="#113-stdunordered_multimap">1.13 std::unordered_multimap</a></li>
+        <li><a href="#114-__gnu_cxxhash_map">1.14 __gnu_cxx::hash_map</a></li>
+        <li><a href="#115-__gnu_cxxslist">1.15 __gnu_cxx::slist</a></li>
       </ol>
     </li>
+    <li><a href="#2-算法algorithm">2. 算法，Algorithm</a>
+      <ol>
+        <li><a href="#string-和-vector-中的-size-和-capacity">string 和 vector 中的 size() 和 capacity()</a></li>
+        <li><a href="#resize-和-reserve-的区别">resize() 和 reserve() 的区别</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-迭代器iterator">3. 迭代器，Iterator</a>
+      <ol>
+        <li><a href="#31--概述">3.1  概述</a></li>
+        <li><a href="#32-迭代器和指针的区别">3.2 迭代器和指针的区别</a></li>
+        <li><a href="#33-迭代器产生的原因">3.3 迭代器产生的原因</a></li>
+        <li><a href="#34-如何正确使用迭代器删除元素">3.4 如何正确使用迭代器删除元素</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-函数对象function-objects">4. 函数对象，Function Objects</a></li>
+    <li><a href="#5-适配器adapter">5. 适配器，Adapter</a>
+      <ol>
+        <li><a href="#容器适配器">容器适配器</a></li>
+        <li><a href="#迭代器适配器">迭代器适配器</a></li>
+      </ol>
+    </li>
+    <li><a href="#6-分配器alloctor">6. 分配器，Alloctor</a></li>
   </ol>
 </nav>
         </div>
@@ -707,6 +924,15 @@ std::set&lt;std::string&gt; copySet = mySet;
     </div>
     
 
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
     
     <script>
         document.getElementById('main-nav-toggle').addEventListener('click', function () {

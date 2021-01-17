@@ -22,7 +22,7 @@
       <pubDate>Sat, 09 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2021-01-09-stl%E9%9D%A2%E7%BB%8F/</guid>
-      <description>1. 概述 STL六大部件：容器、算法、迭代器、函数对象（仿函数）、适配器和分配器。 1.1 容器，Container 一些封装数据结构的模板类，例如 vector 向量</description>
+      <description>0. 概述 STL六大部件：容器、算法、迭代器、函数对象（仿函数）、适配器和分配器。 0.1 容器，Container 一些封装数据结构的模板类，例如 vector 向量</description>
     </item>
     
     <item>
