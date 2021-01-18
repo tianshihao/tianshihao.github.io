@@ -6,7 +6,25 @@
     <description>Recent content in 面经 on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>计网相关面经📚</title>
+      <link>https://tianshihao.github.io/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/</guid>
+      <description>TCP和UDP的区别 HTTP协议是以明文的方式在网络中传输数据，而HTTPS协议传输的数据则是经过TLS加密后的，HTTPS具有更高的安全性</description>
+    </item>
+    
+    <item>
+      <title>操作系统相关面经📚</title>
+      <link>https://tianshihao.github.io/post/2021-01-16-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%9D%A2%E7%BB%8F/</link>
+      <pubDate>Sat, 16 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-01-16-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%9D%A2%E7%BB%8F/</guid>
+      <description>一、进程和线程的区别及其使用 二、多进程的同步方法和如何使用 三、进程间通信的方式 主要包括管道、系统IPC（消息队列、信号量、信号、共享内存）、</description>
+    </item>
+    
     <item>
       <title>数据结构和算法面经📚</title>
       <link>https://tianshihao.github.io/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/</link>
@@ -32,6 +50,15 @@
       
       <guid>https://tianshihao.github.io/post/2021-01-07-c&#43;&#43;%E9%9D%A2%E7%BB%8F/</guid>
       <description>&lt;p&gt;收集常见C++面试问题，包括内存管理、常用库函数、面向对象、STL、编译过程和小的语法知识。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>设计模式总结📜</title>
+      <link>https://tianshihao.github.io/post/2020-12-28-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2020-12-28-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description>设计模式 单例模式Singleton 创建型模式。 其特点是只提供唯一一个类的实例,具有全局变量的特点，在任何位置都可以通过接口获取到那个唯一实例</description>
     </item>
     
   </channel>

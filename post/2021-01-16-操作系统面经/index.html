@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>操作系统相关面经📚 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="操作系统相关">
+
+    <meta property="og:title" content="操作系统相关面经📚" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-16-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%9D%A2%E7%BB%8F/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">操作系统相关面经📚</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-16-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%9D%A2%E7%BB%8F/" class="article-date">
+                <time datetime='2021-01-16T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-16</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="一进程和线程的区别及其使用">一、进程和线程的区别及其使用</h2>
+<h2 id="二多进程的同步方法和如何使用">二、多进程的同步方法和如何使用</h2>
+<h2 id="三进程间通信的方式">三、进程间通信的方式</h2>
+<p>主要包括<strong>管道</strong>、系统IPC（<strong>消息队列</strong>、<strong>信号量</strong>、信号、<strong>共享内存</strong>）、套接字SOCKET。信号量常与共享内存结合使用（共享文件？）。</p>
+<h3 id="一管道">（一）管道</h3>
+<p>管道主要包括无名管道和命名管道：管道可用于具有亲缘关系的父子进程间的通信，命名管道除了具有管道所具有的功能外，它还允许无亲缘关系进程间的通信。</p>
+<h4 id="1-普通管道">1. 普通管道</h4>
+<ul>
+<li>它是<strong>半双工</strong>的（即数据只能在一个方向上流动），具有固定的读端和写端；</li>
+<li>它只能用于具有<strong>亲缘关系</strong>的进程之间的通信（也是父子进程或者兄弟进程之间）；</li>
+<li>它可以看成是一种<strong>特殊的文件</strong>，对于它的读写也可以使用普通的read、write等函数。但是它不是普通的文件，并不属于其他任何文件系统，并且<strong>只存在于内存</strong>中。</li>
+</ul>
+<h4 id="2-命名管道">2. 命名管道</h4>
+<ul>
+<li>FIFO可以在<strong>无关的进程</strong>之间交换数据；</li>
+<li>FIFO有路径名与之相关联，它<strong>以一种特殊设备文件形式存在于文件系统中</strong>。</li>
+</ul>
+<h3 id="二系统ipc">（二）系统IPC</h3>
+<h4 id="消息队列">消息队列</h4>
+<p>消息队列，是<strong>消息的链接表</strong>，存放在内核中。一个消息队列由一个标识符（即队列ID）来标记。 （消息队列克服了信号传递信息少，管道只能承载无格式字节流以及缓冲区大小受限等特点）具有写权限得进程可以按照一定得规则向消息队列中添加新信息；对消息队列有读权限得进程则可以从消息队列中读取信息。</p>
+<p>特点</p>
+<ol>
+<li>消息队列是<strong>面向记录</strong>的，其中的消息具有特定的<strong>格式</strong>以及特定的<strong>优先级</strong>；</li>
+<li>消息队列是<strong>独立于发送于接收进程的</strong>。进程终止时，消息队列及其内容并不会被删除；</li>
+<li>消息队列可以实现消息的<strong>随即查询</strong>，消息不一定要以先进先出的次序去除，也可以按照消息的类型读取。</li>
+</ol>
+<h4 id="信号量semaphore">信号量（Semaphore）</h4>
+<p>信号量是一个计数器，可以用来控制多个进程对共享资源的访问。信号量用于实现进程间的互斥与同步，而不是用于存储进程间的通信数据。</p>
+<p>特点：</p>
+<ol>
+<li>信号量用于<strong>进程间同步</strong>，若要在进程间传递数据需要结合<strong>共享内存</strong>；</li>
+<li>信号量基于操作系统的<strong>PV操作</strong>，程序对信号量的操作都是<strong>原子操作</strong>；</li>
+<li>每次对信号量的PV操作不仅限于对信号量增加1或减少1，而且可以加减<strong>任意正整数</strong>；</li>
+<li>支持信号量组。</li>
+</ol>
+<h4 id="信号signal">信号（Signal）</h4>
+<p>信号是一种比较复杂的<strong>通信方式</strong>，用于通知接收进程某个事件已经发生。</p>
+<h4 id="共享内存shared-memory">共享内存（Shared Memory）</h4>
+<p>共享内存使得多个进程可以访问同一块内存空间，不同进程可以及时看到对方进程中对共享内存中数据的更新。这种方式需要一开某种同步操作，如互斥锁和信号量等。</p>
+<p>特点：</p>
+<ol>
+<li>共享内存是一种<strong>最快</strong>的IPC，因为进程是直接对内存进行存取；</li>
+<li>因为多个进程可以同时操作，所以需要进行<strong>同步</strong>；</li>
+<li><strong>信号量和共享内存</strong>通常结合在一起使用，信号量用来同步对共享内存的访问。</li>
+</ol>
+<h3 id="三套接字socket">（三）套接字（SOCKET）</h3>
+<p>SOCKET也是一种进程间通信机制，与其他通信机制不同的是，它<strong>可用于不同主机之间</strong>的进程通信。</p>
+<h2 id="线程间的通信方式">线程间的通信方式</h2>
+<p>主要包括临界区、互斥量、信号量和事件（信号）。</p>
+<ol>
+<li>临界区：通过<strong>多线程的串行化</strong>来访问公共资源或一段代码，<strong>速度快</strong>，适合控制数据访问；</li>
+<li>互斥量（Synchronized/Lock）：采用<strong>互斥对象机制</strong>，只有拥有互斥对象的线程才有访问公共资源的权限。因为<strong>互斥对象只有一个</strong>，所以可以保证公共资源不会被多个线程同时访问；</li>
+<li>信号量（Semaphore）：为控制具有<strong>有限数量</strong>的用户资源而设计的，它允许多个线程在同一时刻去访问统一资源，但一般需要限制同一时刻访问此资源的最大线程数目；</li>
+<li>事件（信号，Wait/Notify）：通过通知操作的方式来保持多线程的同步，还可以方便的实现多线程优先级的比较操作。</li>
+</ol>
+<h2 id="创建进程的具体方法">创建进程的具体方法</h2>
+<h2 id="fork-函数">fork() 函数</h2>
+<p>成功调用 <code>fork()</code> 会创建一个新的进程，它几乎与调用 <code>fork()</code> 的进程<strong>一模一样</strong>，这两个进程都会继续运行。在子进程中，成功的 <code>fork()</code> 调用会返回 <strong>0</strong>。在父进程中 <code>fork()</code> 返回子进程的 <strong>pid</strong>。如果出现错误，<code>fork()</code> 返回一个<strong>负值</strong>。</p>
+<p>最常见的 <code>fork()</code> 用法是创建一个新的进程，然后使用 <code>exec()</code> 载入二进制映像，替换当前进程的映像。这种情况下，派生 <code>fork()</code> 了新的进程，而这个子进程会执行一个新的二进制可执行文件的映像。这种“派生加执行”的方式是很常见的。</p>
+<p>在早期的 Unix 系统中，创建进程比较原始。当调用 <code>fork()</code> 时，内核会把所有的内部数据结构复制一份，复制进程的<strong>页表项</strong>，然后把父进程的地址空间中的内容<strong>逐页</strong>的复制到子进程的地址空间中。但从内核角度来说，逐页的复制方式是十分耗时的。现代的 Unix 系统采取了更多的优化，例如 Linux，采用了<strong>写时复制</strong>的方法，而不是对父进程空间进程整体复制。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一进程和线程的区别及其使用">一、进程和线程的区别及其使用</a></li>
+    <li><a href="#二多进程的同步方法和如何使用">二、多进程的同步方法和如何使用</a></li>
+    <li><a href="#三进程间通信的方式">三、进程间通信的方式</a>
+      <ol>
+        <li><a href="#一管道">（一）管道</a></li>
+        <li><a href="#二系统ipc">（二）系统IPC</a></li>
+        <li><a href="#三套接字socket">（三）套接字（SOCKET）</a></li>
+      </ol>
+    </li>
+    <li><a href="#线程间的通信方式">线程间的通信方式</a></li>
+    <li><a href="#创建进程的具体方法">创建进程的具体方法</a></li>
+    <li><a href="#fork-函数">fork() 函数</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E7%BA%BF%E7%A8%8B">线程
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B">多线程
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            计网相关面经📚
+        </div>
+    </a>
+    
+    
+    <a href="/post/2021-01-14-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E9%9D%A2%E7%BB%8F/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">数据结构和算法面经📚&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>
