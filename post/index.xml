@@ -13,7 +13,7 @@
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/</guid>
-      <description>TCP和UDP的区别 HTTP协议是以明文的方式在网络中传输数据，而HTTPS协议传输的数据则是经过TLS加密后的，HTTPS具有更高的安全性</description>
+      <description>1. 建立 TCP 服务器的各个系统调用 建立 TCP 服务器连接的过程中主要通过一下系统调用序列来获取某些函数，这些系统调用主要包括 socket()、bind(</description>
     </item>
     
     <item>
