@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>多线程编程面经📚 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="多线程编程">
+
+    <meta property="og:title" content="多线程编程面经📚" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-20-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E9%9D%A2%E7%BB%8F/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">多线程编程面经📚</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-20-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E9%9D%A2%E7%BB%8F/" class="article-date">
+                <time datetime='2021-01-20T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-20</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E9%9D%A2%E7%BB%8F">面经</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C">计算机网络</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="并发concurrency和并行parallelism">并发（Concurrency）和并行（Parallelism）</h2>
+<p>并发（Concurrency）：指宏观上看起来两个程序在同时运行，比如说在单核 CPU 上的多任务。但是从微观上看两个程序的指令是交织着运行的，指令相互交叉，在单个周期内只运行一个指令。这种并发并不能提高计算机的性能，只能提高效率。</p>
+<p>并行（Parallelism）：指严格物理意义上的同时运行，比如多核 CPU，两个程序分别运行在两个核上，两者之间互不影响，单个周期内每个程序都运行了自己的指令，也就是运行了两条指令。这样说来并行的确提高了计算机的效率。所以现在的 CPU 都是往多核方面发展。</p>
+<h2 id="有了进程为什么还要有线程">有了进程为什么还要有线程？</h2>
+<p>进程可以使多个程序并发执行，提高了资源的利用率和系统的吞吐量，但是也有缺点，即进程在同一时间只能干一件事情，如果在执行过程中发生了阻塞，整个进程就会挂起，即使进程中有些工作不太依赖于资源的等待，仍不会执行。</p>
+<p>因此，操作系统引入了<strong>比进程粒度更小</strong>的线程，作为<strong>并发执行的基本单位</strong>，从而减少了程序在并发执行时所付出的时空开销，提高了并发性。</p>
+<p>和进程相比，线程还有以下优点，</p>
+<ol>
+<li>从<strong>资源</strong>上讲，线程相比于进程需要的资源更少；</li>
+<li>从<strong>切换效率</strong>上讲，运行于一个进程中的若干线程，它们之间使用相同的地址空间，彼此切换所需的时间也远远小于进程之间切换所需要的时间。据统计，一个进程的开销大约是一个线程的 30 倍左右；</li>
+<li>从<strong>通信机制</strong>上讲，拥有独立数据空间的进程间通信，费时且不方便；共享进程数据空间的线程的数据可以被其它线程所用。</li>
+</ol>
+<h2 id="什么时候用多进程什么时候用多线程">什么时候用多进程什么时候用多线程</h2>
+<ul>
+<li>频繁修改：需要频繁创建和销毁的优先使用<strong>多线程</strong></li>
+<li>计算量：需要大量计算的优先使用<strong>多线程</strong>，因为需要消耗大量CPU资源且切换频繁，所以多线程好一点</li>
+<li>相关性：任务间相关性比较强的用<strong>多线程</strong>，相关性比较弱的用多进程。因为线程之间的数据共享和同步比较简单。</li>
+<li>多分布：可能要扩展到多机分布的用<strong>多进程</strong>，多核分布的用<strong>多线程</strong>。</li>
+</ul>
+<h2 id="线程的状态与转换">线程的状态与转换</h2>
+<p>线程的基本状态包括：派生、阻塞、激活、调度和结束。</p>
+<h3 id="创建new">创建（New）</h3>
+<p>线程在<strong>进程内派生</strong>出来，它即可由进程派生，也可<strong>由线程派生</strong>。</p>
+<h3 id="阻塞blocked">阻塞（Blocked）</h3>
+<p>如果一个线程在执行过程中需要<strong>等待某个事件发生</strong>，则被阻塞。</p>
+<h3 id="激活unblock">激活（Unblock）</h3>
+<p>如果<strong>阻塞线程的事件发生</strong>，则该线程<strong>被激活</strong>并进入<strong>就绪队列</strong>。</p>
+<h3 id="调度schedule">调度（Schedule）</h3>
+<p>选择一个就绪线程进入执行状态。</p>
+<h3 id="结束finish">结束（Finish）</h3>
+<p>如果一个线程执行结束，它的寄存器上下文以及堆栈内容等将被释放。</p>
+<h2 id="线程间的通信方式">线程间的通信方式</h2>
+<p>主要包括临界区、互斥量、信号量和事件（信号）。</p>
+<ol>
+<li>临界区：通过<strong>多线程的串行化</strong>来访问公共资源或一段代码，<strong>速度快</strong>，适合控制数据访问；</li>
+<li>互斥量（Synchronized/Lock）：采用<strong>互斥对象机制</strong>，只有拥有互斥对象的线程才有访问公共资源的权限。因为<strong>互斥对象只有一个</strong>，所以可以保证公共资源不会被多个线程同时访问；</li>
+<li>信号量（Semaphore）：为控制具有<strong>有限数量</strong>的用户资源而设计的，它允许多个线程在同一时刻去访问统一资源，但一般需要限制同一时刻访问此资源的最大线程数目；</li>
+<li>事件（信号，Wait/Notify）：通过通知操作的方式来保持多线程的同步，还可以方便的实现多线程优先级的比较操作；</li>
+<li>全局变量。</li>
+</ol>
+<h2 id="实现多线程的方法">实现多线程的方法</h2>
+<p>两种：继承 Thread 类，实现 Runable 接口。</p>
+<h2 id="多线程同步和互斥有几种实现方法">多线程同步和互斥有几种实现方法</h2>
+<p>多线程同步：事件、信号量。多线程互斥：临界区、事件、信号量、互斥量。</p>
+<h2 id="多线程同步和互斥有何异同在什么情况下分别使用它们">多线程同步和互斥有何异同，在什么情况下分别使用它们</h2>
+<p><strong>同步是一种特殊的互斥</strong>。当访问资源量存在<strong>先后顺序</strong>的时候使用<strong>同步</strong>，当需要<strong>独占式访问资源</strong>时使用<strong>互斥</strong>。</p>
+<p>如一个生产者和多个消费者之间。生产者和消费者之间是同步关系；消费者之间是互斥关系。</p>
+<h2 id="多线程中栈是私有的堆是公有的">多线程中栈是私有的，堆是公有的</h2>
+<h2 id="thread-类">thread 类</h2>
+<h2 id="join-和-detach1">join() 和 detach()<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></h2>
+<p>每一个程序至少拥有一个线程，那就是执行 <code>main()</code> 函数的主线程，而多线程则是出现两个或两个以上的线程并行运行，即主线程和子线程在同一时间段同时运行。而在这个过程中会出现几种情况：</p>
+<ol>
+<li>主线程先运行结束</li>
+<li>子线程先运行结束</li>
+<li>主子线程同时结束</li>
+</ol>
+<h3 id="join">join()</h3>
+<p><code>join()</code> 函数是一个等待线程完成函数，主线程需要等待子线程运行结束了才可以结束。</p>
+<blockquote>
+<p>把子线程“加入”进来，等待其完成。</p>
+</blockquote>
+<h3 id="detach">detach()</h3>
+<p>称为线程分离函数，使用 <code>detach()</code> 函数会让线程在后台运行，即说明主线程不会等待子线程运行结束才结束。</p>
+<p>如果没有其他一些同步措施的话，此时子线程和主线程<strong>完全分离</strong>，两个线程自顾自的运行，主线程可以不等子线程运行完，就提前结束。这里有个需要注意的地方，如果主线程运行完毕了的话，那些被 detach 的线程也会随着主线程的销毁而被<strong>挂起</strong>，此时里面本应输出出来显示的内容也将不再显示！<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<p>通常称分离线程为守护线程（Daemon Threads），UNIX 中守护线程是指，没有任何显式的用户接口，并在后台运行的线程。这种线程的特点就是长时间运行；线程的生命周期可能会从某一个应用起始到结束，可能会在后台监视文件系统，还有可能对缓存进行清理，亦或对数据结构进行优化。另一方面，分离线程的另一方面只能确定线程什么时候结束，发后即忘（Fire and Forget）的任务就使用到线程的这种方式。</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://blog.csdn.net/qq_36784975/article/details/87699113">https://blog.csdn.net/qq_36784975/article/details/87699113</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://blog.csdn.net/Trouble_provider/article/details/85268764">https://blog.csdn.net/Trouble_provider/article/details/85268764</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#并发concurrency和并行parallelism">并发（Concurrency）和并行（Parallelism）</a></li>
+    <li><a href="#有了进程为什么还要有线程">有了进程为什么还要有线程？</a></li>
+    <li><a href="#什么时候用多进程什么时候用多线程">什么时候用多进程什么时候用多线程</a></li>
+    <li><a href="#线程的状态与转换">线程的状态与转换</a>
+      <ol>
+        <li><a href="#创建new">创建（New）</a></li>
+        <li><a href="#阻塞blocked">阻塞（Blocked）</a></li>
+        <li><a href="#激活unblock">激活（Unblock）</a></li>
+        <li><a href="#调度schedule">调度（Schedule）</a></li>
+        <li><a href="#结束finish">结束（Finish）</a></li>
+      </ol>
+    </li>
+    <li><a href="#线程间的通信方式">线程间的通信方式</a></li>
+    <li><a href="#实现多线程的方法">实现多线程的方法</a></li>
+    <li><a href="#多线程同步和互斥有几种实现方法">多线程同步和互斥有几种实现方法</a></li>
+    <li><a href="#多线程同步和互斥有何异同在什么情况下分别使用它们">多线程同步和互斥有何异同，在什么情况下分别使用它们</a></li>
+    <li><a href="#多线程中栈是私有的堆是公有的">多线程中栈是私有的，堆是公有的</a></li>
+    <li><a href="#thread-类">thread 类</a></li>
+    <li><a href="#join-和-detach1">join() 和 detach()</a>
+      <ol>
+        <li><a href="#join">join()</a></li>
+        <li><a href="#detach">detach()</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/tcp">TCP
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/https">HTTPS
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">计网相关面经📚&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

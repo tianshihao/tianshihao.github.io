@@ -6,14 +6,23 @@
     <description>Recent content on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>多线程编程面经📚</title>
+      <link>https://tianshihao.github.io/post/2021-01-20-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E9%9D%A2%E7%BB%8F/</link>
+      <pubDate>Wed, 20 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-01-20-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E9%9D%A2%E7%BB%8F/</guid>
+      <description>并发（Concurrency）和并行（Parallelism） 并发（Concurrency）：指宏观上看起来两个程序在同时运行，比如说在单核</description>
+    </item>
+    
     <item>
       <title>计网相关面经📚</title>
       <link>https://tianshihao.github.io/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2021-01-18-%E8%AE%A1%E7%BD%91%E9%9D%A2%E7%BB%8F/</guid>
-      <description>1. 建立 TCP 服务器的各个系统调用 建立 TCP 服务器连接的过程中主要通过一下系统调用序列来获取某些函数，这些系统调用主要包括 socket()、bind(</description>
+      <description>OSI七层模型 物理层：通过媒介传输比特，确定机械及电气规范，传输单位为bit，主要包括的协议为：IEE802.3、CLOCK RJ45； 数据链</description>
     </item>
     
     <item>
@@ -22,7 +31,7 @@
       <pubDate>Sat, 16 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2021-01-16-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%9D%A2%E7%BB%8F/</guid>
-      <description>一、进程和线程的区别及其使用 二、多进程的同步方法和如何使用 三、进程间通信的方式 主要包括管道、系统IPC（消息队列、信号量、信号、共享内存）、</description>
+      <description>一、进程和线程的区别及其使用 二、多进程的同步方法和如何使用 三、进程间通信的方式 主要包括管道、系统 IPC（消息队列、信号量、信号、共享内存）、</description>
     </item>
     
     <item>

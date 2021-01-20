@@ -822,19 +822,114 @@ std::set&lt;std::string&gt; copySet = mySet;
     </li>
     <li><a href="#1-容器container">1. 容器，Container</a>
       <ol>
-        <li><a href="#11-stdvector封装的动态数组">1.1 std::vector，封装的动态数组</a></li>
-        <li><a href="#12-stddeque两端都可以扩充的双端队列">1.2 std::deque，两端都可以扩充的双端队列</a></li>
-        <li><a href="#13-stdlist双向链表">1.3 std::list，双向链表</a></li>
-        <li><a href="#14-stdarray普通数组增强版">1.4 std::array，普通数组增强版</a></li>
-        <li><a href="#15-stdforward_list单链表">1.5 std::forward_list，单链表</a></li>
-        <li><a href="#16-stdset集合">1.6 std::set，集合</a></li>
-        <li><a href="#17-stdmultiset可重复集合">1.7 std::multiset，可重复集合</a></li>
-        <li><a href="#18-stdmap一对一映射">1.8 std::map，一对一映射</a></li>
-        <li><a href="#19-stdmultimap一对多映射">1.9 std::multimap，一对多映射</a></li>
-        <li><a href="#110-stdunordered_set无序-set">1.10 std::unordered_set，无序 set</a></li>
-        <li><a href="#111-stdunordered_multiset无序-multiset">1.11 std::unordered_multiset，无序 multiset</a></li>
-        <li><a href="#112-stdunordered_map">1.12 std::unordered_map</a></li>
-        <li><a href="#113-stdunordered_multimap">1.13 std::unordered_multimap</a></li>
+        <li><a href="#11-stdvector封装的动态数组">1.1 std::vector，封装的动态数组</a>
+          <ol>
+            <li><a href="#111-概述">1.1.1 概述</a></li>
+            <li><a href="#112-vector-上的常见操作复杂度效率">1.1.2 vector 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#113-使用场景">1.1.3 使用场景</a></li>
+            <li><a href="#114-迭代器非法化">1.1.4 迭代器非法化</a></li>
+            <li><a href="#115-创建和初始化">1.1.5 创建和初始化</a></li>
+          </ol>
+        </li>
+        <li><a href="#12-stddeque两端都可以扩充的双端队列">1.2 std::deque，两端都可以扩充的双端队列</a>
+          <ol>
+            <li><a href="#121-概述">1.2.1 概述</a></li>
+            <li><a href="#122-deque-上常见操作的复杂度效率">1.2.2 deque 上常见操作的复杂度（效率）</a></li>
+            <li><a href="#123-使用场景">1.2.3 使用场景</a></li>
+            <li><a href="#124-迭代器非法化">1.2.4 迭代器非法化</a></li>
+            <li><a href="#125-示例">1.2.5 示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#13-stdlist双向链表">1.3 std::list，双向链表</a>
+          <ol>
+            <li><a href="#131-概述">1.3.1 概述</a></li>
+            <li><a href="#132-list-上的常见操作复杂度效率">1.3.2 list 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#133-使用场景">1.3.3 使用场景</a></li>
+            <li><a href="#134-迭代器非法化">1.3.4 迭代器非法化</a></li>
+            <li><a href="#135-示例">1.3.5 示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#14-stdarray普通数组增强版">1.4 std::array，普通数组增强版</a>
+          <ol>
+            <li><a href="#141-概述">1.4.1 概述</a></li>
+            <li><a href="#142-list-上的常见操作复杂度效率">1.4.2 list 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#143-使用场景">1.4.3 使用场景</a></li>
+            <li><a href="#144-迭代器非法化">1.4.4 迭代器非法化</a></li>
+            <li><a href="#145-创建和初始化">1.4.5 创建和初始化</a></li>
+            <li><a href="#146-示例">1.4.6 示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#15-stdforward_list单链表">1.5 std::forward_list，单链表</a>
+          <ol>
+            <li><a href="#151-概述">1.5.1 概述</a></li>
+            <li><a href="#152-forward_list-上的常见操作复杂度效率">1.5.2 forward_list 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#153-使用场景">1.5.3 使用场景</a></li>
+            <li><a href="#154-迭代器非法化">1.5.4 迭代器非法化</a></li>
+          </ol>
+        </li>
+        <li><a href="#16-stdset集合">1.6 std::set，集合</a>
+          <ol>
+            <li><a href="#161-概述">1.6.1 概述</a></li>
+            <li><a href="#162-set-上的常见操作复杂度效率">1.6.2 set 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#163-使用场景">1.6.3 使用场景</a></li>
+            <li><a href="#164-迭代器非法化">1.6.4 迭代器非法化</a></li>
+            <li><a href="#165-创建和初始化">1.6.5 创建和初始化</a></li>
+          </ol>
+        </li>
+        <li><a href="#17-stdmultiset可重复集合">1.7 std::multiset，可重复集合</a>
+          <ol>
+            <li><a href="#171-概述">1.7.1 概述</a></li>
+            <li><a href="#172-multiset-上的常见操作复杂度效率">1.7.2 multiset 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#173-使用场景">1.7.3 使用场景</a></li>
+            <li><a href="#174-迭代器非法化">1.7.4 迭代器非法化</a></li>
+          </ol>
+        </li>
+        <li><a href="#18-stdmap一对一映射">1.8 std::map，一对一映射</a>
+          <ol>
+            <li><a href="#181-概述">1.8.1 概述</a></li>
+            <li><a href="#182-map-上的常见操作复杂度效率">1.8.2 map 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#183-使用场景">1.8.3 使用场景</a></li>
+            <li><a href="#184-迭代器非法化">1.8.4 迭代器非法化</a></li>
+          </ol>
+        </li>
+        <li><a href="#19-stdmultimap一对多映射">1.9 std::multimap，一对多映射</a>
+          <ol>
+            <li><a href="#191-概述">1.9.1 概述</a></li>
+            <li><a href="#192-multimap-上的常见操作复杂度效率">1.9.2 multimap 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#193-使用场景">1.9.3 使用场景</a></li>
+            <li><a href="#194-迭代器非法化">1.9.4 迭代器非法化</a></li>
+            <li><a href="#195-示例">1.9.5 示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#110-stdunordered_set无序-set">1.10 std::unordered_set，无序 set</a>
+          <ol>
+            <li><a href="#1101-概述">1.10.1 概述</a></li>
+            <li><a href="#1102-unordered_set-上的常见操作复杂度效率">1.10.2 unordered_set 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#1103-使用场景">1.10.3 使用场景</a></li>
+          </ol>
+        </li>
+        <li><a href="#111-stdunordered_multiset无序-multiset">1.11 std::unordered_multiset，无序 multiset</a>
+          <ol>
+            <li><a href="#1111-概述">1.11.1 概述</a></li>
+            <li><a href="#1112-unordered_multiset-上的常见操作复杂度效率">1.11.2 unordered_multiset 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#1113-使用场景">1.11.3 使用场景</a></li>
+          </ol>
+        </li>
+        <li><a href="#112-stdunordered_map">1.12 std::unordered_map</a>
+          <ol>
+            <li><a href="#1121-概述">1.12.1 概述</a></li>
+            <li><a href="#1122-unordered_map-上的常见操作复杂度效率">1.12.2 unordered_map 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#1123-使用场景">1.12.3 使用场景</a></li>
+            <li><a href="#1124-示例">1.12.4 示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#113-stdunordered_multimap">1.13 std::unordered_multimap</a>
+          <ol>
+            <li><a href="#1131-概述">1.13.1 概述</a></li>
+            <li><a href="#1132-unordered_multimap-上的常见操作复杂度效率">1.13.2 unordered_multimap 上的常见操作复杂度（效率）</a></li>
+            <li><a href="#1133-使用场景">1.13.3 使用场景</a></li>
+          </ol>
+        </li>
         <li><a href="#114-__gnu_cxxhash_map">1.14 __gnu_cxx::hash_map</a></li>
         <li><a href="#115-__gnu_cxxslist">1.15 __gnu_cxx::slist</a></li>
       </ol>
@@ -842,7 +937,11 @@ std::set&lt;std::string&gt; copySet = mySet;
     <li><a href="#2-算法algorithm">2. 算法，Algorithm</a>
       <ol>
         <li><a href="#string-和-vector-中的-size-和-capacity">string 和 vector 中的 size() 和 capacity()</a></li>
-        <li><a href="#resize-和-reserve-的区别">resize() 和 reserve() 的区别</a></li>
+        <li><a href="#resize-和-reserve-的区别">resize() 和 reserve() 的区别</a>
+          <ol>
+            <li><a href="#resize">resize()</a></li>
+          </ol>
+        </li>
       </ol>
     </li>
     <li><a href="#3-迭代器iterator">3. 迭代器，Iterator</a>
