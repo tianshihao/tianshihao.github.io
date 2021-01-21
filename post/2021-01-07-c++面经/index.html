@@ -116,7 +116,7 @@
 <p>若 <code>new_size</code> 为零，则行为是<strong>实现定义</strong>的（可返回空指针，此情况下可能释放或可能不释放旧内存，或返回不会用于访问存储的非空指针）。</p>
 <h3 id="24-alloca不常用">2.4 alloca()，不常用</h3>
 <p>在栈上申请内存。程序在出栈的时候，会自动释放内存。但是需要注意的是，<code>alloca()</code> 不具可移植性, 而且在没有传统堆栈的机器上很难实现。<code>alloca()</code> 不宜使用在必须广泛移植的程序中。C99 中支持变长数组 (VLA)，可以用来替代 <code>alloca()</code>。</p>
-<h2 id="3-c内存管理">3. C++内存管理</h2>
+<h2 id="3-c内存管理百度贴吧后端研发一面">3. C++内存管理（百度贴吧后端研发一面）</h2>
 <p>32bit CPU 可寻址 4G 线性空间，每个进程都有独立的 4G 逻辑地址，其中 0-3G 是<strong>用户态</strong>空间，3-4G 是<strong>内核</strong>空间。</p>
 <p>C++ 中的<strong>虚拟内存</strong>分为堆、栈、映射区、数据段、BSS 段和代码段，共 6 个部分。</p>
 <h3 id="31-动态区域">3.1 动态区域</h3>
@@ -232,7 +232,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 </code></pre></div><h3 id="103-weak_ptr">10.3 weak_ptr</h3>
 <p><code>weak_ptr</code> 是一种<strong>不控制对象生命周期</strong>的智能指针，它指向一个 <code>shared_ptr</code> 管理的对象。进行该对象的内存管理的是那个强引用的 <code>shared_ptr</code>。<code>weak_ptr</code> 只是提供了对管理对象的一个<strong>访问手段</strong>。<code>weak_ptr</code> 设计的目的是为配合 <code>shared_ptr</code> 而引入的一种智能指针来协助 <code>shared_ptr</code> 工作，它只可以从一个 <code>shared_ptr</code> 或另一个 <code>weak_ptr</code> 对象构造，<strong>它的构造和析构不会引起引用记数的增加或减少</strong>。<code>weak_ptr</code> 是用来解决 <code>shared_ptr</code> 相互引用时的死锁问题，如果说两个 <code>shared_ptr</code> 相互引用，那么这两个指针的引用计数永远不可能下降为 0，资源永远不会释放。它是对对象的一种<strong>弱引用</strong>，不会增加对象的引用计数，和 <code>shared_ptr</code> 之间可以相互转化，<code>shared_ptr</code> 可以直接赋值给它，它可以通过调用 <code>lock()</code> 函数来获得 <code>shared_ptr</code>。</p>
 <p>如果一块内存被 <code>shared_ptr</code> 和 <code>weak_ptr</code> 同时引用，当所有 <code>shared_ptr</code> 析构了之后，不管还有没有 <code>weak_ptr</code> 引用该内存，内存也会被释放。所以 <code>weak_ptr</code> 不保证它指向的内存一定是有效的，在使用之前需要检查 <code>weak_ptr</code> 是否为空指针。</p>
-<h2 id="11-内存对齐12">11. 内存对齐<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></h2>
+<h2 id="11-内存对齐12百度贴吧后端研发一面">11. 内存对齐<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>（百度贴吧后端研发一面）</h2>
 <h3 id="原因">原因</h3>
 <ol>
 <li>平台原因（移植原因）：不是所有的硬件平台都能访问任意地址上的任意数据的；某些硬件平台只能在某些地址处取某些特定类型的数据，否则抛出硬件异常。</li>
@@ -420,7 +420,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <p>通常应给基类提供一个虚析构函数，即使它并不需要析构函数。</p>
 <h2 id="14-析构函数的调用顺序">14. 析构函数的调用顺序</h2>
 <p>派生类本身的析构函数、对象成员的析构函数、基类的析构函数。</p>
-<h2 id="15-计算以下类的大小">15 计算以下类的大小</h2>
+<h2 id="15-计算类的大小百度贴吧后端研发一面">15 计算类的大小（百度贴吧后端研发一面）</h2>
 <h3 id="空类">空类</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
@@ -527,7 +527,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
     ++(*<span style="font-weight:bold;text-decoration:underline">this</span>);
     <span style="font-weight:bold;text-decoration:underline">return</span> oldValue;
 }
-</code></pre></div><h2 id="6-static关键字的作用">6. static关键字的作用</h2>
+</code></pre></div><h2 id="6-static-关键字的作用">6. static 关键字的作用</h2>
 <h3 id="61-全局静态变量">6.1 全局静态变量</h3>
 <p>在全局变量前加上关键字 <code>static</code>，全局变量就变成了<strong>全局静态变量</strong>。</p>
 <p>存储：静态存储区，在整个<strong>程序运行期间一直存在</strong>。静态变量被初始化存储在数据段，未被初始化或初始化为零存储在 BSS 段。</p>
@@ -550,6 +550,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <p>四种强制类型转换操作符分别为：<code>static_cast</code>、<code>dynamic_cast</code>、<code>const_cast</code>、<code>reinterpret_cast</code>。</p>
 <h3 id="71-static_cast">7.1 static_cast</h3>
 <p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把 <code>int</code> 换成 <code>char</code>，<code>float</code> 换成 <code>int</code> ，比如<strong>非 <code>const</code></strong> 转<code> const</code> ，<code>void *</code> 转指针。</p>
+<p>不能转换 <code>const</code>、<code>volatile</code>等属性。</p>
 <p>还可用于多态向上转换，即派生类的指针转换成基类指针；如果是向下转换，能成功，但是不安全，结果未知。</p>
 <h3 id="72-dynamic_cast">7.2 dynamic_cast</h3>
 <p>用于<strong>动态类型转换</strong>。具体的说，只能用于含有<strong>虚函数</strong>的类，用于类层次间的向上和向下转化，就是在基类指针到派生类指针，或者派生类到基类指针的转换。
@@ -634,7 +635,7 @@ BeforeMain::BeforeMain()
 BeforeMain bM;
 
 </code></pre></div><p>以上两种方法也存在优先顺序，构造函数优先于 __attribute__。</p>
-<h2 id="11-const-的用法">11. const 的用法</h2>
+<h2 id="11-const-的用法百度贴吧后端研发一面">11. const 的用法（百度贴吧后端研发一面）</h2>
 <h3 id="111-修饰普通变量">11.1 修饰普通变量</h3>
 <p>表示变量不能被再次赋值。</p>
 <h3 id="112-修饰指针变量">11.2 修饰指针变量</h3>
@@ -691,6 +692,9 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <p>对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换</p>
 <h2 id="14-函数栈空间最大值">14. 函数栈空间最大值</h2>
 <p>默认是 1M，但可以调整。</p>
+<h2 id="15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</h2>
+<p><code>volatile</code> 的意思是“脆弱的”，表明它修饰的变量的值十分容易被改变，所以编译器就不会对这个变量进行优化（CPU 的优化是让该变量存放到 CPU 寄存器而不是内存），进而<strong>提供稳定的访问</strong>。每次读取 <code>volatile</code> 的变量时，<strong>系统总是会从内存中读取这个变量，并且将它的值立刻保存</strong>。</p>
+<p>多线程操作，每个线程有自己的寄存器，正常改变量是在寄存器里面改，改完之后线程之间很难同步，所以使用 <code>volatile</code>，直接在内存中修改、生效，便于多线程同步。一般在多个线程操作一个变量时会给变量添加关键字 <code>volatile</code>。</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -719,7 +723,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#24-alloca不常用">2.4 alloca()，不常用</a></li>
       </ol>
     </li>
-    <li><a href="#3-c内存管理">3. C++内存管理</a>
+    <li><a href="#3-c内存管理百度贴吧后端研发一面">3. C++内存管理（百度贴吧后端研发一面）</a>
       <ol>
         <li><a href="#31-动态区域">3.1 动态区域</a></li>
         <li><a href="#32-静态区域">3.2 静态区域</a></li>
@@ -750,7 +754,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#103-weak_ptr">10.3 weak_ptr</a></li>
       </ol>
     </li>
-    <li><a href="#11-内存对齐12">11. 内存对齐</a>
+    <li><a href="#11-内存对齐12百度贴吧后端研发一面">11. 内存对齐（百度贴吧后端研发一面）</a>
       <ol>
         <li><a href="#原因">原因</a></li>
         <li><a href="#对齐规则">对齐规则</a></li>
@@ -786,7 +790,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     <li><a href="#12-移动构造函数">12. 移动构造函数</a></li>
     <li><a href="#13-析构函数为什么一般定义成虚函数">13. 析构函数为什么一般定义成虚函数</a></li>
     <li><a href="#14-析构函数的调用顺序">14. 析构函数的调用顺序</a></li>
-    <li><a href="#15-计算以下类的大小">15 计算以下类的大小</a>
+    <li><a href="#15-计算类的大小百度贴吧后端研发一面">15 计算类的大小（百度贴吧后端研发一面）</a>
       <ol>
         <li><a href="#空类">空类</a></li>
         <li><a href="#有虚函数的类">有虚函数的类</a></li>
@@ -811,7 +815,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#52-i">5.2 i++</a></li>
       </ol>
     </li>
-    <li><a href="#6-static关键字的作用">6. static关键字的作用</a>
+    <li><a href="#6-static-关键字的作用">6. static 关键字的作用</a>
       <ol>
         <li><a href="#61-全局静态变量">6.1 全局静态变量</a></li>
         <li><a href="#62-局部静态变量">6.2 局部静态变量</a></li>
@@ -837,7 +841,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#利用全局变量和构造函数的特点">利用全局变量和构造函数的特点</a></li>
       </ol>
     </li>
-    <li><a href="#11-const-的用法">11. const 的用法</a>
+    <li><a href="#11-const-的用法百度贴吧后端研发一面">11. const 的用法（百度贴吧后端研发一面）</a>
       <ol>
         <li><a href="#111-修饰普通变量">11.1 修饰普通变量</a></li>
         <li><a href="#112-修饰指针变量">11.2 修饰指针变量</a>
@@ -861,6 +865,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     </li>
     <li><a href="#13-隐式类型转换">13. 隐式类型转换</a></li>
     <li><a href="#14-函数栈空间最大值">14. 函数栈空间最大值</a></li>
+    <li><a href="#15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</a></li>
   </ol>
 </nav>
         </div>
