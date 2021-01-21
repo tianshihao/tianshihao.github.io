@@ -232,6 +232,54 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 </code></pre></div><h3 id="103-weak_ptr">10.3 weak_ptr</h3>
 <p><code>weak_ptr</code> 是一种<strong>不控制对象生命周期</strong>的智能指针，它指向一个 <code>shared_ptr</code> 管理的对象。进行该对象的内存管理的是那个强引用的 <code>shared_ptr</code>。<code>weak_ptr</code> 只是提供了对管理对象的一个<strong>访问手段</strong>。<code>weak_ptr</code> 设计的目的是为配合 <code>shared_ptr</code> 而引入的一种智能指针来协助 <code>shared_ptr</code> 工作，它只可以从一个 <code>shared_ptr</code> 或另一个 <code>weak_ptr</code> 对象构造，<strong>它的构造和析构不会引起引用记数的增加或减少</strong>。<code>weak_ptr</code> 是用来解决 <code>shared_ptr</code> 相互引用时的死锁问题，如果说两个 <code>shared_ptr</code> 相互引用，那么这两个指针的引用计数永远不可能下降为 0，资源永远不会释放。它是对对象的一种<strong>弱引用</strong>，不会增加对象的引用计数，和 <code>shared_ptr</code> 之间可以相互转化，<code>shared_ptr</code> 可以直接赋值给它，它可以通过调用 <code>lock()</code> 函数来获得 <code>shared_ptr</code>。</p>
 <p>如果一块内存被 <code>shared_ptr</code> 和 <code>weak_ptr</code> 同时引用，当所有 <code>shared_ptr</code> 析构了之后，不管还有没有 <code>weak_ptr</code> 引用该内存，内存也会被释放。所以 <code>weak_ptr</code> 不保证它指向的内存一定是有效的，在使用之前需要检查 <code>weak_ptr</code> 是否为空指针。</p>
+<h2 id="11-内存对齐12">11. 内存对齐<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></h2>
+<h3 id="原因">原因</h3>
+<ol>
+<li>平台原因（移植原因）：不是所有的硬件平台都能访问任意地址上的任意数据的；某些硬件平台只能在某些地址处取某些特定类型的数据，否则抛出硬件异常。</li>
+<li>性能原因：由于 CPU 读取数据是<strong>按块读取</strong>的，内存对齐可以使得 CPU 一次性就可以将所需的数据读进来，不需要额外操作，提高了效率。</li>
+</ol>
+<h3 id="对齐规则">对齐规则</h3>
+<p>每个特定平台上的编译器都有自己的默认“<strong>对齐系数</strong>”（也叫对齐模数）。GCC 中默认 <code>#pragma pack(4)</code>，可以通过预编译命令 <code>#pragma pack(n)</code>（n = 1、2、4、8、16）来改变这一系数。</p>
+<p><strong>有效对齐值</strong>：是给定值 <code>#pragma pack(n)</code> 和<strong>结构体中最长数据类型长度</strong>中较小的那个。有效对齐值也叫<strong>对齐单位</strong>。</p>
+<p>内存对齐需要遵循的规则：</p>
+<ol>
+<li>
+<p>结构体第一个成员的<strong>偏移量（offset）<strong>为 0，以后</strong>每个成员</strong>相对于结构体首地址的偏移量都是<strong>该成员大小与有效对齐值中较小那个的整数倍</strong>，如有需要编译器会在成员之间加上<strong>填充字节</strong>。</p>
+</li>
+<li>
+<p><strong>结构体的总大小为有效对齐值的整数倍</strong>，如有需要编译器会<strong>在最末一个成员之后加上填充字节</strong>。</p>
+</li>
+</ol>
+<h3 id="例子">例子</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iosteam&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#pargma pack(4)
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">struct</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>
+{
+    <span style="font-weight:bold;text-decoration:underline">char</span> a;
+    <span style="font-weight:bold;text-decoration:underline">int</span> b;
+    <span style="font-weight:bold;text-decoration:underline">short</span> c;
+};
+
+<span style="font-weight:bold;text-decoration:underline">struct</span> <span style="color:#666;font-weight:bold;font-style:italic">B</span>
+{
+    <span style="font-weight:bold;text-decoration:underline">short</span> c;
+    <span style="font-weight:bold;text-decoration:underline">char</span> a;
+    <span style="font-weight:bold;text-decoration:underline">int</span> b;
+};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(B) &lt;&lt; endl;
+    
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>对于结构体 A，对齐系数是 4，结构体中最长数据类型长度 <code>int</code> 为 4，所有有效对齐值为 4。对于第二个成员 <code>int b</code>，其数据长度为 4，该大小与有效对齐值 4 的较小值是 4，故 <code>b</code> 的偏移量取 4 的整数倍 4，<code>b</code> 的偏移量是 4，应该在第一个数据成员 <code>char a</code> 后填充 3 个字节，不放任何东西。同理，对于第三个成员 <code>short c</code>，数据长度为 2，为较小值，故其偏移量应取 2 的整数倍，是 8，8 = 4（b 的偏移量） + 4（b 的大小），正好无需在 <code>b</code> 后填充字节。</p>
+<p>此时，结构体 A 占了 10 个字节，但还有结构体本身的对齐。结构体的大小为有效对齐值的整数倍，应该取 4×3 = 12，所以需要在 <code>c</code> 后面添加两个字节。</p>
+<p>综上所述，结构体 A 的内存大小为 12 字节。</p>
 <hr>
 <h2 id="1-strcpystrncpy-和strlen">1. strcpy()、strncpy() 和strlen()</h2>
 <h3 id="11-strcpy">1.1 strcpy()</h3>
@@ -240,7 +288,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <p><code>strncpy()</code>的函数原型是<code>char *strncpy(char *dest, const char *src, size_t count);</code>，复制 <code>src</code> 所指向的字符数组的至多 <code>count</code> 个字符（包含终止字符，但不包含后随空字符的任何字符）到 <code>dest</code> 所指向的字符数组。</p>
 <ul>
 <li>若在完全复制整个 <code>src</code> 数组前抵达 <code>count</code> ，<strong>则结果的字符数组不是空终止的</strong>。</li>
-<li>若在复制来自 <code>src</code> 的空终止字符后未抵达 <code>count</code> ，则写入<strong>额外的空字符</strong>到 <code>dest</code> ，直至写入总共 <code>count</code> 个字符。</li>
+<li>若在复制来自 <code>src</code> 的空终止字符后未抵达 <code>count</code> ，则写入<strong>额外的空字符</strong>到 <code>dest</code>，直至写入总共 <code>count</code> 个字符。</li>
 <li>若字符数组重叠，若 <code>dest</code> 或 <code>src</code> 不是指向字符数组的指针（包含若 <code>dest</code> 或 <code>src</code> 为空指针），若 <code>dest</code> 所指向的数组大小小于 <code>count</code> ，或若 <code>src</code> 所指向的数组大小小于 <code>count</code> 且它不含空字符，则行为未定义。</li>
 </ul>
 <h3 id="13-strlen">1.3 strlen()</h3>
@@ -372,6 +420,60 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <p>通常应给基类提供一个虚析构函数，即使它并不需要析构函数。</p>
 <h2 id="14-析构函数的调用顺序">14. 析构函数的调用顺序</h2>
 <p>派生类本身的析构函数、对象成员的析构函数、基类的析构函数。</p>
+<h2 id="15-计算以下类的大小">15 计算以下类的大小</h2>
+<h3 id="空类">空类</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>{};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    A a;
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>空类的大小是 1， 在 C++ 中空类会占一个字节，<strong>这是为了让对象的实例能够相互区别</strong>。具体来说，空类同样可以被实例化，并且每个实例在内存中都有独一无二的地址，因此，<strong>编译器会给空类隐含加上一个字节</strong>，这样空类实例化之后就会拥有独一无二的内存地址。当该空白类作为基类时，该类的大小就优化为 0 了，子类的大小就是子类本身的大小。这就是所谓的<strong>空白基类最优化</strong>。</p>
+<p>空类的实例大小就是类的大小，所以 <code>sizeof(a) = 1</code> 字节,如果 <code>a</code> 是指针，则 <code>sizeof(a)</code> 就是指针的大小，即 4 字节。</p>
+<h3 id="有虚函数的类">有虚函数的类</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>
+{
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Func</span>(){}
+};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    A a;
+    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>有虚函数的类，编译器会为每个对象添加一个隐藏成员，隐藏成员中保存了一个指向虚函数表的指针 <code>__vptr</code>，所以有虚函数的类和对象的大小就是这个指针的大小，32 位系统 4 字节，64 为系统 8 字节。</p>
+<h3 id="静态类成员">静态类成员</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span> 
+{ 
+    <span style="font-weight:bold;text-decoration:underline">static</span> <span style="font-weight:bold;text-decoration:underline">int</span> a; 
+    <span style="font-weight:bold;text-decoration:underline">int</span> b; 
+};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+  cout&lt;&lt;<span style="font-weight:bold;text-decoration:underline">sizeof</span>(A)&lt;&lt;endl;<span style="color:#888;font-style:italic">// 输出 4;
+</span><span style="color:#888;font-style:italic"></span>  A a; 
+  cout&lt;&lt;<span style="font-weight:bold;text-decoration:underline">sizeof</span>(a)&lt;&lt;endl;<span style="color:#888;font-style:italic">// 输出 4;
+</span><span style="color:#888;font-style:italic"></span>  <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>静态成员存放在静态存储区，不占用类的大小, 普通函数也不占用类大小。</p>
 <hr>
 <h2 id="1-静态库和动态库">1. 静态库和动态库</h2>
 <p>静态库和动态库的区别来自于链接阶段如何处理库，链接成可执行程序。有静态链接方式和动态链接方式。</p>
@@ -532,8 +634,45 @@ BeforeMain::BeforeMain()
 BeforeMain bM;
 
 </code></pre></div><p>以上两种方法也存在优先顺序，构造函数优先于 __attribute__。</p>
-<h2 id="11-const-修饰成员函数的目的">11. const 修饰成员函数的目的</h2>
-<p><code>const</code> 修饰的成员函数表明函数调用不会对对象做出任何更改，事实上，如果确认不会对对象做更改，就应该为函数加上 <code>const</code> 限定，这样无论 <code>const</code> 对象还是普通对象都可以调用该函数。</p>
+<h2 id="11-const-的用法">11. const 的用法</h2>
+<h3 id="111-修饰普通变量">11.1 修饰普通变量</h3>
+<p>表示变量不能被再次赋值。</p>
+<h3 id="112-修饰指针变量">11.2 修饰指针变量</h3>
+<p><code>const</code> 修饰指针变量有以下三种情况。</p>
+<h4 id="1-const-修饰指针指向的内容则内容为不可变量">1. const 修饰指针指向的内容，则内容为不可变量</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> *p = 8;
+
+</code></pre></div><p>则指针指向的内容 8 不可改变。简称<strong>左定值</strong>，因为 <code>const</code> 位于 <code>*</code> 号的左边。</p>
+<h4 id="2-const-修饰指针则指针为不可变量">2. const 修饰指针，则指针为不可变量</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> a = 8;
+<span style="font-weight:bold;text-decoration:underline">int</span>* <span style="font-weight:bold;text-decoration:underline">const</span> p = &amp;a;
+*p = 9; <span style="color:#888;font-style:italic">// 正确
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span>  b = 7;
+p = &amp;b; <span style="color:#888;font-style:italic">// 错误
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>对于 <code>const</code> 指针 <code>p</code> 其指向的内存地址不能够被改变，但其内容可以改变。简称，<strong>右定向</strong>。因为 <code>const</code> 位于 <code>*</code> 号的右边。</p>
+<h4 id="3-const-修饰指针和指针指向的内容则指针和指针指向的内容都为不可变量">3. const 修饰指针和指针指向的内容，则指针和指针指向的内容都为不可变量</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> a = 8;
+<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> * <span style="font-weight:bold;text-decoration:underline">const</span>  p = &amp;a;
+
+</code></pre></div><p>这时，<code>const p</code> 的指向的内容和指向的内存地址都已固定，不可改变。</p>
+<p>对于 A，B，C 三种情况，根据 <code>const</code> 位于 <code>*</code> 号的位置不同，我总结三句话便于记忆的话：<strong>“左定值，右定向，const 修饰不变量”</strong>。</p>
+<h3 id="113-修饰函数参数和函数返回值">11.3 修饰函数参数和函数返回值</h3>
+<p><code>const</code> 修饰函数参数可以分为三种情况：</p>
+<ol>
+<li>值传递的 <code>const</code> 修饰传递，一般这种情况不需要 <code>const</code> 修饰，因为函数会自动产生临时变量复制实参值。</li>
+<li>当 <code>const</code> 参数为指针时，可以防止指针被意外篡改；</li>
+<li>自定义类型的参数传递，需要临时对象复制参数，对于临时对象的构造，需要调用构造函数，比较浪费时间，因此我们采取 <strong><code>const</code> 外加引用</strong>传递的方法。</li>
+</ol>
+<p><code>const</code> 修饰返回值分三种情况：</p>
+<ol>
+<li><code>const</code> 修饰内置类型的返回值，修饰与不修饰返回值作用一样。</li>
+<li><code>const</code> 修饰<strong>自定义类型</strong>的作为返回值，此时返回的值<strong>不能作为左值使用</strong>，既<strong>不能被赋值</strong>，也<strong>不能被修改</strong>；</li>
+<li><code>const</code> 修饰返回的指针或者引用，是否返回一个指向 <code>const</code> 的指针，取决于我们想让用户干什么。</li>
+</ol>
+<h3 id="114-const-修饰类成员函数">11.4 const 修饰类成员函数</h3>
+<p><code>const</code> 修饰类成员函数，其目的是<strong>防止成员函数修改被调用对象的值</strong>，如果我们不想修改一个调用对象的值，所有的成员函数都应当声明为 <code>const</code> 成员函数。</p>
+<p>如果有个成员函数想修改对象中的某一个成员怎么办？这时我们可以使用 <code>mutable</code> 关键字修饰这个成员，<code>mutable</code> 的意思也是易变的，容易改变的意思，<strong>被 <code>mutable</code> 关键字修饰的成员可以处于不断变化中</strong>。</p>
 <h2 id="12-以下四行代码的区别">12. 以下四行代码的区别</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *arr1 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
 <span style="font-weight:bold;text-decoration:underline">char</span> *arr2 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
@@ -552,6 +691,17 @@ BeforeMain bM;
 <p>对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换</p>
 <h2 id="14-函数栈空间最大值">14. 函数栈空间最大值</h2>
 <p>默认是 1M，但可以调整。</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://zhuanlan.zhihu.com/p/30007037">https://zhuanlan.zhihu.com/p/30007037</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://www.cnblogs.com/jijiji/p/4854581.html">https://www.cnblogs.com/jijiji/p/4854581.html</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
         </div>
 
         
@@ -600,6 +750,13 @@ BeforeMain bM;
         <li><a href="#103-weak_ptr">10.3 weak_ptr</a></li>
       </ol>
     </li>
+    <li><a href="#11-内存对齐12">11. 内存对齐</a>
+      <ol>
+        <li><a href="#原因">原因</a></li>
+        <li><a href="#对齐规则">对齐规则</a></li>
+        <li><a href="#例子">例子</a></li>
+      </ol>
+    </li>
     <li><a href="#1-strcpystrncpy-和strlen">1. strcpy()、strncpy() 和strlen()</a>
       <ol>
         <li><a href="#11-strcpy">1.1 strcpy()</a></li>
@@ -629,6 +786,13 @@ BeforeMain bM;
     <li><a href="#12-移动构造函数">12. 移动构造函数</a></li>
     <li><a href="#13-析构函数为什么一般定义成虚函数">13. 析构函数为什么一般定义成虚函数</a></li>
     <li><a href="#14-析构函数的调用顺序">14. 析构函数的调用顺序</a></li>
+    <li><a href="#15-计算以下类的大小">15 计算以下类的大小</a>
+      <ol>
+        <li><a href="#空类">空类</a></li>
+        <li><a href="#有虚函数的类">有虚函数的类</a></li>
+        <li><a href="#静态类成员">静态类成员</a></li>
+      </ol>
+    </li>
     <li><a href="#1-静态库和动态库">1. 静态库和动态库</a>
       <ol>
         <li><a href="#11-静态库">1.1 静态库</a></li>
@@ -673,7 +837,20 @@ BeforeMain bM;
         <li><a href="#利用全局变量和构造函数的特点">利用全局变量和构造函数的特点</a></li>
       </ol>
     </li>
-    <li><a href="#11-const-修饰成员函数的目的">11. const 修饰成员函数的目的</a></li>
+    <li><a href="#11-const-的用法">11. const 的用法</a>
+      <ol>
+        <li><a href="#111-修饰普通变量">11.1 修饰普通变量</a></li>
+        <li><a href="#112-修饰指针变量">11.2 修饰指针变量</a>
+          <ol>
+            <li><a href="#1-const-修饰指针指向的内容则内容为不可变量">1. const 修饰指针指向的内容，则内容为不可变量</a></li>
+            <li><a href="#2-const-修饰指针则指针为不可变量">2. const 修饰指针，则指针为不可变量</a></li>
+            <li><a href="#3-const-修饰指针和指针指向的内容则指针和指针指向的内容都为不可变量">3. const 修饰指针和指针指向的内容，则指针和指针指向的内容都为不可变量</a></li>
+          </ol>
+        </li>
+        <li><a href="#113-修饰函数参数和函数返回值">11.3 修饰函数参数和函数返回值</a></li>
+        <li><a href="#114-const-修饰类成员函数">11.4 const 修饰类成员函数</a></li>
+      </ol>
+    </li>
     <li><a href="#12-以下四行代码的区别">12. 以下四行代码的区别</a>
       <ol>
         <li><a href="#121-const-char-arr1--123">12.1 const char *arr1 = &ldquo;123&rdquo;;</a></li>
