@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加 SSH key 🔑到远程仓库 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="添加 SSH key 🔑到远程仓库" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-25-%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">添加 SSH key 🔑到远程仓库</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-25-%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" class="article-date">
+                <time datetime='2021-01-25T20:30:47.000&#43;08:00' itemprop="datePublished">2021-01-25</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/git">Git</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>记录一下，别老到处查了。</p>
+<h2 id="1-配置本地-git">1. 配置本地 git</h2>
+<p>输入以下指令：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ git config --global user.name <span style="color:#666;font-style:italic">&#34;your_name&#34;</span>
+$ git config --global user.email <span style="color:#666;font-style:italic">&#34;your_email@example.com&#34;</span>
+
+</code></pre></div><h2 id="2-生成一个-ssh-key">2. 生成一个 SSH key</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ssh-keygen -t rsa -C <span style="color:#666;font-style:italic">&#34;your_email@example.com&#34;</span>
+</code></pre></div><p>参数说明</p>
+<ul>
+<li>-t 指定密钥类型，默认是 rsa，可以省略；</li>
+<li>-C 设置注释文字，比如邮箱；</li>
+<li>-f 指定密钥文件名，支持相对路径和绝对路径。</li>
+</ul>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/rsa-keygen.png" alt="rsa-keygen"></p>
+<p>省略该参数运行上面的命令会再次让用户输入文件名，可以不输入，使用默认文件名，生成 id_rsa 和 id_ras.pub 两个密钥文件，或者输入，例如 key，生成 key 和 key.pub。</p>
+<p>接着又会提醒输入一个自定义密码，这个密码是在每次 <code>push</code> 时输入的密码，不是 GitHub 的密码。为了方便可以不用输入，直接按回车，相应地，<code>push</code> 时也不需要输入密码，直接提交到 GitHub。</p>
+<h2 id="3-添加-ssh-key-到远程仓库">3. 添加 SSH key 到远程仓库</h2>
+<h3 id="31-拷贝公钥内容">3.1 拷贝公钥内容</h3>
+<p>可以直接使用指令</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ clip &lt; ~/.ssh/id_rsa.pub
+
+</code></pre></div><h3 id="32-加到-github">3.2 加到 GitHub</h3>
+<p>进入 <a href="https://github.com/settings/keys">SSH and GPG keys</a> 页面，点击“New SSH key”，将复制的公钥内容拷贝进去。Title 可自定义，默认使用生成密钥时的注释文字。</p>
+<h2 id="4-测试-ssh-key">4. 测试 SSH key</h2>
+<p>使用以下指令：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ssh -T git@github.com
+
+</code></pre></div><p>输出以下内容：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">The authenticity of host &#39;github.com (13.250.177.223)&#39; can&#39;t be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+
+</code></pre></div><p>询问是否继续建立连接，输入“yes”，又输出一下内容：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Warning: Permanently added &#39;github.com,13.229.188.59&#39; (RSA) to the list of known hosts.
+Hi tianshihao! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+
+</code></pre></div><p>到此，说明 SSH key 添加成功。</p>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-配置本地-git">1. 配置本地 git</a></li>
+    <li><a href="#2-生成一个-ssh-key">2. 生成一个 SSH key</a></li>
+    <li><a href="#3-添加-ssh-key-到远程仓库">3. 添加 SSH key 到远程仓库</a>
+      <ol>
+        <li><a href="#31-拷贝公钥内容">3.1 拷贝公钥内容</a></li>
+        <li><a href="#32-加到-github">3.2 加到 GitHub</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-测试-ssh-key">4. 测试 SSH key</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/git">Git
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">TCP 滑动窗口&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

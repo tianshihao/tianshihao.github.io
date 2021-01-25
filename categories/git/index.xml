@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Git on 水上书</title>
-    <link>https://tianshihao.github.io/tags/git/</link>
+    <link>https://tianshihao.github.io/categories/git/</link>
     <description>Recent content in Git on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 25 Jan 2021 20:30:47 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Jan 2021 20:30:47 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/git/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>添加 SSH key 🔑到远程仓库</title>
       <link>https://tianshihao.github.io/post/2021-01-25-%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</link>
