@@ -59,6 +59,61 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">TCP 滑动窗口</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="article-date">
+                        <time datetime='2021-01-25T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-25</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C">计算机网络</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>TCP 的滑动窗口是以字节为单位的。现在假定 A 发送数据，B 接收数据，A 和 B 都维护一个大小为 20 的窗口，称 A 的窗口为发送窗口，B 的窗口为接收窗口。A 的发送窗口是根据 B 发来的确认报文构造出来的。例如 B 的确认报文中的窗口大小是 20，确认号是 31（B 期望收到的下一个序号是 31，30 及之前的数据以接收完毕），根据这两个数据，A 就能构造出自己的大小为 20 的，起始序号是 31 的发送窗口。</p>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/tcp">TCP
+                            </a>
+                        </li>
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3">滑动窗口
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="/post/2021-01-21-git%E7%9B%B8%E5%85%B3%E9%9D%A2%E7%BB%8F/">Git 常见操作📜</a></h1>
                 </header>
                 
@@ -608,56 +663,6 @@
                         
                         <li class="article-tag-list-item">
                             <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F">单例模式
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </footer>
-                
-            </div>
-        </article>
-        
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-            <div class="article-inner">
-                
-                
-                <header class="article-header">
-                    <h1 itemprop="name"><a class="article-title" href="/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/">名称空间</a></h1>
-                </header>
-                
-                <div class="article-meta">
-                    <a href="/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/" class="article-date">
-                        <time datetime='2020-12-13T22:55:02.000&#43;00:00' itemprop="datePublished">2020-12-13</time>
-                    </a>
-                    
-                    
-                    <div class="post-categories">
-                        <div class="article-category">
-                            
-                            
-                            <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">C&#43;&#43;学习笔记</a>
-                            
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-                <div class="article-entry" itemprop="articleBody">
-                    <p>
-                        
-                    <p>C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。</p>
-                    </p>
-                    <p class="article-more-link">
-                        <a href="/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/"></a>
-                    </p>
-                </div>
-
-                
-                <footer class="article-footer">
-                    <ul class="article-tag-list">
-                        
-                        <li class="article-tag-list-item">
-                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/c&#43;&#43;">C&#43;&#43;
                             </a>
                         </li>
                         

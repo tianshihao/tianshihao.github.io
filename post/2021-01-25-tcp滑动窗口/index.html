@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TCP 滑动窗口 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="TCP 滑动窗口原理">
+
+    <meta property="og:title" content="TCP 滑动窗口" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">TCP 滑动窗口</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="article-date">
+                <time datetime='2021-01-25T00:00:00.000&#43;00:00' itemprop="datePublished">2021-01-25</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C">计算机网络</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>TCP 的滑动窗口是以字节为单位的。现在假定 A 发送数据，B 接收数据，A 和 B 都维护一个大小为 20 的窗口，称 A 的窗口为发送窗口，B 的窗口为接收窗口。A 的发送窗口是根据 B 发来的确认报文构造出来的。例如 B 的确认报文中的窗口大小是 20，确认号是 31（B 期望收到的下一个序号是 31，30 及之前的数据以接收完毕），根据这两个数据，A 就能构造出自己的大小为 20 的，起始序号是 31 的发送窗口。</p>
+<h2 id="工作原理">工作原理</h2>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/A%E6%9E%84%E9%80%A0%E7%9A%84%E5%8F%91%E9%80%81%E7%AA%97%E5%8F%A3.png" alt="A构造的发送窗口"></p>
+<p>发送窗口越大，就越有可能获得更高的传输效率。前提是接收方必须来得及处理这些收到的数据。</p>
+<p>发送窗口表示，在没有收到 B 的确认之前，A 就可以连续把窗口内的数据都发送出去；凡是已发送的数据在未收到确认之前都必须暂时保留，一遍在超时重传时使用。</p>
+<p>发送窗口后沿的后面部分表示已发送并且收到了确认，这些数据可以不用保留；发送窗口前沿的前面部分表示不允许发送，<strong>因为接收方都没有为这部分数据保留临时存放的缓存区域</strong>。</p>
+<p>发送窗口后沿的变化有两种可能，即不动（没有收到新的确认）和前移（收到了新的确认）；发送窗口前沿也有两种可能，不动和前移，但是不动对应这两种情况：收到新的确认，但对方通知的窗口缩小了；没有收到新的确认，对方通知的窗口大小也不变。</p>
+<p>发送窗口的前沿也可以向后收缩，但最好不要这么做，可能会产生一些错误。</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/A%E5%8F%91%E9%80%81%E4%BA%8611%E4%B8%AA%E5%AD%97%E8%8A%82%E7%9A%84%E6%95%B0%E6%8D%AE.png" alt="A发送了11个字节的数据"></p>
+<p>描述一个发送窗口的状态需要三个指针：\(P_1\)，\(P_2\)和\(P_3\)。指针都指向字节的序号。这三个指针指向的几个部分的意义如下：</p>
+<ol>
+<li>小于 \(P_1\) 的是已发送给并受到确认的部分，而大于 \(P_3\) 的是不允许发送的部分；</li>
+<li>\(P_3-P_1\) = A 的发送窗口（又称通知窗口）；</li>
+<li>\(P_2-P_1\) = 已发送但尚未受到确认的字节数；</li>
+<li>\(P_3-P_2\) = 允许发送但尚未发送的字节数（又称可用窗口或者有效窗口）。</li>
+</ol>
+<p>对于接收窗口而言，B 只能对按序收到的数据中的最高序号给出确认，未按序到达的数据只能先暂存在接收窗口中。</p>
+<h2 id="窗口与缓存">窗口与缓存</h2>
+<p>发送方的应用进程把字节流写入 TCP 的发送缓存，接收方的应用进程从 TCP 的接收缓存中读取字节流。缓存空间和序号空间都是有限的，并且都是循环使用的。</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/%E7%AA%97%E5%8F%A3%E4%B8%8E%E7%BC%93%E5%AD%98.png" alt="窗口与缓存"></p>
+<p>发送缓存用来暂时存放：</p>
+<ol>
+<li>发送应用程序传送给发送方 TCP 准备发送的数据；</li>
+<li>TCP 已发送但尚未收到确认的数据。</li>
+</ol>
+<p>发送窗口只是发送缓存的一部分。<strong>已被确认的数据应当从发送缓存中删除，因此发送缓存和发送窗口的后沿是重合的</strong>。发送应用程序最后写入缓存的字节减去最后被确认的字节，就是还保留在发送缓存中的被写入的字节数。发送应用程序必须控制写入缓存的速率，不能太快，否则发送缓存就没有存放数据的空间。</p>
+<p>接收缓存用来暂时存放：</p>
+<ol>
+<li>按序到达的、但尚未被接收应用程序读取的数据；</li>
+<li>未按序到达的数据。</li>
+</ol>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#工作原理">工作原理</a></li>
+    <li><a href="#窗口与缓存">窗口与缓存</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/tcp">TCP
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3">滑动窗口
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-01-21-git%E7%9B%B8%E5%85%B3%E9%9D%A2%E7%BB%8F/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Git 常见操作📜&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

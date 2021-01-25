@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>滑动窗口 on 水上书</title>
+    <link>https://tianshihao.github.io/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</link>
+    <description>Recent content in 滑动窗口 on 水上书</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Mon, 25 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP 滑动窗口</title>
+      <link>https://tianshihao.github.io/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</link>
+      <pubDate>Mon, 25 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-01-25-tcp%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</guid>
+      <description>&lt;p&gt;TCP 的滑动窗口是以字节为单位的。现在假定 A 发送数据，B 接收数据，A 和 B 都维护一个大小为 20 的窗口，称 A 的窗口为发送窗口，B 的窗口为接收窗口。A 的发送窗口是根据 B 发来的确认报文构造出来的。例如 B 的确认报文中的窗口大小是 20，确认号是 31（B 期望收到的下一个序号是 31，30 及之前的数据以接收完毕），根据这两个数据，A 就能构造出自己的大小为 20 的，起始序号是 31 的发送窗口。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
