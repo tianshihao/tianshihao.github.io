@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>About // 水上书</title>
+    <title>如何用 UML 类图表示设计模式 // 水上书</title>
 
     <meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-<meta name="description" content="Hugo, the world’s fastest framework for building websites">
+<meta name="description" content="UML">
 
-    <meta property="og:title" content="About" />
+    <meta property="og:title" content="如何用 UML 类图表示设计模式" />
 <meta property="og:description"
     content="" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="zh" />
-<meta property="og:url" content="https://tianshihao.github.io/about/" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2020-11-12-%E5%A6%82%E4%BD%95%E7%94%A8-uml-%E7%B1%BB%E5%9B%BE%E8%A1%A8%E7%A4%BA%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" />
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -58,31 +58,27 @@
     <div class="article-inner">
         
         <header class="article-header">
-            <h1 class="article-title" itemprop="name">About</h1>
+            <h1 class="article-title" itemprop="name">如何用 UML 类图表示设计模式</h1>
         </header>
         
         <div class="article-meta">
-            <a href="/about/" class="article-date">
-                <time datetime='2019-02-28T00:00:00.000&#43;00:00' itemprop="datePublished">2019-02-28</time>
+            <a href="/post/2020-11-12-%E5%A6%82%E4%BD%95%E7%94%A8-uml-%E7%B1%BB%E5%9B%BE%E8%A1%A8%E7%A4%BA%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="article-date">
+                <time datetime='2020-11-12T00:00:00.000&#43;00:00' itemprop="datePublished">2020-11-12</time>
             </a>
             
             
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/uml">UML</a>
+                    
+                </div>
+            </div>
+            
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p>Written in Go, Hugo is an open source static site generator available under the <a href="https://github.com/gohugoio/hugo/blob/master/LICENSE">Apache Licence 2.0.</a> Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.</p>
-<p>Hugo makes use of a variety of open source projects including:</p>
-<ul>
-<li><a href="https://github.com/yuin/goldmark">https://github.com/yuin/goldmark</a></li>
-<li><a href="https://github.com/alecthomas/chroma">https://github.com/alecthomas/chroma</a></li>
-<li><a href="https://github.com/muesli/smartcrop">https://github.com/muesli/smartcrop</a></li>
-<li><a href="https://github.com/spf13/cobra">https://github.com/spf13/cobra</a></li>
-<li><a href="https://github.com/spf13/viper">https://github.com/spf13/viper</a></li>
-</ul>
-<p>Hugo is ideal for blogs, corporate websites, creative portfolios, online magazines, single page applications or even a website with thousands of pages.</p>
-<p>Hugo is for people who want to hand code their own website without worrying about setting up complicated runtimes, dependencies and databases.</p>
-<p>Websites built with Hugo are extremelly fast, secure and can be deployed anywhere including, AWS, GitHub Pages, Heroku, Netlify and any other hosting provider.</p>
-<p>Learn more and contribute on <a href="https://github.com/gohugoio">GitHub</a>.</p>
-
+            
         </div>
 
         
@@ -102,12 +98,16 @@
     
 <nav id="article-nav">
     
-    <a href="/post/2020-11-12-%E5%A6%82%E4%BD%95%E7%94%A8-uml-%E7%B1%BB%E5%9B%BE%E8%A1%A8%E7%A4%BA%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/post/2020-11-27-%E7%BA%BF%E7%B4%A2%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%BA%BF%E7%B4%A2%E5%8C%96%E5%8F%8A%E9%81%8D%E5%8E%86/" id="article-nav-newer" class="article-nav-link-wrap">
         <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            如何用 UML 类图表示设计模式
+            线索二叉树的线索化及遍历
         </div>
     </a>
     
+    
+    <a href="/about/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">About&nbsp;<span>&gt;</span></div>
+    </a>
     
 </nav>
 
@@ -126,6 +126,15 @@
     </div>
     
 
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
     
     <script>
         document.getElementById('main-nav-toggle').addEventListener('click', function () {

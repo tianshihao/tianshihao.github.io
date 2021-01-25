@@ -97,7 +97,12 @@
       <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://tianshihao.github.io/post/2020-12-28-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
-      <description>设计模式 单例模式Singleton 创建型模式。 其特点是只提供唯一一个类的实例,具有全局变量的特点，在任何位置都可以通过接口获取到那个唯一实例</description>
+      <description>&lt;p&gt;设计模式有三种主要的模式类别：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;创建型模式&lt;/strong&gt;提供创建对象的机制， 增加已有代码的灵活性和可复用性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;结构型模式&lt;/strong&gt;介绍如何将对象和类组装成较大的结构， 并同时保持结构的灵活和高效。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;行为模式&lt;/strong&gt;负责对象间的高效沟通和职责委派。&lt;/li&gt;
+&lt;/ul&gt;</description>
     </item>
     
     <item>
@@ -172,6 +177,15 @@
 &lt;p&gt;  结点结构中含有线索的的二叉树称为线索二叉树。&lt;br&gt;
   若结点有左子树，则其lchild域指示其左子，否则令lchild域指示其前驱；若结点有右子树，则其rchild域指示其右子，否则令rchild域指示其后继。&lt;br&gt;
   为了避免混淆，需要增加两个标志域LTag和RTag，标志域为0表示结点后接指针，标志位为1表示结点后接线索。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>如何用 UML 类图表示设计模式</title>
+      <link>https://tianshihao.github.io/post/2020-11-12-%E5%A6%82%E4%BD%95%E7%94%A8-uml-%E7%B1%BB%E5%9B%BE%E8%A1%A8%E7%A4%BA%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2020-11-12-%E5%A6%82%E4%BD%95%E7%94%A8-uml-%E7%B1%BB%E5%9B%BE%E8%A1%A8%E7%A4%BA%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description></description>
     </item>
     
   </channel>

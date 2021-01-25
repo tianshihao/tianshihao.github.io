@@ -83,58 +83,376 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <h2 id="设计模式">设计模式</h2>
-<h3 id="单例模式singleton">单例模式Singleton</h3>
-<p>创建型模式。</p>
-<p>其特点是只提供<strong>唯一</strong>一个类的实例,具有全局变量的特点，在任何位置都可以通过接口获取到那个唯一实例。</p>
-<p>适用场景：</p>
+            <p>设计模式有三种主要的模式类别：</p>
+<ul>
+<li><strong>创建型模式</strong>提供创建对象的机制， 增加已有代码的灵活性和可复用性。</li>
+<li><strong>结构型模式</strong>介绍如何将对象和类组装成较大的结构， 并同时保持结构的灵活和高效。</li>
+<li><strong>行为模式</strong>负责对象间的高效沟通和职责委派。</li>
+</ul>
+<p>创建型模式主要包括：工厂方法、抽象工厂、生成器、原型和单例。</p>
+<p>结构性模式主要包括：适配器、桥接、组合、装饰、外观、享元（Flyweight）和代理。</p>
+<p>行为模式主要包括：责任链、命令、迭代器、中介者、备忘录、观察者、状态、策略、模板方法和访问者。</p>
+<h2 id="创建型模式">创建型模式</h2>
+<h3 id="工厂方法factory-method">工厂方法（Factory Method）</h3>
+<h4 id="意图">意图</h4>
+<p><strong>工厂方法模式</strong>是一种创建型设计模式， 其在<strong>基类中提供一个创建对象的方法</strong>，允许<strong>派生类决定实例化对象的类型</strong>。</p>
+<h4 id="模式结构">模式结构</h4>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/structure-indexed.png" alt="工厂方法模式结构"></p>
 <ol>
-<li>设别管理器，系统中可能有多个设备，但是只有一个设备管理器，用于管理设备驱动；</li>
-<li>数据池，用来缓存数据的数据结构，需要在一处写，多处读取或者多处写，多处读取。</li>
+<li>
+<p><strong>产品</strong> （Product） 将会对接口进行声明。 对于所有由创建者及其派生类构建的对象， 这些接口都是通用的。</p>
+</li>
+<li>
+<p><strong>具体产品</strong> （Concrete Products） 是产品接口的不同实现。</p>
+</li>
+<li>
+<p><strong>创建者</strong> （Creator） 类声明返回产品对象的工厂方法。该方法的返回对象类型必须与产品接口相匹配。</p>
+<p>你可以将工厂方法声明为抽象方法，强制要求每个派生类以不同方式实现该方法。或者，你也可以在基础工厂方法中返回默认产品类型。</p>
+<p>注意，尽管它的名字是创建者，但他最主要的职责并<strong>不是</strong>创建产品。一般来说，创建者类包含一些与产品相关的核心业务逻辑。 工厂方法将这些逻辑处理从具体产品类中分离出来。打个比方，大型软件开发公司拥有程序员培训部门。但是，这些公司的主要工作还是编写代码，而非生产程序员。</p>
+</li>
+<li>
+<p><strong>具体创建者</strong> （Concrete Creators） 将会重写基础工厂方法，使其返回不同类型的产品。</p>
+<p>注意，并不一定每次调用工厂方法都会<strong>创建</strong>新的实例。工厂方法也可以返回缓存、对象池或其他来源的已有对象。</p>
+</li>
 </ol>
-<p>特点：</p>
-<ol>
-<li>全局只有一个实例：static特性，同时禁止用户自己声明并定义（把构造函数写为private）</li>
-<li>线程安全；</li>
-<li>禁止赋值和拷贝；</li>
-<li>用户通过接口获取实例：使用static类成员函数</li>
-</ol>
-<p>好处：</p>
-<ol>
-<li>保证全局唯一性；</li>
-<li>节约系统资源；</li>
-<li>避免对共享资源的多场占用。</li>
-</ol>
-<p>样例：</p>
-<p>Meyers' Singleton</p>
+<h4 id="优缺点">优缺点</h4>
+<p>✔️ 可以避免创建者和具体产品之间的紧密耦合。</p>
+<p>✔️ <em>单一职责原则</em>。你可以将产品创建代码放在程序的单一位置，从而使得代码更容易维护。</p>
+<p>✔️ <em>开闭原则</em>。无需更改现有客户端代码，就可以在程序中引入新的产品类型。</p>
+<p>❌ 应用工厂方法模式需要引入许多新的派生类，代码可能会因此变得更复杂。最好的情况是将该模式引入创建者类的现有层次结构中。</p>
+<h4 id="实现">实现</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
-</span><span style="color:#888;font-weight:bold"></span>
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Singleton</span>
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 产品接口提供了所有具体产品都要实现的操作.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Product</span>
 {
-<span style="font-weight:bold;text-decoration:underline">private</span>:
-    Singleton() { std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;constructor called!&#34;</span> &lt;&lt; std::endl; }
-
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    Singleton(<span style="font-weight:bold;text-decoration:underline">const</span> Singleton &amp;) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
-    ~Singleton() { std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;destructor called!&#34;</span> &lt;&lt; std::endl; }
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Product(){};
+};
 
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 具体产品为产品接口提供多种实现.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Product
+{
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    Singleton &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>=(<span style="font-weight:bold;text-decoration:underline">const</span> Singleton &amp;) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
-    <span style="font-weight:bold;text-decoration:underline">static</span> Singleton &amp;GetInstance()
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
     {
-        <span style="font-weight:bold;text-decoration:underline">static</span> Singleton instance;
-        <span style="font-weight:bold;text-decoration:underline">return</span> instance;
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;{Result of the ConcreteProductA}&#34;</span>;
     }
 };
 
-<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>(<span style="font-weight:bold;text-decoration:underline">int</span> argc, <span style="font-weight:bold;text-decoration:underline">char</span> *argv[])
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductB</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Product
 {
-    Singleton &amp;instance_1 = Singleton::GetInstance();
-    <span style="color:#888;font-style:italic">// Singleton &amp;instance_2 = Singleton::GetInstance();
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;{Result of the ConcreteProductB}&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 创建者类声明了要返回产品对象的工厂方法. 创建者的派生类通常要实现这个方法.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Creator</span>
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 请注意, 创建者虚基类也许会提供一些默认的工厂方法的实现, 例如 SomeOperation().
+</span><span style="color:#888;font-style:italic">     */</span>
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 也请注意, 创建者的主要任务不是创建产品. 通常, 其中会包含一些依赖于
+</span><span style="color:#888;font-style:italic">     * 由工厂方法返回的产品对象的业务逻辑. 派生类可以通过重写工厂方法并从中
+</span><span style="color:#888;font-style:italic">     * 返回不同类型的产品来间接地更改业务逻辑.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="color:#888;font-style:italic">// 虚基类也可以提供具体函数实现.
+</span><span style="color:#888;font-style:italic"></span>    string <span style="color:#666;font-weight:bold;font-style:italic">SomeOperation</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="color:#888;font-style:italic">// 调用工厂方法创建一个产品对象.
+</span><span style="color:#888;font-style:italic"></span>        Product *product = <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;FactoryMethod();
+        <span style="color:#888;font-style:italic">// 使用产品对象.
+</span><span style="color:#888;font-style:italic"></span>        string result = <span style="color:#666;font-style:italic">&#34;Creator: The same creator&#39;s code has just worked with &#34;</span> + product-&gt;Operation();
+        <span style="font-weight:bold;text-decoration:underline">delete</span> product;
+        <span style="font-weight:bold;text-decoration:underline">return</span> result;
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">// 注意基类的析构函数一定是虚函数.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Creator() {}
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 具体创建者重写工厂方法以更改结果中返回的产品类型.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteCreatorA</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Creator
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 注意, 即使从工厂方法返回的对象为具体产品, 但函数的返回类型仍是产品.
+</span><span style="color:#888;font-style:italic">     * 这样做能使得创建者独立于具体产品类.
+</span><span style="color:#888;font-style:italic">     */</span>
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA</span>();
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteCreatorB</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Creator
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductB</span>();
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 尽管还是通过基类的接口, 但客户代码使用具体的创建者实例工作. 只要客户端继续
+</span><span style="color:#888;font-style:italic"> * 通过基类接口, 就可以通过其传递任何创建者的派生类.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>(<span style="font-weight:bold;text-decoration:underline">const</span> Creator &amp;creator)
+{
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: I&#39;m not aware of the creator&#39;s class, but it still works.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; creator.SomeOperation() &lt;&lt; endl;
 }
 
-</code></pre></div><p>todo：懒汉、饿汉https://note.youdao.com/ynoteshare1/index.html?id=571f8ae9d2d2c5265b43136d5e65673f&amp;type=note</p>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 程序根据配置或环境选择一种创建者类型.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;App: Launched with the ConcreteCreatorA.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    Creator *creator = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteCreatorA();
+    ClientCode(*creator);
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;App: Launched with the ConcreteCreatorB.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    Creator *creator2 = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteCreatorB();
+    ClientCode(*creator2);
+
+    <span style="font-weight:bold;text-decoration:underline">delete</span> creator;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> creator2;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="抽象工厂abstract-factory">抽象工厂（Abstract Factory）</h3>
+<h4 id="意图-1">意图</h4>
+<p><strong>抽象工厂模式</strong>是一种创建型设计模式，它能创建一系列相关的对象，而无需指定其具体类。</p>
+<h4 id="模式结构-1">模式结构</h4>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/abstract-factory/structure-indexed.png" alt="抽象工厂设计模式"></p>
+<ol>
+<li><strong>抽象产品</strong>（Abstract Product）为构成系列产品的一组不同但相关的产品声明接口。</li>
+<li><strong>具体产品</strong>（Concrete Product）是抽象产品的多种不同类型实现。所有变体（维多利亚/现代）都必须实现相应的抽象产品（椅子/沙发）。</li>
+<li><strong>抽象工厂</strong>（Abstract Factory）接口声明了一组创建各种抽象产品的方法。</li>
+<li><strong>具体工厂</strong>（Concrete Factory）实现抽象工厂的构建方法。每个具体工厂都对应特定产品变体，且仅创建此种产品变体。</li>
+<li>尽管具体工厂会对具体产品进行初始化，其构建方法签名必须返回相应的<em>抽象</em>产品。这样，使用工厂类的客户端代码就不会与工厂创建的特定产品变体耦合。<strong>客户端</strong>（Client）只需通过抽象接口调用工厂和产品对象，就能与任何具体工厂/产品变体交互。</li>
+</ol>
+<h4 id="优缺点-1">优缺点</h4>
+<p>✔️ 你可以确保同一工厂生成的产品相互匹配。</p>
+<p>✔️ 你可以避免客户端和具体产品代码的耦合。</p>
+<p>✔️ <em>单一职责原则</em>。 你可以将产品生成代码抽取到同一位置， 使得代码易于维护。</p>
+<p>✔️ <em>开闭原则</em>。 向应用程序中引入新产品变体时， 你无需修改客户端代码。</p>
+<p>❌ 由于采用该模式需要向应用中引入众多的接口和类，代码可能会比之前更加复杂。</p>
+<h4 id="实现-1">实现</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 每个产品系列的具体产品应该有一个基本接口. 所有产品的变体都必须实现这个接口.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">AbstractProductA</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> std::string UsefulFunctionA() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~AbstractProductA(){};
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 具体产品由相应的具体工厂创建.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractProductA
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::string UsefulFunctionA() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the product A1.&#34;</span>;
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractProductA
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::string UsefulFunctionA() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the product A2.&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 这里是另一种产品的基本接口. 所有产品都可以相互作用, 但是只有在同一具体变体中
+</span><span style="color:#888;font-style:italic"> * 的产品之间才能有正确的互动.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">AbstractProductB</span>
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 产品 B 可以做自己的事情...
+</span><span style="color:#888;font-style:italic">     */</span>
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> std::string UsefulFunctionB() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * ...但它同样能和产品 A 合作.
+</span><span style="color:#888;font-style:italic">     * 
+</span><span style="color:#888;font-style:italic">     * 抽象工厂能保证它创建出来的所有产品都属于同一变体, 因此, 产品间相互兼容.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> std::string AnotherUsefulFunctionB(<span style="font-weight:bold;text-decoration:underline">const</span> AbstractProductA &amp;collaborator) <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~AbstractProductB(){};
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 具体的产品由相应的工厂创建.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductB1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractProductB
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::string UsefulFunctionB() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the product B1.&#34;</span>;
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 变体 B1 只能和变体 A1 正常配合. 但是, 它却接受抽象产品 A 的任何实例作为参数.
+</span><span style="color:#888;font-style:italic">     */</span>
+    std::string AnotherUsefulFunctionB(<span style="font-weight:bold;text-decoration:underline">const</span> AbstractProductA &amp;collaborator) <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">const</span> std::string result = collaborator.UsefulFunctionA();
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the product B1 collaborating with ( &#34;</span> + result + <span style="color:#666;font-style:italic">&#34; )&#34;</span>;
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductB2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractProductB
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::string UsefulFunctionB() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the product B2.&#34;</span>;
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 变体 B2 只能和变体 A2 正常配合. 但是, 它却接受抽象产品 A 的任何实例作为参数.
+</span><span style="color:#888;font-style:italic">     */</span>
+    std::string AnotherUsefulFunctionB(<span style="font-weight:bold;text-decoration:underline">const</span> AbstractProductA &amp;collaborator) <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">const</span> std::string result = collaborator.UsefulFunctionA();
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;The result of the B2 collaborating with (&#34;</span> + result + <span style="color:#666;font-style:italic">&#34; )&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 抽象工厂接口声明了一系列返回不同抽象产品的方法. 这些产品被称为产品系列并且在主题
+</span><span style="color:#888;font-style:italic"> * 或概念上高度相关. 一个系列的产品也许有若干变体, 但是一种变体的产品和另一种变体的
+</span><span style="color:#888;font-style:italic"> * 产品不兼容. 即一个现代风格的椅子和一个维多利亚桌子的椅子不兼容.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">AbstractFactory</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> AbstractProductA *CreateProductA() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> AbstractProductB *<span style="color:#666;font-weight:bold;font-style:italic">CreateProductB</span>() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~AbstractFactory(){};
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 具体工厂生产的一系列产品属于一种变体. 该工厂保证生产出来的产品相互兼容.
+</span><span style="color:#888;font-style:italic"> * 注意, 具体工厂方法的类型返回一个抽象的产品, 但在方法的内部一个具体的产品却被实例化了.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteFactory1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractFactory
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    AbstractProductA *CreateProductA() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA1</span>();
+    }
+    AbstractProductB *<span style="color:#666;font-weight:bold;font-style:italic">CreateProductB</span>() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteProductB1();
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 每个具体工厂都对应一种相应的产品变体.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteFactory2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> AbstractFactory
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    AbstractProductA *CreateProductA() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProductA2</span>();
+    }
+    AbstractProductB *<span style="color:#666;font-weight:bold;font-style:italic">CreateProductB</span>() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteProductB2();
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 客户端只能通过抽象类型使用工厂类和产品类: 抽象工厂和抽象产品. 这让程序员可以
+</span><span style="color:#888;font-style:italic"> * 不修改客户端代码的情况下传递任意工厂和产品的派生类.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>(<span style="font-weight:bold;text-decoration:underline">const</span> AbstractFactory &amp;factory)
+{
+    <span style="font-weight:bold;text-decoration:underline">const</span> AbstractProductA *product_a = factory.CreateProductA();
+    <span style="font-weight:bold;text-decoration:underline">const</span> AbstractProductB *product_b = factory.CreateProductB();
+
+    std::cout &lt;&lt; product_b-&gt;UsefulFunctionB() &lt;&lt; std::endl;
+    std::cout &lt;&lt; product_b-&gt;AnotherUsefulFunctionB(*product_a) &lt;&lt; std::endl;
+
+    <span style="font-weight:bold;text-decoration:underline">delete</span> product_a;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> product_b;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: Testing client code with the first factory type:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    ConcreteFactory1 *f1 = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteFactory1();
+    ClientCode(*f1);
+    <span style="font-weight:bold;text-decoration:underline">delete</span> f1;
+
+    std::cout &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: Testing the same client code with the second factory type:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    ConcreteFactory2 *f2 = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteFactory2();
+    ClientCode(*f2);
+    <span style="font-weight:bold;text-decoration:underline">delete</span> f2;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="生成器">生成器</h3>
+<h3 id="原型">原型</h3>
+<h3 id="单例singleton">单例（Singleton）</h3>
+<h2 id="结构型模式">结构型模式</h2>
+<h3 id="适配器">适配器</h3>
+<h3 id="桥接">桥接</h3>
+<h3 id="组合">组合</h3>
+<h3 id="装饰">装饰</h3>
+<h3 id="外观">外观</h3>
+<h3 id="享元flyweight">享元（Flyweight）</h3>
+<h3 id="代理">代理</h3>
+<h2 id="行为模型">行为模型</h2>
 <h3 id="观察者模式observerevent">观察者模式Observer/Event</h3>
 <p>行为型模式。</p>
 <blockquote>
@@ -255,137 +573,6 @@
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="工厂模式factory">工厂模式Factory</h3>
-<p>创建型模式。</p>
-<p>工厂方法Factory Method</p>
-<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/structure.png" alt="工厂方法结构"></p>
-<h4 id="模式的实现-1">模式的实现</h4>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
-</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
-</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * Product 接口提供了所有 ConcreteProduct 都要实现的操作.
-</span><span style="color:#888;font-style:italic"> */</span>
-
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Product</span>
-{
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="font-weight:bold;text-decoration:underline">virtual</span> string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
-    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Product(){};
-};
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * ConcreteProduct 为 Product 接口提供多种实现.
-</span><span style="color:#888;font-style:italic"> */</span>
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProduct1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Product
-{
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="font-weight:bold;text-decoration:underline">virtual</span> string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
-    {
-        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;{Result of the ConcreteProduct1}&#34;</span>;
-    }
-};
-
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProduct2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Product
-{
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    string Operation() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
-    {
-        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;{Result of the ConcreteProduct2}&#34;</span>;
-    }
-};
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * Creator 类声明了要返回 Product 类对象的工厂方法. Creator 的派生类通常要实现
-</span><span style="color:#888;font-style:italic"> * 这个方法.
-</span><span style="color:#888;font-style:italic"> */</span>
-
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Creator</span>
-{
-    <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic">     * 请注意, Creator 类也许会提供一些默认的工厂方法的实现, 例如 SomeOperation().
-</span><span style="color:#888;font-style:italic">     */</span>
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="font-weight:bold;text-decoration:underline">virtual</span> Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
-    <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic">     * 也请注意, Creator 的主要任务不是创建 Product. 通常, 其中会包含一些依赖于
-</span><span style="color:#888;font-style:italic">     * 由工厂方法返回的 Product 对象的业务逻辑. 派生类可以通过重写工厂方法并从中
-</span><span style="color:#888;font-style:italic">     * 返回不同类型的 Product 来间接地更改业务逻辑.
-</span><span style="color:#888;font-style:italic">     */</span>
-
-    <span style="color:#888;font-style:italic">// 虚基类也可以提供具体函数实现.
-</span><span style="color:#888;font-style:italic"></span>    string <span style="color:#666;font-weight:bold;font-style:italic">SomeOperation</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
-    {
-        <span style="color:#888;font-style:italic">// 调用工厂方法创建一个 Product 对象.
-</span><span style="color:#888;font-style:italic"></span>        Product *product = <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;FactoryMethod();
-        <span style="color:#888;font-style:italic">// 使用 Product 对象.
-</span><span style="color:#888;font-style:italic"></span>        string result = <span style="color:#666;font-style:italic">&#34;Creator: The same creator&#39;s code has just worked with &#34;</span> + product-&gt;Operation();
-        <span style="font-weight:bold;text-decoration:underline">delete</span> product;
-        <span style="font-weight:bold;text-decoration:underline">return</span> result;
-    }
-
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="color:#888;font-style:italic">// 注意基类的析构函数一定是虚函数.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Creator() {}
-};
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * 具体的 Creator 重写工厂方法以更改结果中的 Product 类型.
-</span><span style="color:#888;font-style:italic"> */</span>
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteCreator1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Creator
-{
-    <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic">     * 注意, 即使从工厂方法返回的对象为 Concrete Product, 但函数的返回值仍是 Product.
-</span><span style="color:#888;font-style:italic">     * 这样做能使得 Creator 独立于 Concrete Product 类.
-</span><span style="color:#888;font-style:italic">     */</span>
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
-    {
-        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProduct1</span>();
-    }
-};
-
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteCreator2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Creator
-{
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    Product *FactoryMethod() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
-    {
-        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">new</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteProduct2</span>();
-    }
-};
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * 尽管还是通过基类的接口, 但客户代码使用具体的 Creator 实例工作. 只要客户端继续
-</span><span style="color:#888;font-style:italic"> * 通过基类接口, 就可以通过其传递任何 Creator 的派生类.
-</span><span style="color:#888;font-style:italic"> */</span>
-<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>(<span style="font-weight:bold;text-decoration:underline">const</span> Creator &amp;creator)
-{
-    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: I&#39;m not aware of the creator&#39;s class, but it still works.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
-         &lt;&lt; creator.SomeOperation() &lt;&lt; endl;
-}
-
-<span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * 程序根据配置或环境选择一种创建者类型.
-</span><span style="color:#888;font-style:italic"> */</span>
-
-<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
-{
-    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;App: Launched with the ConcreteCreator1.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
-    Creator *creator = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteCreator1();
-    ClientCode(*creator);
-    cout &lt;&lt; endl;
-
-    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;App: Launched with the ConcreteCreator2.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
-    Creator *creator2 = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteCreator2();
-    ClientCode(*creator2);
-
-    <span style="font-weight:bold;text-decoration:underline">delete</span> creator;
-    <span style="font-weight:bold;text-decoration:underline">delete</span> creator2;
-
-    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
-}
-
 </code></pre></div>
         </div>
 
@@ -395,20 +582,48 @@
             <h3></h3>
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#设计模式">设计模式</a>
+    <li><a href="#创建型模式">创建型模式</a>
       <ol>
-        <li><a href="#单例模式singleton">单例模式Singleton</a></li>
+        <li><a href="#工厂方法factory-method">工厂方法（Factory Method）</a>
+          <ol>
+            <li><a href="#意图">意图</a></li>
+            <li><a href="#模式结构">模式结构</a></li>
+            <li><a href="#优缺点">优缺点</a></li>
+            <li><a href="#实现">实现</a></li>
+          </ol>
+        </li>
+        <li><a href="#抽象工厂abstract-factory">抽象工厂（Abstract Factory）</a>
+          <ol>
+            <li><a href="#意图-1">意图</a></li>
+            <li><a href="#模式结构-1">模式结构</a></li>
+            <li><a href="#优缺点-1">优缺点</a></li>
+            <li><a href="#实现-1">实现</a></li>
+          </ol>
+        </li>
+        <li><a href="#生成器">生成器</a></li>
+        <li><a href="#原型">原型</a></li>
+        <li><a href="#单例singleton">单例（Singleton）</a></li>
+      </ol>
+    </li>
+    <li><a href="#结构型模式">结构型模式</a>
+      <ol>
+        <li><a href="#适配器">适配器</a></li>
+        <li><a href="#桥接">桥接</a></li>
+        <li><a href="#组合">组合</a></li>
+        <li><a href="#装饰">装饰</a></li>
+        <li><a href="#外观">外观</a></li>
+        <li><a href="#享元flyweight">享元（Flyweight）</a></li>
+        <li><a href="#代理">代理</a></li>
+      </ol>
+    </li>
+    <li><a href="#行为模型">行为模型</a>
+      <ol>
         <li><a href="#观察者模式observerevent">观察者模式Observer/Event</a>
           <ol>
             <li><a href="#模式的结构">模式的结构</a></li>
             <li><a href="#优点">优点：</a></li>
             <li><a href="#缺点">缺点：</a></li>
             <li><a href="#模式的实现">模式的实现</a></li>
-          </ol>
-        </li>
-        <li><a href="#工厂模式factory">工厂模式Factory</a>
-          <ol>
-            <li><a href="#模式的实现-1">模式的实现</a></li>
           </ol>
         </li>
       </ol>
