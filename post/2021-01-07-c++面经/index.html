@@ -566,6 +566,7 @@ size of object is:      8
 <p>生成一个临时变量，把它的引用作为函数参数传入函数内。</p>
 <h2 id="4-隐式类型转换">4. 隐式类型转换</h2>
 <p>首先，对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换，其次，对于只存在单个参数的构造函数的对象构造来说，函数调用可以直接使用该参数传入，编译器会自动调用其构造函数生成临时对象。</p>
+<p>todo：单开一章</p>
 <h2 id="5-自增自减">5. 自增、自减</h2>
 <p>以自增为例。</p>
 <h3 id="51-i">5.1 ++i</h3>
@@ -575,6 +576,7 @@ size of object is:      8
     *<span style="font-weight:bold;text-decoration:underline">this</span> += 1;
     <span style="font-weight:bold;text-decoration:underline">return</span> *<span style="font-weight:bold;text-decoration:underline">this</span>;
 }
+
 </code></pre></div><h3 id="52-i">5.2 i++</h3>
 <p>先保存旧值，再自增，最后返回旧值。</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> <span style="font-weight:bold;text-decoration:underline">int</span>::<span style="font-weight:bold;text-decoration:underline">operator</span>(<span style="font-weight:bold;text-decoration:underline">int</span>)
@@ -583,6 +585,7 @@ size of object is:      8
     ++(*<span style="font-weight:bold;text-decoration:underline">this</span>);
     <span style="font-weight:bold;text-decoration:underline">return</span> oldValue;
 }
+
 </code></pre></div><h2 id="6-static-关键字的作用">6. static 关键字的作用</h2>
 <h3 id="61-全局静态变量">6.1 全局静态变量</h3>
 <p>在全局变量前加上关键字 <code>static</code>，全局变量就变成了<strong>全局静态变量</strong>。</p>
@@ -744,14 +747,12 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <p>这里 &ldquo;123&rdquo; 本来是在栈上的，但是<strong>编译器</strong>可能会做某些<strong>优化</strong>，将其放到<strong>常量区</strong>。经验证，不能修改。</p>
 <h3 id="124-char-arr4--123">12.4 char arr4[] = &ldquo;123&rdquo;;</h3>
 <p>字符串 &ldquo;123&rdquo; 保存在<strong>栈区</strong>，可以通过 <code>arr4</code> 去修改。</p>
-<h2 id="13-隐式类型转换">13. 隐式类型转换</h2>
-<p>对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换</p>
-<h2 id="14-函数栈空间最大值">14. 函数栈空间最大值</h2>
+<h2 id="13-函数栈空间最大值">13. 函数栈空间最大值</h2>
 <p>默认是 1M，但可以调整。</p>
-<h2 id="15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</h2>
+<h2 id="14-volatile百度贴吧后端研发一面">14. volatile（百度贴吧后端研发一面）</h2>
 <p><code>volatile</code> 的意思是“脆弱的”，表明它修饰的变量的值十分容易被改变，所以编译器就不会对这个变量进行优化（CPU 的优化是让该变量存放到 CPU 寄存器而不是内存），进而<strong>提供稳定的访问</strong>。每次读取 <code>volatile</code> 的变量时，<strong>系统总是会从内存中读取这个变量，并且将它的值立刻保存</strong>。</p>
 <p>多线程操作，每个线程有自己的寄存器，正常改变量是在寄存器里面改，改完之后线程之间很难同步，所以使用 <code>volatile</code>，直接在内存中修改、生效，便于多线程同步。一般在多个线程操作一个变量时会给变量添加关键字 <code>volatile</code>。</p>
-<h2 id="16-函数签名signature4">16. 函数签名（Signature）<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></h2>
+<h2 id="15-函数签名signature4">15. 函数签名（Signature）<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></h2>
 <p>包含了一个函数的信息，包括<strong>函数名、参数类型、参数个数、顺序以及它所在的类和命名空间</strong>。普通函数签名并不包含函数返回值部分，如果两个函数仅仅只有函数返回值不同，那么系统是无法区分这两个函数的，此时编译器会提示语法错误。<strong>函数签名用于识别不同的函数</strong>，函数的名字只是函数签名的一部分。在编译器及链接器处理符号时，使用某种名称修饰的方法，使得每个函数签名对应一个修饰后名称（Decorated Name）。编译器在将 C++ 源代码编译成目标文件时，会将函数和变量的名字进行修饰，形成符号名，也就是说，C++ 的源代码编译后的目标文件中所使用的符号名是相应的函数和变量的修饰后名称。<strong>C++ 编译器和链接器都使用符号来识别和处理函数和变量，所以对于不同函数签名的函数，即使函数名相同，编译器和链接器都认为它们是不同的函数</strong>。</p>
 <p>不同的编译器厂商的名称修饰方法可能不同，所以不同的编译器对于同一个函数签名可能对应不同的修饰后名称。</p>
 <section class="footnotes" role="doc-endnotes">
@@ -933,10 +934,9 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#124-char-arr4--123">12.4 char arr4[] = &ldquo;123&rdquo;;</a></li>
       </ol>
     </li>
-    <li><a href="#13-隐式类型转换">13. 隐式类型转换</a></li>
-    <li><a href="#14-函数栈空间最大值">14. 函数栈空间最大值</a></li>
-    <li><a href="#15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</a></li>
-    <li><a href="#16-函数签名signature4">16. 函数签名（Signature）</a></li>
+    <li><a href="#13-函数栈空间最大值">13. 函数栈空间最大值</a></li>
+    <li><a href="#14-volatile百度贴吧后端研发一面">14. volatile（百度贴吧后端研发一面）</a></li>
+    <li><a href="#15-函数签名signature4">15. 函数签名（Signature）</a></li>
   </ol>
 </nav>
         </div>
