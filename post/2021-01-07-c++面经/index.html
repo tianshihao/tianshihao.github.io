@@ -465,21 +465,26 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <h2 id="15-析构函数的调用顺序">15. 析构函数的调用顺序</h2>
 <p>派生类本身的析构函数、对象成员的析构函数、基类的析构函数。</p>
 <h2 id="16-计算类的大小百度贴吧后端研发一面">16 计算类的大小（百度贴吧后端研发一面）</h2>
+<p>类的大小和类的对象的大小是一样的。</p>
 <h3 id="161-空类">16.1 空类</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
 
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>{};
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>
+{
+};
 
 <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
 {
-    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
     A a;
-    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of class is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of object is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><p>空类的大小是 1， 在 C++ 中空类会占一个字节，<strong>这是为了让对象的实例能够相互区别</strong>。具体来说，空类同样可以被实例化，并且每个实例在内存中都有独一无二的地址，因此，<strong>编译器会给空类隐含加上一个字节</strong>，这样空类实例化之后就会拥有独一无二的内存地址。当该空白类作为基类时，该类的大小就优化为 0 了，子类的大小就是子类本身的大小。这就是所谓的<strong>空白基类最优化</strong>。</p>
+</code></pre></div><p>空类的大小是 1， 在 C++ 中空类会占一个字节，<strong>这是为了让对象的实例能够相互区别</strong>。具体来说，空类同样可以被实例化，并且每个实例在内存中都有独一无二的地址，因此，<strong>编译器会给空类隐含加上一个字节</strong>，这样空类实例化之后就会拥有独一无二的内存地址。当该空白类作为基类时，由于其不含任何数据，该类的大小就优化为 0 了，子类的大小之取决于子类本身的大小，这就是所谓的<strong>空白基类最优化</strong>（Empty Base Optimization，EBO），并不是指空白基类的单独是 0，只是在计算继承空白基类的派生类的大小时，作为派生类一部分的空白基类大小优化为 0。</p>
 <p>空类的实例大小就是类的大小，所以 <code>sizeof(a) = 1</code> 字节,如果 <code>a</code> 是指针，则 <code>sizeof(a)</code> 就是指针的大小，即 4 字节。</p>
 <h3 id="162-有虚函数的类">16.2 有虚函数的类</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
@@ -492,13 +497,19 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 
 <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
 {
-    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
     A a;
-    cout &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of class is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of object is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><p>有虚函数的类，编译器会为每个对象添加一个隐藏成员，隐藏成员中保存了一个指向虚函数表的指针 <code>__vptr</code>，所以有虚函数的类和对象的大小就是这个指针的大小，32 位系统 4 字节，64 为系统 8 字节。</p>
+</code></pre></div><p>有虚函数的类，编译器会为每个对象添加一个隐藏成员，隐藏成员中保存了一个指向虚函数表的指针 <code>__vptr</code>，所以有虚函数的类和对象的大小就是这个指针的大小。</p>
+<p>上述代码输出结果是：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">size of class is:       8
+size of object is:      8
+</code></pre></div><p>类的大小和类的对象的大小是一样的。输出结果为 8 是内存对齐的结果。带有虚函数的类会有一个隐含对象——指向虚函数表的指针，在 64 位机器上，指针的大小是 8 字节，对齐系数为 4，有效对齐值为 4，因此内存对齐之后大小为 8。</p>
 <h3 id="163-静态类成员">16.3 静态类成员</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
@@ -511,10 +522,12 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 
 <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
 {
-  cout&lt;&lt;<span style="font-weight:bold;text-decoration:underline">sizeof</span>(A)&lt;&lt;endl;<span style="color:#888;font-style:italic">// 输出 4;
-</span><span style="color:#888;font-style:italic"></span>  A a; 
-  cout&lt;&lt;<span style="font-weight:bold;text-decoration:underline">sizeof</span>(a)&lt;&lt;endl;<span style="color:#888;font-style:italic">// 输出 4;
-</span><span style="color:#888;font-style:italic"></span>  <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+    A a;
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of class is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(A) &lt;&lt; endl;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size of object is:</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">sizeof</span>(a) &lt;&lt; endl;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
 </code></pre></div><p>静态成员存放在静态存储区，不占用类的大小, 普通函数也不占用类大小。</p>
