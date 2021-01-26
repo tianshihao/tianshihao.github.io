@@ -326,7 +326,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <h3 id="34-以-new-方式创建出来的局部对象">3.4 以 new 方式创建出来的局部对象</h3>
 <p>当使用 <code>new</code> 定义对象时，其构造函数被执行；当使用 <code>delete</code> 删除对象时，其析构函数被执行。</p>
 <h2 id="4-虚函数的工作原理">4. 虚函数的工作原理</h2>
-<p>通常，编译器处理虚函数的方法是：给每个对象添加一个隐藏成员。隐藏成员中保存了一个指向<strong>函数地址数组的指针</strong>。这种<strong>数组</strong>称为<strong>虚函数表</strong>（virtual function table，vtbl）。虚函数表中存储了为类对象进行声明的虚函数的地址。例如，基类对象包含一个指针，该指针指向基类中所有虚函数的地址表。派生类对象将包含一个指向独立地址表的指针。如果派生类提供了虚函数的新定义，该虚函数表将保存新函数的地址；如果派生类没有重新定义虚函数，该 vtbl 将保存函数原始版本的地址。如果派生类定义了新的虚函数，则该函数的地址也将被添加到 vtbl 中（参见图 13.5）。注意，无论类中包含的虚函数是 1 个还是 10 个，都只需要在对象中添加1个地址成员，只是表的大小不同而已。一个类的所有对象、所有示例，共享一个虚函数表。</p>
+<p>通常，编译器处理虚函数的方法是：给每个对象添加一个隐藏成员。隐藏成员中保存了一个指向<strong>函数地址数组的指针</strong>。这种<strong>数组</strong>称为<strong>虚函数表</strong>（virtual function table，vtbl）。虚函数表中存储了为类对象进行声明的虚函数的地址。例如，基类对象包含一个指针，该指针指向基类中所有虚函数的地址表。派生类对象将包含一个指向<strong>独立地址表</strong>的指针。<strong>如果派生类提供了虚函数的新定义，该虚函数表将保存新函数的地址；如果派生类没有重新定义虚函数，该 vtbl 将保存函数原始版本的地址。如果派生类定义了新的虚函数，则该函数的地址也将被添加到 vtbl 中</strong>（参见图 13.5）。注意，无论类中包含的虚函数是 1 个还是 10 个，都只需要在对象中添加 1 个地址成员，只是表的大小不同而已。一个类的所有对象、所有示例，共享一个虚函数表。</p>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/%E4%B8%80%E7%A7%8D%E8%99%9A%E5%87%BD%E6%95%B0%E6%9C%BA%E5%88%B6.png" alt="一种虚函数机制"></p>
 <p>总之，使用虚函数时，在内存和执行速度方面有一定的成本，包括:</p>
 <ul>
@@ -394,7 +394,9 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 </tbody>
 </table>
 <h2 id="7-关键字-override-和-final">7. 关键字 override 和 final</h2>
-<p>todo</p>
+<p>C++11 新增关键字。</p>
+<p><code>override</code> 放置于函数后显式指明派生类的该函数是继承自基类的虚函数，如果派生类与基类虚函数的签名不一致，编译器就会报错。其中，虚函数签名不匹配的错误通常是因为函数名、参数列表或 <code>const</code> 属性不一样，导致意外创建了一个新的虚函数，而不是重写一个已存在的虚函数。<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+<p><code>final</code> 放置在类名或虚函数后，表示不希望某个类或某个虚函数被重写，添加 <code>final</code> 关键字后被继承或重写，编译器会报错。</p>
 <h2 id="8-构造函数的成员初始化列表">8. 构造函数的成员初始化列表</h2>
 <p>在类或结构体的构造函数的参数列表后以冒号开头、逗号经行风格的一系列初始化字段。使用初始化列表会直接使用传入参数的复制构造函数进行初始化，<strong>省去了一次执行传入参数的默认构造函数的过程</strong>，否则会调用一次传入参数的默认构造函数。所以使用成员初始化列表效率会高一些。</p>
 <p>有以下三种情况必须使用成员初始化列表进行初始化：</p>
@@ -502,11 +504,11 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <h2 id="2-extern-c">2. extern &ldquo;C&rdquo;</h2>
 <p>C++ 调用 C 函数需要 <code>extern &quot;C&quot;</code>，因为 C 语言没有函数重载。</p>
 <hr>
-<h2 id="1-c语言参数压栈顺序">1. C语言参数压栈顺序</h2>
+<h2 id="1-c-语言参数压栈顺序">1. C 语言参数压栈顺序</h2>
 <p>从右到左。</p>
-<h2 id="2-c语言函数调用">2. C语言函数调用</h2>
+<h2 id="2-c-语言函数调用">2. C 语言函数调用</h2>
 <p>每一个函数调用都会分配<strong>函数栈</strong>，在栈内进行函数执行过程。调用前，先把<strong>返回地址压栈</strong>，然后把当前函数的 <strong><code>esp</code> 指针</strong>压栈。</p>
-<h2 id="3-c如何处理返回值">3. C++如何处理返回值</h2>
+<h2 id="3-c-如何处理返回值">3. C++ 如何处理返回值</h2>
 <p>生成一个临时变量，把它的引用作为函数参数传入函数内。</p>
 <h2 id="4-隐式类型转换">4. 隐式类型转换</h2>
 <p>首先，对于内置类型，低精度的变量给高精度变量赋值会发生隐式类型转换，其次，对于只存在单个参数的构造函数的对象构造来说，函数调用可以直接使用该参数传入，编译器会自动调用其构造函数生成临时对象。</p>
@@ -695,6 +697,9 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <h2 id="15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</h2>
 <p><code>volatile</code> 的意思是“脆弱的”，表明它修饰的变量的值十分容易被改变，所以编译器就不会对这个变量进行优化（CPU 的优化是让该变量存放到 CPU 寄存器而不是内存），进而<strong>提供稳定的访问</strong>。每次读取 <code>volatile</code> 的变量时，<strong>系统总是会从内存中读取这个变量，并且将它的值立刻保存</strong>。</p>
 <p>多线程操作，每个线程有自己的寄存器，正常改变量是在寄存器里面改，改完之后线程之间很难同步，所以使用 <code>volatile</code>，直接在内存中修改、生效，便于多线程同步。一般在多个线程操作一个变量时会给变量添加关键字 <code>volatile</code>。</p>
+<h2 id="16-函数签名signature4">16. 函数签名（Signature）<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></h2>
+<p>包含了一个函数的信息，包括<strong>函数名、参数类型、参数个数、顺序以及它所在的类和命名空间</strong>。普通函数签名并不包含函数返回值部分，如果两个函数仅仅只有函数返回值不同，那么系统是无法区分这两个函数的，此时编译器会提示语法错误。<strong>函数签名用于识别不同的函数</strong>，函数的名字只是函数签名的一部分。在编译器及链接器处理符号时，使用某种名称修饰的方法，使得每个函数签名对应一个修饰后名称（Decorated Name）。编译器在将 C++ 源代码编译成目标文件时，会将函数和变量的名字进行修饰，形成符号名，也就是说，C++ 的源代码编译后的目标文件中所使用的符号名是相应的函数和变量的修饰后名称。<strong>C++ 编译器和链接器都使用符号来识别和处理函数和变量，所以对于不同函数签名的函数，即使函数名相同，编译器和链接器都认为它们是不同的函数</strong>。</p>
+<p>不同的编译器厂商的名称修饰方法可能不同，所以不同的编译器对于同一个函数签名可能对应不同的修饰后名称。</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -703,6 +708,12 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 </li>
 <li id="fn:2" role="doc-endnote">
 <p><a href="https://www.cnblogs.com/jijiji/p/4854581.html">https://www.cnblogs.com/jijiji/p/4854581.html</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p><a href="https://zhuanlan.zhihu.com/p/260992059">https://zhuanlan.zhihu.com/p/260992059</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://blog.csdn.net/fengbingchun/article/details/79133749">https://blog.csdn.net/fengbingchun/article/details/79133749</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
@@ -805,9 +816,9 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
       </ol>
     </li>
     <li><a href="#2-extern-c">2. extern &ldquo;C&rdquo;</a></li>
-    <li><a href="#1-c语言参数压栈顺序">1. C语言参数压栈顺序</a></li>
-    <li><a href="#2-c语言函数调用">2. C语言函数调用</a></li>
-    <li><a href="#3-c如何处理返回值">3. C++如何处理返回值</a></li>
+    <li><a href="#1-c-语言参数压栈顺序">1. C 语言参数压栈顺序</a></li>
+    <li><a href="#2-c-语言函数调用">2. C 语言函数调用</a></li>
+    <li><a href="#3-c-如何处理返回值">3. C++ 如何处理返回值</a></li>
     <li><a href="#4-隐式类型转换">4. 隐式类型转换</a></li>
     <li><a href="#5-自增自减">5. 自增、自减</a>
       <ol>
@@ -866,6 +877,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     <li><a href="#13-隐式类型转换">13. 隐式类型转换</a></li>
     <li><a href="#14-函数栈空间最大值">14. 函数栈空间最大值</a></li>
     <li><a href="#15-volatile百度贴吧后端研发一面">15. volatile（百度贴吧后端研发一面）</a></li>
+    <li><a href="#16-函数签名signature4">16. 函数签名（Signature）</a></li>
   </ol>
 </nav>
         </div>
