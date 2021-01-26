@@ -485,7 +485,6 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 }
 
 </code></pre></div><p>空类的大小是 1， 在 C++ 中空类会占一个字节，<strong>这是为了让对象的实例能够相互区别</strong>。具体来说，空类同样可以被实例化，并且每个实例在内存中都有独一无二的地址，因此，<strong>编译器会给空类隐含加上一个字节</strong>，这样空类实例化之后就会拥有独一无二的内存地址。当该空白类作为基类时，由于其不含任何数据，该类的大小就优化为 0 了，子类的大小之取决于子类本身的大小，这就是所谓的<strong>空白基类最优化</strong>（Empty Base Optimization，EBO），并不是指空白基类的单独是 0，只是在计算继承空白基类的派生类的大小时，作为派生类一部分的空白基类大小优化为 0。</p>
-<p>空类的实例大小就是类的大小，所以 <code>sizeof(a) = 1</code> 字节,如果 <code>a</code> 是指针，则 <code>sizeof(a)</code> 就是指针的大小，即 4 字节。</p>
 <h3 id="162-有虚函数的类">16.2 有虚函数的类</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
