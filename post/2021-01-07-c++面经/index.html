@@ -108,7 +108,7 @@
 <p>重新分配给定的内存区域。它必须是之前为 <code>malloc()</code>、 <code>calloc()</code>或 <code>realloc()</code> 所分配，并且仍未被 <code>free()</code> 或 <code>realloc()</code> 的调用所释放。否则，结果<strong>未定义</strong>。</p>
 <p>重新分配按以下二者之一执行：</p>
 <ol>
-<li>可能的话，扩张或收缩 <code>ptr</code> 所指向的已存在内存。内容在新旧大小中的较小范围内保持不变。若扩张范围，则数组新增部分的内容是未定义的。</li>
+<li>可能的话，扩张或收缩 <code>ptr</code> 所指向的已存在内存。内容在新旧大小中的较小范围内保持不变。若扩张范围，则数组新增部分的内容是未定义的；</li>
 <li>分配一个大小 <code>new_size</code> 字节的新内存块，并复制大小等于新旧大小中较小者的内存区域，然后释放旧内存块。</li>
 </ol>
 <p>若无足够内存，则不释放旧内存块，并返回空指针。</p>
@@ -121,14 +121,14 @@
 <p>C++ 中的<strong>虚拟内存</strong>分为堆、栈、映射区、数据段、BSS 段和代码段，共 6 个部分。</p>
 <h3 id="31-动态区域">3.1 动态区域</h3>
 <ol>
-<li>堆（Heap）：使用 <code>new</code> 或 <code>malloc()</code> 在堆区动态分配内存，这些内存不用时，需要使用 <code>delete</code> 或 <code>free()</code> 手动释放内存空间。堆区地址<strong>由小到大</strong>增长。</li>
-<li>映射区（Memory Mapping Segment）：存储<strong>动态链接库</strong>以及调用 <strong><code>mmap()</code></strong> 函数进行<strong>文件映射</strong>。映射区地址<strong>由大到小</strong>增长。</li>
+<li>堆（Heap）：使用 <code>new</code> 或 <code>malloc()</code> 在堆区动态分配内存，这些内存不用时，需要使用 <code>delete</code> 或 <code>free()</code> 手动释放内存空间。堆区地址<strong>由小到大</strong>增长；</li>
+<li>映射区（Memory Mapping Segment）：存储<strong>动态链接库</strong>以及调用 <strong><code>mmap()</code></strong> 函数进行<strong>文件映射</strong>。映射区地址<strong>由大到小</strong>增长；</li>
 <li>栈（Stack）：由程序自动向操作系统申请以及回收的内存，速度快，方便，但程序员无法控制。如果分配失败，则会提示<strong>栈溢出</strong>错误。<code>const</code> 局部变量也存储在栈区。栈区的地址<strong>由大到小</strong>增长。栈区中存储函数的返回地址、参数、局部变量、返回值、自动变量。</li>
 </ol>
 <h3 id="32-静态区域">3.2 静态区域</h3>
 <ol>
-<li>数据段（Data Segment）：存储程序中<strong>已初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>。</li>
-<li>BSS 段（BSS Segment）：存储<strong>未初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>，以及所有被<strong>初始化为 0</strong> 的<strong>全部变量</strong>和<strong>静态变量</strong>。</li>
+<li>数据段（Data Segment）：存储程序中<strong>已初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>；</li>
+<li>BSS 段（BSS Segment）：存储<strong>未初始化</strong>的<strong>全局变量</strong>和<strong>静态变量</strong>，以及所有被<strong>初始化为 0</strong> 的<strong>全部变量</strong>和<strong>静态变量</strong>；</li>
 <li>代码段（Text Segment）：分为只读存储区和文本区。<strong>只读存储区存储字符串常量</strong>，<strong>文本区存储程序的机器代码</strong>。</li>
 </ol>
 <h2 id="4-野指针">4. 野指针</h2>
@@ -143,7 +143,7 @@
 <ol>
 <li>堆内存泄漏（Heap Leak）。使用了 <code>new</code> 或 <code>malloc()</code> 申请内存，在内存使用结束后却没有使用 <code>delete</code> 或 <code>free()</code> 释放内存，将导致申请的内存不会再次被使用，就会产生<strong>堆内存泄漏</strong>；</li>
 <li>系统资源泄漏（Resource Leak），主要指程序使用<strong>系统分配</strong>的资源，例如 <strong>Bitmap</strong>、handle、<strong>SOCKET</strong> 等，没有使用相应的函数释放，导致系统<strong>资源浪费</strong>，严重可导致系统<strong>效能降低</strong>，系统<strong>运行不稳定</strong>；</li>
-<li>没有将基类的析构函数定义为虚函数。当基类指针指向派生类对象时，如果基类析构函数不是虚的，将只会调用基类的析构函数，从而导致派生类的资源没有正确的释放，因此造成内存泄漏；</li>
+<li>没有将基类的析构函数定义为虚函数。当基类指针指向派生类对象时，如果基类析构函数不是虚的，将只会调用基类的析构函数，从而导致派生类的资源没有正确的释放，因此造成内存泄漏。</li>
 </ol>
 <h2 id="6-new-和-delete-是如何实现的">6. new 和 delete 是如何实现的</h2>
 <p>使用 <code>new</code> 创建对象时，首先会调用 <code>malloc()</code> 为对象分配存储空间，然后调用对象的构造函数；使用 <code>delete</code> 释放对象内存时，首先会调用对象的析构函数，然后调用 <code>free()</code> 释放内存。</p>
@@ -239,12 +239,12 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <li>性能原因：由于 CPU 读取数据是<strong>按块读取</strong>的，内存对齐可以使得 CPU 一次性就可以将所需的数据读进来，不需要额外操作，提高了效率。</li>
 </ol>
 <h3 id="对齐规则">对齐规则</h3>
-<p>每个特定平台上的编译器都有自己的默认“<strong>对齐系数</strong>”（也叫对齐模数）。GCC 中默认 <code>#pragma pack(4)</code>，可以通过预编译命令 <code>#pragma pack(n)</code>（n = 1、2、4、8、16）来改变这一系数。</p>
+<p>每个特定平台上的编译器都有自己的默认“<strong>对齐系数</strong>”（也叫对齐模数）。可以通过预编译命令 <code>#pragma pack(n)</code>（n = 1、2、4、8、16）来改变对齐系数。GCC 中默认 <code>#pragma pack(4)</code>。</p>
 <p><strong>有效对齐值</strong>：是给定值 <code>#pragma pack(n)</code> 和<strong>结构体中最长数据类型长度</strong>中较小的那个。有效对齐值也叫<strong>对齐单位</strong>。</p>
 <p>内存对齐需要遵循的规则：</p>
 <ol>
 <li>
-<p>结构体第一个成员的<strong>偏移量（offset）<strong>为 0，以后</strong>每个成员</strong>相对于结构体首地址的偏移量都是<strong>该成员大小与有效对齐值中较小那个的整数倍</strong>，如有需要编译器会在成员之间加上<strong>填充字节</strong>。</p>
+<p>结构体第一个成员的<strong>偏移量（offset）<strong>为 0，以后</strong>每个成员</strong>相对于结构体首地址的偏移量都是<strong>该成员大小与有效对齐值中较小那个的整数倍</strong>，如有需要编译器会在成员之间加上<strong>填充字节</strong>；</p>
 </li>
 <li>
 <p><strong>结构体的总大小为有效对齐值的整数倍</strong>，如有需要编译器会<strong>在最末一个成员之后加上填充字节</strong>。</p>
