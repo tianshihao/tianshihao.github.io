@@ -120,7 +120,7 @@
 <p>✔️ <em>单一职责原则</em>。你可以将产品创建代码放在程序的单一位置，从而使得代码更容易维护。</p>
 <p>✔️ <em>开闭原则</em>。无需更改现有客户端代码，就可以在程序中引入新的产品类型。</p>
 <p>❌ 应用工厂方法模式需要引入许多新的派生类，代码可能会因此变得更复杂。最好的情况是将该模式引入创建者类的现有层次结构中。</p>
-<h4 id="实现">实现</h4>
+<h4 id="代码示例">代码示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
@@ -264,7 +264,7 @@
 <p>✔️ <em>单一职责原则</em>。 你可以将产品生成代码抽取到同一位置， 使得代码易于维护。</p>
 <p>✔️ <em>开闭原则</em>。 向应用程序中引入新产品变体时， 你无需修改客户端代码。</p>
 <p>❌ 由于采用该模式需要向应用中引入众多的接口和类，代码可能会比之前更加复杂。</p>
-<h4 id="实现-1">实现</h4>
+<h4 id="代码示例-1">代码示例</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span>
 <span style="color:#888;font-style:italic">/**
@@ -441,10 +441,452 @@
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="生成器">生成器</h3>
-<h3 id="原型">原型</h3>
+</code></pre></div><h3 id="生成器builder">生成器（Builder）</h3>
+<h4 id="意图-2">意图</h4>
+<p><strong>生成器模式</strong>是一种创建型设计模式，使你能够分步骤创建复杂对象。该模式允许你使用相同的创建代码生成不同类型和形式的对象。</p>
+<h4 id="模式结构-2">模式结构</h4>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/builder/structure-indexed.png" alt="生成器设计模式结构"></p>
+<ol>
+<li><strong>生成器</strong> （Builder） 接口声明在所有类型生成器中通用的产品构造步骤。</li>
+<li><strong>具体生成器</strong> （Concrete Builders） 提供构造过程的不同实现。 具体生成器也可以构造不遵循通用接口的产品。</li>
+<li><strong>产品</strong> （Products） 是最终生成的对象。 由不同生成器构造的产品无需属于同一类层次结构或接口。</li>
+<li><strong>主管</strong> （Director） 类定义调用构造步骤的顺序， 这样你就可以创建和复用特定的产品配置。</li>
+<li><strong>客户端</strong> （Client） 必须将某个生成器对象与主管类关联。 一般情况下， 你只需通过主管类构造函数的参数进行一次性关联即可。 此后主管类就能使用生成器对象完成后续所有的构造任务。 但在客户端将生成器对象传递给主管类制造方法时还有另一种方式。 在这种情况下， 你在使用主管类生产产品时每次都可以使用不同的生成器。</li>
+</ol>
+<h4 id="优缺点-2">优缺点</h4>
+<p>✔️ 你可以分步创建对象，暂缓创建步骤或递归运行创建步骤。</p>
+<p>✔️ 生成不同形式的产品时，你可以复用相同的制造代码。</p>
+<p>✔️ <em>单一职责原则</em>。你可以将复杂构造代码从产品的业务逻辑中分离出来。</p>
+<p>❌ 由于该模式需要新增多个类，因此代码整体复杂度会有所增加。</p>
+<h4 id="代码示例-2">代码示例</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;vector&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 只有当产品十分复杂并且需要拓展配置时, 使用生成器模式才有意义.
+</span><span style="color:#888;font-style:italic"> * 
+</span><span style="color:#888;font-style:italic"> * 不像其它模式, 不同的具体生成器能生产不相关的产品. 换句话说, 不同生成器也许不会
+</span><span style="color:#888;font-style:italic"> * 总是遵循相同的接口.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Product1</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::vector&lt;std::string&gt; parts_;
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ListParts</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Product parts: &#34;</span>;
+        <span style="font-weight:bold;text-decoration:underline">for</span> (size_t i = 0; i &lt; parts_.size(); ++i)
+        {
+            <span style="font-weight:bold;text-decoration:underline">if</span> (parts_[i] == parts_.back())
+            {
+                std::cout &lt;&lt; parts_[i];
+            }
+            <span style="font-weight:bold;text-decoration:underline">else</span>
+            {
+                std::cout &lt;&lt; parts_[i] &lt;&lt; <span style="color:#666;font-style:italic">&#34;, &#34;</span>;
+            }
+        }
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 生成器接口为创建产品对象的不同部分明确了方法.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Builder</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> ProducePartA() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ProducePartB</span>() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ProducePartC</span>() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Builder() {}
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteBuilder1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Builder
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    Product1 *product;
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     *  一个新创建的生成器实例应该包含一个空产品对象, 它将被进一步组装.
+</span><span style="color:#888;font-style:italic">     */</span>
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    ConcreteBuilder1()
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;Reset();
+    }
+    ~ConcreteBuilder1()
+    {
+        <span style="font-weight:bold;text-decoration:underline">delete</span> product;
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Reset</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;product = <span style="font-weight:bold;text-decoration:underline">new</span> Product1();
+    }
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 所有的生产步骤都使用相同的产品实例.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ProducePartA</span>() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;product-&gt;parts_.push_back(<span style="color:#666;font-style:italic">&#34;PartA1&#34;</span>);
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ProducePartB</span>() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;product-&gt;parts_.push_back(<span style="color:#666;font-style:italic">&#34;PartB1&#34;</span>);
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ProducePartC</span>() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;product-&gt;parts_.push_back(<span style="color:#666;font-style:italic">&#34;PartC1&#34;</span>);
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 具体生成器应该为生产出来的产品提供自己的方法. 这是因为不同的具体生成器会
+</span><span style="color:#888;font-style:italic">     * 生产完全不同的且不遵循相同接口的产品. 因此, 这样的方法不能在生成器基类接口
+</span><span style="color:#888;font-style:italic">     * 中声明(至少在静态类型的编程语言中). 
+</span><span style="color:#888;font-style:italic">     * 
+</span><span style="color:#888;font-style:italic">     * 通常, 在把最后的结果返回给客户代码之后, 一个生成器实例就可以开始生产另一件
+</span><span style="color:#888;font-style:italic">     * 产品了. 这就是为什么在 GetProduct 最后调用 Reset 方法的原因. 然而, 这并不
+</span><span style="color:#888;font-style:italic">     * 是强制性的, 可以让生成器在抛弃之前的产品之前等待客户代码的显式 Reset 调用.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 这里要注意内存的所有权. 一旦调用了 GetProduct, 这个方法的使用者就会负责
+</span><span style="color:#888;font-style:italic">     * 释放存放产品内存的所有权. 这里可以使用智能指针来避免内存泄漏.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    Product1 *<span style="color:#666;font-weight:bold;font-style:italic">GetProduct</span>()
+    {
+        Product1 *result = <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;product;
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;Reset();
+        <span style="font-weight:bold;text-decoration:underline">return</span> result;
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Director</span>
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    Builder *builder;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 主管和用户代码传进来的任意生成器实例一起工作. 这也就是说, 客户代码可能
+</span><span style="color:#888;font-style:italic">     * 控制新组装的产品的最终类型.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> SetBuiler(Builder *builder)
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;builder = builder;
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 主管能使用相同的建造步骤构造一些产品变体.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">BuildMinimalVisbleProduct</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;builder-&gt;ProducePartA();
+    }
+
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">BuildFullFeaturedProduct</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;builder-&gt;ProducePartA();
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;builder-&gt;ProducePartB();
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;builder-&gt;ProducePartC();
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 客户代码创建一个生成器对象, 把它传递给主管, 然后初始化构造流程. 最后的结果从
+</span><span style="color:#888;font-style:italic"> * 生成器对象那里取回.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 这里因为简单使用了原始的指针, 但也可以使用智能指针.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>(Director &amp;direcotr)
+{
+    ConcreteBuilder1 *builder = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteBuilder1();
+    direcotr.SetBuiler(builder);
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Standard basic product:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    direcotr.BuildMinimalVisbleProduct();
+
+    Product1 *p = builder-&gt;GetProduct();
+    p-&gt;ListParts();
+    <span style="font-weight:bold;text-decoration:underline">delete</span> p;
+
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Standard full featured product:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    direcotr.BuildFullFeaturedProduct();
+
+    p = builder-&gt;GetProduct();
+    p-&gt;ListParts();
+    <span style="font-weight:bold;text-decoration:underline">delete</span> p;
+
+    <span style="color:#888;font-style:italic">// 生成器模式可以脱离主管类使用.
+</span><span style="color:#888;font-style:italic"></span>    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Custom product:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    builder-&gt;ProducePartA();
+    builder-&gt;ProducePartC();
+    p = builder-&gt;GetProduct();
+    p-&gt;ListParts();
+    <span style="font-weight:bold;text-decoration:underline">delete</span> p;
+
+    <span style="font-weight:bold;text-decoration:underline">delete</span> builder;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    Director *director = <span style="font-weight:bold;text-decoration:underline">new</span> Director();
+    ClientCode(*director);
+    <span style="font-weight:bold;text-decoration:underline">delete</span> director;
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="原型">原型</h3>
 <h3 id="单例singleton">单例（Singleton）</h3>
-<h2 id="结构型模式">结构型模式</h2>
+<h4 id="意图-3">意图</h4>
+<p><strong>单例模式</strong>是一种创建型设计模式，让你能够保证一个类只有一个实例，并提供一个访问该实例的全局节点。</p>
+<h4 id="解决方案">解决方案</h4>
+<p>所有单例的实现都包含以下两个相同的步骤：</p>
+<ul>
+<li>将默认构造函数设为<strong>私有</strong>，防止其它对象使用单例类的 <code>new</code> 运算符。</li>
+<li>新建一个静态构建方法作为构造函数，该函数会“偷偷”调用私用构造函数来创建对象，并将其保存在一个静态成员变量中。此后所有对于该函数的调用都将返回这一缓存对象。</li>
+</ul>
+<p>如果代码能够访问单例类，那么它就能够调用单例类的静态方法。无论合适调用该方法，它总是会返回相同的对象。</p>
+<h4 id="模式结构-3">模式结构</h4>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/structure-zh-indexed.png" alt="单例模式结构"></p>
+<ol>
+<li>
+<p><strong>单例</strong>（Singleton）类声明了一个名为 <code>get­Instance</code>获取实例的静态方法来返回其所属类的一个相同实例。</p>
+<p>单例的构造函数必须对客户端（Client）代码隐藏。调用 <code>获取实例</code>方法必须是获取单例对象的唯一方式。</p>
+</li>
+</ol>
+<h4 id="优缺点-3">优缺点</h4>
+<p>✔️ 可以保证一个类只有一个实例。</p>
+<p>✔️ 获得了一个指向该实例的全局访问节点。</p>
+<p>✔️ 仅在首次请求单例对象时对其进行初始化。</p>
+<p>❌ 违反了单一职责原则。该模式同时解决了两个问题。</p>
+<p>❌ 单例模式可能掩盖不良设计，比如程序各组件之间相互了解过多。</p>
+<p>❌ 该模式在多线程环境中需要进行特殊处理，避免多个线程多次创建该单例对象。</p>
+<p>❌ 单例的客户端代码单元测试可能会比较困难，因为许多测试框架以基于继承的方式创建模拟对象。由于单例类的构造函数是私有的，而且绝大多数语言无法重写静态方法，所以需要仔细考虑模拟单例的方法。要么感觉不编写测试代码，或者不使用单例模式。</p>
+<h4 id="代码示例-3">代码示例</h4>
+<h5 id="基础单例">基础单例</h5>
+<p>实现一个粗糙的单例非常简单，仅需隐藏构造函数并实现一个静态的构建方法即可。</p>
+<p>相同的类在多线程环境中会出错。多线程可能会同时调用构建方法并获取多个单例类对象。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;thread&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 单例类声明了 GetInstance 方法, 该方法可以用作构造函数的替代品并且每次让客户端
+</span><span style="color:#888;font-style:italic"> * 访问同一实例.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Singleton</span>
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 为了防止 new 运算符直接调用构造函数, 单例类的构造函数应该被设置为私有.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+<span style="font-weight:bold;text-decoration:underline">protected</span>:
+    std::string value_;
+
+    <span style="font-weight:bold;text-decoration:underline">static</span> Singleton *singleton_;
+
+    Singleton(<span style="font-weight:bold;text-decoration:underline">const</span> std::string value) : value_(value) {}
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 单例是不能被复制的.
+</span><span style="color:#888;font-style:italic">     */</span>
+    Singleton(Singleton &amp;other) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 单例也不应该是可分配的.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="font-weight:bold;text-decoration:underline">operator</span>=(<span style="font-weight:bold;text-decoration:underline">const</span> Singleton &amp;) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 这是控制访问单例实例的静态方法. 第一次使用该方法时, 它会创建一个单例对象
+</span><span style="color:#888;font-style:italic">     * 并把它放置在静态存储区. 以后该方法时, 它会给客户代码返回已存在的, 存储在
+</span><span style="color:#888;font-style:italic">     * 静态存储区的单例对象.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="font-weight:bold;text-decoration:underline">static</span> Singleton *<span style="color:#666;font-weight:bold;font-style:italic">GetInstance</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;value);
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 最后, 任何单例都应定义一些可以在其实例上执行的业务逻辑.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">SomeBusinessLogic</span>()
+    {
+        <span style="color:#888;font-style:italic">// ...
+</span><span style="color:#888;font-style:italic"></span>    }
+
+    std::string value() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> value_;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 静态成员应该在类外初始化.
+</span><span style="color:#888;font-style:italic"> */</span>
+Singleton *Singleton::singleton_ = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 静态方法应该在类外面定义.
+</span><span style="color:#888;font-style:italic"> */</span>
+Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;value)
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 这是创建一个实例更安全的方法. 当两个线程想在同一时间访问单例的情况下,
+</span><span style="color:#888;font-style:italic">     * instance = new Singleton 是危险的.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">if</span> (singleton_ == <span style="font-weight:bold;text-decoration:underline">nullptr</span>)
+    {
+        singleton_ = <span style="font-weight:bold;text-decoration:underline">new</span> Singleton(value);
+    }
+    <span style="font-weight:bold;text-decoration:underline">return</span> singleton_;
+}
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreadFoo</span>()
+{
+    <span style="color:#888;font-style:italic">// 下面的代码模拟缓慢的初始化.
+</span><span style="color:#888;font-style:italic"></span>    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton *singleton = Singleton::GetInstance(<span style="color:#666;font-style:italic">&#34;FOO&#34;</span>);
+    std::cout &lt;&lt; singleton-&gt;value() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreadBar</span>()
+{
+    <span style="color:#888;font-style:italic">// 下面的代码模拟缓慢的初始化.
+</span><span style="color:#888;font-style:italic"></span>    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton *singleton = Singleton::GetInstance(<span style="color:#666;font-style:italic">&#34;BAR&#34;</span>);
+    std::cout &lt;&lt; singleton-&gt;value() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;If you see the same value, then singleton was reused (yay!</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+              &lt;&lt; <span style="color:#666;font-style:italic">&#34;If you see different values, then 2 singletons were created (booo!!)</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>
+              &lt;&lt; <span style="color:#666;font-style:italic">&#34;RESULT:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    std::<span style="font-weight:bold;text-decoration:underline">thread</span> t1(ThreadFoo);
+    std::<span style="font-weight:bold;text-decoration:underline">thread</span> t2(ThreadBar);
+
+    t1.join();
+    t2.join();
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h5 id="线程安全单例">线程安全单例</h5>
+<p>为了解决这个问题，必须在创建首个单例对象时对线程进行同步。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;mutex&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;thread&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 单例类声明了 GetInstance 方法, 该方法可以用作构造函数的替代品并且每次让客户端
+</span><span style="color:#888;font-style:italic"> * 访问同一实例.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Singleton</span>
+{
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 为了防止 new/delete 运算符直接调用构造函数/析构函数, 单例类的构造函数/析构函数
+</span><span style="color:#888;font-style:italic">     * 应该被设置为私有.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    <span style="font-weight:bold;text-decoration:underline">static</span> Singleton *pinstance_;
+    <span style="font-weight:bold;text-decoration:underline">static</span> std::mutex mutex_;
+
+<span style="font-weight:bold;text-decoration:underline">protected</span>:
+    std::string value_;
+    Singleton(<span style="font-weight:bold;text-decoration:underline">const</span> std::string value) : value_(value) {}
+    ~Singleton() {}
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 单例是不能被复制的.
+</span><span style="color:#888;font-style:italic">     */</span>
+    Singleton(Singleton &amp;other) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 单例也不应该是可分配的.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="font-weight:bold;text-decoration:underline">operator</span>=(<span style="font-weight:bold;text-decoration:underline">const</span> Singleton &amp;) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 这是控制访问单例实例的静态方法. 第一次使用该方法时, 它会创建一个单例对象
+</span><span style="color:#888;font-style:italic">     * 并把它放置在静态存储区. 以后该方法时, 它会给客户代码返回已存在的, 存储在
+</span><span style="color:#888;font-style:italic">     * 静态存储区的单例对象.
+</span><span style="color:#888;font-style:italic">     */</span>
+
+    <span style="font-weight:bold;text-decoration:underline">static</span> Singleton *<span style="color:#666;font-weight:bold;font-style:italic">GetInstance</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;value);
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 最后, 任何单例都应定义一些可以在其实例上执行的业务逻辑.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">SomeBusinessLogic</span>()
+    {
+        <span style="color:#888;font-style:italic">// ...
+</span><span style="color:#888;font-style:italic"></span>    }
+
+    std::string value() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> value_;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 静态成员和方法应该在类外定义.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+Singleton *Singleton::pinstance_{<span style="font-weight:bold;text-decoration:underline">nullptr</span>};
+std::mutex Singleton::mutex_;
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 第一次调用 GetInstance 时, 将锁定存储位置, 然后再次确保变量为 nullptr, 然后再
+</span><span style="color:#888;font-style:italic"> * 设置值.
+</span><span style="color:#888;font-style:italic"> */</span>
+Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;value)
+{
+    std::lock_guard&lt;std::mutex&gt; lock(mutex_);
+    <span style="font-weight:bold;text-decoration:underline">if</span> (pinstance_ == <span style="font-weight:bold;text-decoration:underline">nullptr</span>)
+    {
+        pinstance_ = <span style="font-weight:bold;text-decoration:underline">new</span> Singleton(value);
+    }
+    <span style="font-weight:bold;text-decoration:underline">return</span> pinstance_;
+}
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreadFoo</span>()
+{
+    <span style="color:#888;font-style:italic">// 下面的代码模拟缓慢的初始化.
+</span><span style="color:#888;font-style:italic"></span>    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton *singleton = Singleton::GetInstance(<span style="color:#666;font-style:italic">&#34;FOO&#34;</span>);
+    std::cout &lt;&lt; singleton-&gt;value() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreadBar</span>()
+{
+    <span style="color:#888;font-style:italic">// 下面的代码模拟缓慢的初始化.
+</span><span style="color:#888;font-style:italic"></span>    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    Singleton *singleton = Singleton::GetInstance(<span style="color:#666;font-style:italic">&#34;BAR&#34;</span>);
+    std::cout &lt;&lt; singleton-&gt;value() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    <span style="font-weight:bold;text-decoration:underline">return</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;If you see the same value, then singleton was reused (yay!</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+              &lt;&lt; <span style="color:#666;font-style:italic">&#34;If you see different values, then 2 singletons were created (booo!!)</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>
+              &lt;&lt; <span style="color:#666;font-style:italic">&#34;RESULT:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    std::<span style="font-weight:bold;text-decoration:underline">thread</span> t1(ThreadFoo);
+    std::<span style="font-weight:bold;text-decoration:underline">thread</span> t2(ThreadBar);
+
+    t1.join();
+    t2.join();
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h2 id="结构型模式">结构型模式</h2>
 <h3 id="适配器">适配器</h3>
 <h3 id="桥接">桥接</h3>
 <h3 id="组合">组合</h3>
@@ -589,7 +1031,7 @@
             <li><a href="#意图">意图</a></li>
             <li><a href="#模式结构">模式结构</a></li>
             <li><a href="#优缺点">优缺点</a></li>
-            <li><a href="#实现">实现</a></li>
+            <li><a href="#代码示例">代码示例</a></li>
           </ol>
         </li>
         <li><a href="#抽象工厂abstract-factory">抽象工厂（Abstract Factory）</a>
@@ -597,12 +1039,27 @@
             <li><a href="#意图-1">意图</a></li>
             <li><a href="#模式结构-1">模式结构</a></li>
             <li><a href="#优缺点-1">优缺点</a></li>
-            <li><a href="#实现-1">实现</a></li>
+            <li><a href="#代码示例-1">代码示例</a></li>
           </ol>
         </li>
-        <li><a href="#生成器">生成器</a></li>
+        <li><a href="#生成器builder">生成器（Builder）</a>
+          <ol>
+            <li><a href="#意图-2">意图</a></li>
+            <li><a href="#模式结构-2">模式结构</a></li>
+            <li><a href="#优缺点-2">优缺点</a></li>
+            <li><a href="#代码示例-2">代码示例</a></li>
+          </ol>
+        </li>
         <li><a href="#原型">原型</a></li>
-        <li><a href="#单例singleton">单例（Singleton）</a></li>
+        <li><a href="#单例singleton">单例（Singleton）</a>
+          <ol>
+            <li><a href="#意图-3">意图</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#模式结构-3">模式结构</a></li>
+            <li><a href="#优缺点-3">优缺点</a></li>
+            <li><a href="#代码示例-3">代码示例</a></li>
+          </ol>
+        </li>
       </ol>
     </li>
     <li><a href="#结构型模式">结构型模式</a>
