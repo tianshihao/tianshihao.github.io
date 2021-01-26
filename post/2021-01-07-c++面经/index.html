@@ -344,7 +344,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <h2 id="5-静态函数和虚函数的区别">5. 静态函数和虚函数的区别</h2>
 <p>静态函数在编译时确定运行时机，虚函数在运行时进行动态绑定。</p>
 <p>虚函数因为用了虚函数表机制，调用的时候会增加一次内存开销。</p>
-<h2 id="6-重载overload覆盖override和改写overwrite的区别">6. 重载（Overload）、覆盖（Override）和改写（Overwrite）的区别</h2>
+<h2 id="6-重载overload重写override和改写overwrite的区别">6. 重载（Overload）、重写（Override）和改写（Overwrite）的区别</h2>
 <table>
 <thead>
 <tr>
@@ -393,6 +393,46 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 </tr>
 </tbody>
 </table>
+<h3 id="代码示例">代码示例</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Base</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">int</span> foo();
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Derived</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Base
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> foo() <span style="font-weight:bold;text-decoration:underline">override</span>;
+};
+
+</code></pre></div><p>IntelliSense 提示“返回类型与重写虚拟函数 &ldquo;Base::foo&rdquo; 的返回类型 &ldquo;int&rdquo; 既不相同，也不协变C/C++(317)”。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Base</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">int</span> foo();
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Derived</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Base
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> foo() <span style="font-weight:bold;text-decoration:underline">const</span>;
+};
+
+</code></pre></div><p>将函数签名中的 <code>const</code> 属性改为 <code>const</code> 时，相当于改写了函数，改写之后的函数将在派生类中隐藏基类的虚函数。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Base</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">int</span> foo();
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Derived</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Base
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">int</span> foo() <span style="font-weight:bold;text-decoration:underline">override</span>;
+};
+
+</code></pre></div><p>正确的重写。</p>
 <h2 id="7-关键字-override-和-final">7. 关键字 override 和 final</h2>
 <p>C++11 新增关键字。</p>
 <p><code>override</code> 放置于函数后显式指明派生类的该函数是继承自基类的虚函数，如果派生类与基类虚函数的签名不一致，编译器就会报错。其中，虚函数签名不匹配的错误通常是因为函数名、参数列表或 <code>const</code> 属性不一样，导致意外创建了一个新的虚函数，而不是重写一个已存在的虚函数。<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
@@ -792,7 +832,11 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     </li>
     <li><a href="#4-虚函数的工作原理">4. 虚函数的工作原理</a></li>
     <li><a href="#5-静态函数和虚函数的区别">5. 静态函数和虚函数的区别</a></li>
-    <li><a href="#6-重载overload覆盖override和改写overwrite的区别">6. 重载（Overload）、覆盖（Override）和改写（Overwrite）的区别</a></li>
+    <li><a href="#6-重载overload重写override和改写overwrite的区别">6. 重载（Overload）、重写（Override）和改写（Overwrite）的区别</a>
+      <ol>
+        <li><a href="#代码示例">代码示例</a></li>
+      </ol>
+    </li>
     <li><a href="#7-关键字-override-和-final">7. 关键字 override 和 final</a></li>
     <li><a href="#8-构造函数的成员初始化列表">8. 构造函数的成员初始化列表</a></li>
     <li><a href="#9-构造函数为什么不定义成虚函数">9. 构造函数为什么不定义成虚函数</a></li>
