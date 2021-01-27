@@ -667,8 +667,7 @@
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;memory&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;unordered_map&gt;</span><span style="color:#888;font-weight:bold">
-</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
-
+</span><span style="color:#888;font-weight:bold"></span>
 <span style="color:#888;font-style:italic">// 原型设计模式
 </span><span style="color:#888;font-style:italic">//
 </span><span style="color:#888;font-style:italic">// 目的: 复制已有的对象, 而又不需要让代码依赖于它们所属的类.
@@ -686,12 +685,12 @@
 <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Prototype</span>
 {
 <span style="font-weight:bold;text-decoration:underline">protected</span>:
-    string prototype_name_;
+    std::string prototype_name_;
     <span style="font-weight:bold;text-decoration:underline">float</span> prototype_field_;
 
 <span style="font-weight:bold;text-decoration:underline">public</span>:
     Prototype() {}
-    Prototype(string prototype_name) : prototype_name_(prototype_name) {}
+    Prototype(std::string prototype_name) : prototype_name_(prototype_name) {}
 
     <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Prototype() {}
     <span style="font-weight:bold;text-decoration:underline">virtual</span> std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
@@ -705,8 +704,8 @@
 
 <span style="color:#888;font-style:italic">/**
 </span><span style="color:#888;font-style:italic"> * ConcretePrototype1 是原型的派生类并且实现了 Clone 方法. 在这个例子中, 所有的
-</span><span style="color:#888;font-style:italic"> * 原型类的数据成员都在栈区中. 如果有例如指向原型的指针: Stirng* name_, 那么为了
-</span><span style="color:#888;font-style:italic"> * 确保 Clone 方法有深拷贝还要实现复制构造函数.
+</span><span style="color:#888;font-style:italic"> * 原型类的数据成员都在栈区中. 如果有例如指向原型的指针: Stirng* name_,
+</span><span style="color:#888;font-style:italic"> * 那么为了确保 Clone 方法有深拷贝还要实现复制构造函数.
 </span><span style="color:#888;font-style:italic"> */</span>
 
 <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcretePrototype1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Prototype
@@ -715,13 +714,13 @@
     <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field1_;
 
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    ConcretePrototype1(string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
+    ConcretePrototype1(std::string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
         : Prototype(prototype_name),
           concrete_prototype_field1_(concrete_prototype_field) {}
 
     <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic">     * 注意 Clone 方法返回一个指向新的 ConcretePrototype1 复制品的指针. 因此, 客户
-</span><span style="color:#888;font-style:italic">     * 代码有责任释放内存. 这里可以使用智能指针 unique_pointer.
+</span><span style="color:#888;font-style:italic">     * 注意 Clone 方法返回一个指向新的 ConcretePrototype1 复制品的指针. 因此,
+</span><span style="color:#888;font-style:italic">     * 客户代码有责任释放内存. 这里可以使用智能指针 unique_pointer.
 </span><span style="color:#888;font-style:italic">     */</span>
     std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
     {
@@ -736,44 +735,46 @@
     <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field2_;
 
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    ConcretePrototype2(string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
+    ConcretePrototype2(std::string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
         : Prototype(prototype_name),
           concrete_prototype_field2_(concrete_prototype_field) {}
 
     std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
     {
         <span style="color:#888;font-style:italic">// return new ConcretePrototype2(*this);
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// 自己构建自己.
 </span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">return</span> std::unique_ptr&lt;Prototype&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype2(*<span style="font-weight:bold;text-decoration:underline">this</span>));
     }
 };
 
 <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic"> * 在原型工厂中有两个具体的原型, 一个具体原型类有一个, 所以每次想创建一个子弹时,
-</span><span style="color:#888;font-style:italic"> * 可以使用现有的和复制的.
+</span><span style="color:#888;font-style:italic"> * 在原型工厂中保留两个具体的原型的对象, 一个具体原型类有一个, 所以每次想创建
+</span><span style="color:#888;font-style:italic"> * 一个实例时, 可以使用现有的和复制的.
 </span><span style="color:#888;font-style:italic"> */</span>
 
 <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">PrototypeFactory</span>
 {
 <span style="font-weight:bold;text-decoration:underline">private</span>:
-    std::unordered_map&lt;Type, Prototype *, std::hash&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; prototypes_;
+    std::unordered_map&lt;Type, std::unique_ptr&lt;Prototype&gt;, std::hash&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; prototypes_;
 
 <span style="font-weight:bold;text-decoration:underline">public</span>:
     PrototypeFactory()
     {
         prototypes_[Type::PROTOTYPE_1] =
-            <span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype1(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_1&#34;</span>, 50.f);
+            std::unique_ptr&lt;Prototype&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype1(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_1&#34;</span>, 50.f));
         prototypes_[Type::PROTOTYPE_2] =
-            <span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype2(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_2&#34;</span>, 60.f);
+            std::unique_ptr&lt;Prototype&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype2(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_1&#34;</span>, 60.f));
     }
 
     <span style="color:#888;font-style:italic">/**
-</span><span style="color:#888;font-style:italic">     * 释放已分配的内存时注意. 如果会智能指针, 最好使用智能指针.
+</span><span style="color:#888;font-style:italic">     * 注意释放手动分配的内存. 如果会智能指针, 最好使用智能指针.
 </span><span style="color:#888;font-style:italic">     */</span>
     ~PrototypeFactory()
     {
-        <span style="font-weight:bold;text-decoration:underline">delete</span> prototypes_[Type::PROTOTYPE_1];
-        <span style="font-weight:bold;text-decoration:underline">delete</span> prototypes_[Type::PROTOTYPE_2];
-    }
+        <span style="color:#888;font-style:italic">// 使用智能指针不需要 delete.
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// delete prototypes_[Type::PROTOTYPE_1];
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// delete prototypes_[Type::PROTOTYPE_2];
+</span><span style="color:#888;font-style:italic"></span>    }
 
     <span style="color:#888;font-style:italic">/**
 </span><span style="color:#888;font-style:italic">     * 注意这里需要明确希望复制的原型类型, 方法会从该类型的对象创造原型.
@@ -790,28 +791,22 @@
 
     std::unique_ptr&lt;Prototype&gt; prototype =
         prototype_factory.CreatePrototype(Type::PROTOTYPE_1);
-    <span style="color:#888;font-style:italic">// prototype_factory-&gt;CreatePrototype(Type::PROTOTYPE_1);
-</span><span style="color:#888;font-style:italic"></span>    prototype-&gt;Method(90);
-    <span style="color:#888;font-style:italic">// delete prototype;
-</span><span style="color:#888;font-style:italic"></span>
+    prototype-&gt;Method(90);
+
     std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
 
-    <span style="color:#888;font-style:italic">// std::cout &lt;&lt; &#34;Lets&#39; create a Prototype 2\n&#34;;
-</span><span style="color:#888;font-style:italic"></span>
-    <span style="color:#888;font-style:italic">// prototype = prototype_factory.CreatePrototype(Type::PROTOTYPE_2);
-</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// prototype-&gt;Method(10);
-</span><span style="color:#888;font-style:italic"></span>
-    <span style="color:#888;font-style:italic">// delete prototype;
-</span><span style="color:#888;font-style:italic"></span>}
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Lets&#39; create a Prototype 2</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    prototype = prototype_factory.CreatePrototype(Type::PROTOTYPE_2);
+    prototype-&gt;Method(10);
+}
 
 <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
 {
     std::unique_ptr&lt;PrototypeFactory&gt; prototype_factory(<span style="font-weight:bold;text-decoration:underline">new</span> PrototypeFactory());
 
-    <span style="color:#888;font-style:italic">// PrototypeFactory *prototype_factory = new PrototypeFactory();
-</span><span style="color:#888;font-style:italic"></span>    Client(*prototype_factory);
-    <span style="color:#888;font-style:italic">// delete prototype_factory;
-</span><span style="color:#888;font-style:italic"></span>
+    Client(*prototype_factory);
+
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
@@ -1059,7 +1054,8 @@ Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h2 id="结构型模式">结构型模式</h2>
+</code></pre></div><h5 id="meyers-singleton">Meyers Singleton</h5>
+<h2 id="结构型模式">结构型模式</h2>
 <h3 id="适配器">适配器</h3>
 <h3 id="桥接">桥接</h3>
 <h3 id="组合">组合</h3>

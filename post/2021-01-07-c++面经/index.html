@@ -600,12 +600,50 @@ size of object is:      8
 <h3 id="63-静态函数">6.3 静态函数</h3>
 <p>在函数返回类型前加 <code>static</code>，函数就定义为静态函数。函数的定义和声明在默认情况下都是 <code>extern</code> 的，但静态函数只是在声明他的文件当中可见，不能被其他文件所用。</p>
 <p>函数的实现使用 <code>static</code> 修饰，那么这个函数只可在本文件内使用，不会同其他文件中的同名函数引起冲突；</p>
-<h3 id="64-类的静态成员">6.4 类的静态成员</h3>
-<p>在类中，静态成员可以实现多个对象之间的数据共享，并且使用静态数据成员还不会破坏隐藏的原则，即保证了安全性。因此，静态成员是类的所有对象中共享的成员，而不是某个对象的成员。对多个对象来说，静态数据成员只存储一处，供所有对象共用。</p>
-<h3 id="65-类的静态函数">6.5 类的静态函数</h3>
-<p>静态成员函数和静态数据成员一样，它们都属于类的静态成员，它们都不是对象成员。因此，对静态成员的引用不需要用对象名。</p>
-<p><strong>在静态成员函数的实现中不能直接引用类中说明的非静态成员</strong>，可以引用类中说明的静态成员（这点非常重要）。如果静态成员函数中要引用非静态成员时，可通过对象来引用。从中可看出，调用静态成员函数使用如下格式：&lt;类名&gt;::&lt;静态成员函数名&gt;(&lt;参数表&gt;);</p>
-<h2 id="7-c的四种强制类型转换">7. C++的四种强制类型转换</h2>
+<h3 id="64-类的静态数据成员">6.4 类的静态数据成员</h3>
+<p>在类中，静态成员可以实现多个对象之间的数据共享，并且使用静态数据成员还不会破坏隐藏的原则，即保证了安全性。因此，静态成员是类的所有对象中共享的成员，而不是某个对象的成员。对多个对象来说，静态数据成员只存储一处，供所有对象共用。类的静态数据一定是在类里面声明，类外面定义。</p>
+<h3 id="65-类的静态成员函数">6.5 类的静态成员函数</h3>
+<p>静态成员函数是属于类的，不属于对象。</p>
+<ol>
+<li>
+<p><strong>静态成员函数没有 <code>this</code> 指针</strong>，因此</p>
+<ol>
+<li>它可以访问所属类的 <code>static</code> 成员，但不能访问非 <code>static</code> 成员；</li>
+<li>它不能声明为虚函数，不能实现动态绑定，虚函数的实现依靠 <code>vptr</code> 和 <code>vtable</code>，但 <code>vptr</code> 只能被 <code>this</code> 指针访问；</li>
+<li>它不能声明为 <code>const</code>，因为编译器会为被修饰为 <code>const</code> 的函数添加一个隐式的参数 <code>const this*</code>。</li>
+</ol>
+</li>
+<li>
+<p>静态成员函数既可以在类中定义，也可以在类外定义，在类外定义时，不能重复指定 <code>static</code> 关键字；</p>
+</li>
+<li>
+<p>构造函数、析构函数不能为静态函数。</p>
+<ol>
+<li>静态成员函数的调用方式有两种，通过对象调用；通过类名调用。</li>
+</ol>
+</li>
+</ol>
+<p>如果静态成员函数中要引用非静态成员时，可通过对象来引用。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Accout</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">static</span> <span style="font-weight:bold;text-decoration:underline">double</span> m_rate;
+    <span style="font-weight:bold;text-decoration:underline">static</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">set_rate</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">double</span>&amp; x){ m_rate = x; }
+};
+
+<span style="font-weight:bold;text-decoration:underline">double</span> Account::m_rate = 8.0; <span style="color:#888;font-style:italic">// 静态数据成员在类外定义.
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    Account::set_rate(5.0); <span style="color:#888;font-style:italic">// 通过类名调用静态成员函数.
+</span><span style="color:#888;font-style:italic"></span>    
+    Account a;
+    a.set_rate(7.0); <span style="color:#888;font-style:italic">// 通过对象调用静态成员函数.
+</span><span style="color:#888;font-style:italic"></span>    
+    retuen 0;
+}
+
+</code></pre></div><h2 id="7-c的四种强制类型转换">7. C++的四种强制类型转换</h2>
 <p>四种强制类型转换操作符分别为：<code>static_cast</code>、<code>dynamic_cast</code>、<code>const_cast</code>、<code>reinterpret_cast</code>。</p>
 <h3 id="71-static_cast">7.1 static_cast</h3>
 <p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把 <code>int</code> 换成 <code>char</code>，<code>float</code> 换成 <code>int</code> ，比如<strong>非 <code>const</code></strong> 转<code> const</code> ，<code>void *</code> 转指针。</p>
@@ -891,8 +929,8 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#61-全局静态变量">6.1 全局静态变量</a></li>
         <li><a href="#62-局部静态变量">6.2 局部静态变量</a></li>
         <li><a href="#63-静态函数">6.3 静态函数</a></li>
-        <li><a href="#64-类的静态成员">6.4 类的静态成员</a></li>
-        <li><a href="#65-类的静态函数">6.5 类的静态函数</a></li>
+        <li><a href="#64-类的静态数据成员">6.4 类的静态数据成员</a></li>
+        <li><a href="#65-类的静态成员函数">6.5 类的静态成员函数</a></li>
       </ol>
     </li>
     <li><a href="#7-c的四种强制类型转换">7. C++的四种强制类型转换</a>
