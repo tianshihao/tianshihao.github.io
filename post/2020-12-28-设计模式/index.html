@@ -641,9 +641,182 @@
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
 
-</code></pre></div><h3 id="原型">原型</h3>
-<h3 id="单例singleton">单例（Singleton）</h3>
+</code></pre></div><h3 id="原型prototype">原型（Prototype）</h3>
 <h4 id="意图-3">意图</h4>
+<p><strong>原型模式</strong>是一种创建型设计模式，使你能够复制已有对象，而又无需使代码依赖它们所属的类。</p>
+<h4 id="模式结构-3">模式结构</h4>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/prototype/structure-indexed.png" alt="原型设计模式的结构"></p>
+<ol>
+<li><strong>原型</strong>（Prototype）接口将对克隆方法进行声明。在绝大多数情况下，其中只会有一个名为 <code>clone</code>克隆的方法。</li>
+<li><strong>具体原型</strong>（Concrete Prototype）类将实现克隆方法。除了将原始对象的数据复制到克隆体中之外，该方法有时还需处理克隆过程中的极端情况，例如克隆关联对象和梳理递归依赖等等。</li>
+<li><strong>客户端</strong>（Client）可以复制实现了原型接口的任何对象。</li>
+</ol>
+<h4 id="原型注册表实现">原型注册表实现</h4>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/structure-prototype-cache-indexed.png" alt="原型注册表"></p>
+<ol>
+<li><strong>原型注册表</strong>（Prototype Registry）提供了一种访问常用原型的简单方法，其中存储了一系列可供随时复制的预生成对象。最简单的注册表原型是一个 <code>名称 → 原型</code> 的哈希表。但如果需要使用名称以外的条件进行搜索，你可以创建更加完善的注册表版本。</li>
+</ol>
+<h4 id="优缺点-3">优缺点</h4>
+<p>✔️ 你可以克隆对象，而无需与它们所属的具体类相耦合。</p>
+<p>✔️ 你可以克隆预生成原型，避免反复运行初始化代码。</p>
+<p>✔️ 你可以更方便地生成复杂对象。</p>
+<p>✔️ 你可以用继承以外的方式来处理复杂对象的不同配置。</p>
+<p>❌ 克隆包含循环引用的复杂对象可能会非常麻烦。</p>
+<h4 id="代码示例-3">代码示例</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;memory&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;unordered_map&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="color:#888;font-style:italic">// 原型设计模式
+</span><span style="color:#888;font-style:italic">//
+</span><span style="color:#888;font-style:italic">// 目的: 复制已有的对象, 而又不需要让代码依赖于它们所属的类.
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">enum</span> <span style="color:#666;font-weight:bold;font-style:italic">Type</span>
+{
+    PROTOTYPE_1 = 0,
+    PROTOTYPE_2
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 示例的类有复制能力. 我们将看到不同类型的值域如何被复制.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Prototype</span>
+{
+<span style="font-weight:bold;text-decoration:underline">protected</span>:
+    string prototype_name_;
+    <span style="font-weight:bold;text-decoration:underline">float</span> prototype_field_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    Prototype() {}
+    Prototype(string prototype_name) : prototype_name_(prototype_name) {}
+
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Prototype() {}
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Method</span>(<span style="font-weight:bold;text-decoration:underline">float</span> prototype_field)
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;prototype_field_ = prototype_field;
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Call Method from &#34;</span> &lt;&lt; prototype_name_
+                  &lt;&lt; <span style="color:#666;font-style:italic">&#34; with field : &#34;</span> &lt;&lt; prototype_field &lt;&lt; std::endl;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * ConcretePrototype1 是原型的派生类并且实现了 Clone 方法. 在这个例子中, 所有的
+</span><span style="color:#888;font-style:italic"> * 原型类的数据成员都在栈区中. 如果有例如指向原型的指针: Stirng* name_, 那么为了
+</span><span style="color:#888;font-style:italic"> * 确保 Clone 方法有深拷贝还要实现复制构造函数.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcretePrototype1</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Prototype
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field1_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    ConcretePrototype1(string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
+        : Prototype(prototype_name),
+          concrete_prototype_field1_(concrete_prototype_field) {}
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 注意 Clone 方法返回一个指向新的 ConcretePrototype1 复制品的指针. 因此, 客户
+</span><span style="color:#888;font-style:italic">     * 代码有责任释放内存. 这里可以使用智能指针 unique_pointer.
+</span><span style="color:#888;font-style:italic">     */</span>
+    std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="color:#888;font-style:italic">// return new ConcretePrototype1(*this);
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">return</span> std::unique_ptr&lt;Prototype&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype1(*<span style="font-weight:bold;text-decoration:underline">this</span>));
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcretePrototype2</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Prototype
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field2_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    ConcretePrototype2(string prototype_name, <span style="font-weight:bold;text-decoration:underline">float</span> concrete_prototype_field)
+        : Prototype(prototype_name),
+          concrete_prototype_field2_(concrete_prototype_field) {}
+
+    std::unique_ptr&lt;Prototype&gt; Clone() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        <span style="color:#888;font-style:italic">// return new ConcretePrototype2(*this);
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">return</span> std::unique_ptr&lt;Prototype&gt;(<span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype2(*<span style="font-weight:bold;text-decoration:underline">this</span>));
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 在原型工厂中有两个具体的原型, 一个具体原型类有一个, 所以每次想创建一个子弹时,
+</span><span style="color:#888;font-style:italic"> * 可以使用现有的和复制的.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">PrototypeFactory</span>
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    std::unordered_map&lt;Type, Prototype *, std::hash&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; prototypes_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    PrototypeFactory()
+    {
+        prototypes_[Type::PROTOTYPE_1] =
+            <span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype1(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_1&#34;</span>, 50.f);
+        prototypes_[Type::PROTOTYPE_2] =
+            <span style="font-weight:bold;text-decoration:underline">new</span> ConcretePrototype2(<span style="color:#666;font-style:italic">&#34;PROTOTYPE_2&#34;</span>, 60.f);
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 释放已分配的内存时注意. 如果会智能指针, 最好使用智能指针.
+</span><span style="color:#888;font-style:italic">     */</span>
+    ~PrototypeFactory()
+    {
+        <span style="font-weight:bold;text-decoration:underline">delete</span> prototypes_[Type::PROTOTYPE_1];
+        <span style="font-weight:bold;text-decoration:underline">delete</span> prototypes_[Type::PROTOTYPE_2];
+    }
+
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 注意这里需要明确希望复制的原型类型, 方法会从该类型的对象创造原型.
+</span><span style="color:#888;font-style:italic">     */</span>
+    std::unique_ptr&lt;Prototype&gt; CreatePrototype(Type type)
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> prototypes_[type]-&gt;Clone();
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Client</span>(PrototypeFactory &amp;prototype_factory)
+{
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Let&#39;s create a Prototype 1</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    std::unique_ptr&lt;Prototype&gt; prototype =
+        prototype_factory.CreatePrototype(Type::PROTOTYPE_1);
+    <span style="color:#888;font-style:italic">// prototype_factory-&gt;CreatePrototype(Type::PROTOTYPE_1);
+</span><span style="color:#888;font-style:italic"></span>    prototype-&gt;Method(90);
+    <span style="color:#888;font-style:italic">// delete prototype;
+</span><span style="color:#888;font-style:italic"></span>
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    <span style="color:#888;font-style:italic">// std::cout &lt;&lt; &#34;Lets&#39; create a Prototype 2\n&#34;;
+</span><span style="color:#888;font-style:italic"></span>
+    <span style="color:#888;font-style:italic">// prototype = prototype_factory.CreatePrototype(Type::PROTOTYPE_2);
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// prototype-&gt;Method(10);
+</span><span style="color:#888;font-style:italic"></span>
+    <span style="color:#888;font-style:italic">// delete prototype;
+</span><span style="color:#888;font-style:italic"></span>}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::unique_ptr&lt;PrototypeFactory&gt; prototype_factory(<span style="font-weight:bold;text-decoration:underline">new</span> PrototypeFactory());
+
+    <span style="color:#888;font-style:italic">// PrototypeFactory *prototype_factory = new PrototypeFactory();
+</span><span style="color:#888;font-style:italic"></span>    Client(*prototype_factory);
+    <span style="color:#888;font-style:italic">// delete prototype_factory;
+</span><span style="color:#888;font-style:italic"></span>
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="单例singleton">单例（Singleton）</h3>
+<h4 id="意图-4">意图</h4>
 <p><strong>单例模式</strong>是一种创建型设计模式，让你能够保证一个类只有一个实例，并提供一个访问该实例的全局节点。</p>
 <h4 id="解决方案">解决方案</h4>
 <p>所有单例的实现都包含以下两个相同的步骤：</p>
@@ -652,7 +825,7 @@
 <li>新建一个静态构建方法作为构造函数，该函数会“偷偷”调用私用构造函数来创建对象，并将其保存在一个静态成员变量中。此后所有对于该函数的调用都将返回这一缓存对象。</li>
 </ul>
 <p>如果代码能够访问单例类，那么它就能够调用单例类的静态方法。无论合适调用该方法，它总是会返回相同的对象。</p>
-<h4 id="模式结构-3">模式结构</h4>
+<h4 id="模式结构-4">模式结构</h4>
 <p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/structure-zh-indexed.png" alt="单例模式结构"></p>
 <ol>
 <li>
@@ -660,7 +833,7 @@
 <p>单例的构造函数必须对客户端（Client）代码隐藏。调用 <code>获取实例</code>方法必须是获取单例对象的唯一方式。</p>
 </li>
 </ol>
-<h4 id="优缺点-3">优缺点</h4>
+<h4 id="优缺点-4">优缺点</h4>
 <p>✔️ 可以保证一个类只有一个实例。</p>
 <p>✔️ 获得了一个指向该实例的全局访问节点。</p>
 <p>✔️ 仅在首次请求单例对象时对其进行初始化。</p>
@@ -668,7 +841,7 @@
 <p>❌ 单例模式可能掩盖不良设计，比如程序各组件之间相互了解过多。</p>
 <p>❌ 该模式在多线程环境中需要进行特殊处理，避免多个线程多次创建该单例对象。</p>
 <p>❌ 单例的客户端代码单元测试可能会比较困难，因为许多测试框架以基于继承的方式创建模拟对象。由于单例类的构造函数是私有的，而且绝大多数语言无法重写静态方法，所以需要仔细考虑模拟单例的方法。要么感觉不编写测试代码，或者不使用单例模式。</p>
-<h4 id="代码示例-3">代码示例</h4>
+<h4 id="代码示例-4">代码示例</h4>
 <h5 id="基础单例">基础单例</h5>
 <p>实现一个粗糙的单例非常简单，仅需隐藏构造函数并实现一个静态的构建方法即可。</p>
 <p>相同的类在多线程环境中会出错。多线程可能会同时调用构建方法并获取多个单例类对象。</p>
@@ -1050,14 +1223,22 @@ Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:
             <li><a href="#代码示例-2">代码示例</a></li>
           </ol>
         </li>
-        <li><a href="#原型">原型</a></li>
-        <li><a href="#单例singleton">单例（Singleton）</a>
+        <li><a href="#原型prototype">原型（Prototype）</a>
           <ol>
             <li><a href="#意图-3">意图</a></li>
-            <li><a href="#解决方案">解决方案</a></li>
             <li><a href="#模式结构-3">模式结构</a></li>
+            <li><a href="#原型注册表实现">原型注册表实现</a></li>
             <li><a href="#优缺点-3">优缺点</a></li>
             <li><a href="#代码示例-3">代码示例</a></li>
+          </ol>
+        </li>
+        <li><a href="#单例singleton">单例（Singleton）</a>
+          <ol>
+            <li><a href="#意图-4">意图</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#模式结构-4">模式结构</a></li>
+            <li><a href="#优缺点-4">优缺点</a></li>
+            <li><a href="#代码示例-4">代码示例</a></li>
           </ol>
         </li>
       </ol>
