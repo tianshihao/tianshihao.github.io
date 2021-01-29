@@ -90,7 +90,7 @@
 <li><strong>行为模式</strong>负责对象间的高效沟通和职责委派。</li>
 </ul>
 <p>创建型模式主要包括：工厂方法、抽象工厂、生成器、原型和单例。</p>
-<p>结构性模式主要包括：适配器、桥接、组合、装饰、外观、享元（Flyweight）和代理。</p>
+<p>结构型模式主要包括：适配器、桥接、组合、装饰、外观、享元（Flyweight）和代理。</p>
 <p>行为模式主要包括：责任链、命令、迭代器、中介者、备忘录、观察者、状态、策略、模板方法和访问者。</p>
 <h2 id="创建型模式">创建型模式</h2>
 <h3 id="工厂方法factory-method">工厂方法（Factory Method）</h3>
@@ -1057,129 +1057,328 @@ Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:
 </code></pre></div><h5 id="meyers-singleton">Meyers Singleton</h5>
 <h2 id="结构型模式">结构型模式</h2>
 <h3 id="适配器">适配器</h3>
-<h3 id="桥接">桥接</h3>
-<h3 id="组合">组合</h3>
+<h4 id="意图-5">意图</h4>
+<p><strong>适配器模式</strong>是一种结构型设计模式，它能使接口不兼容的对象能够相互合作。</p>
+<h4 id="结构模式">结构模式</h4>
+<h5 id="对象适配器">对象适配器</h5>
+<p>实现时使用了构成原则：适配器实现了其中一个对象的接口，并对另一个对象进行封装。所有流行的编程语言都可以实现适配器。</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210128135443.png" alt="适配器设计模式的结构（对象适配器）"></p>
+<ol>
+<li><strong>客户端</strong>（Client）是包含当前程序业务逻辑的类。</li>
+<li><strong>客户端接口</strong>（Client Interface）描述了其他类与客户端代码合作时必须遵循的协议。</li>
+<li><strong>服务</strong>（Service）中有一些功能类（通常来自第三方或遗留系统）。客户端与其接口不兼容，因此无法直接调用其功能。</li>
+<li><strong>适配器</strong>（Adapter）是一个可以同时与客户端和服务交互的类：它在实现客户端接口的同时封装了服务对象。适配器接受客户端通过适配器接口发起的调用，并将其转换为适用于被封装服务对象的调用。</li>
+<li>客户端代码只需通过接口与适配器交互即可，无需与具体的适配器类耦合。因此，你可以向程序中添加新类型的适配器而无需修改已有代码。这在服务类的接口被更改或替换时很有用：你无需修改客户端代码就可以创建新的适配器类。</li>
+</ol>
+<h5 id="类适配器">类适配器</h5>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210128135457.png" alt="适配器设计模式（类适配器）"></p>
+<ol>
+<li><strong>类适配器</strong>不需要封装任何对象，因为它同时继承了客户端和服务的行为。适配功能在重写的方法中完成。最后生成的适配器可替代已有的客户端类进行使用。</li>
+</ol>
+<h4 id="优缺点-5">优缺点</h4>
+<p>✔️ <em>单一职责原则</em> 可以将接口或数据转换代码从程序主要业务逻辑中分离。</p>
+<p>✔️ <em>开闭原则</em> 只要客户端代码通过客户端接口与适配器进行交互，你就能在不修改现有客户端代码的情况下在程序中添加新类型的适配器。</p>
+<p>❌ 代码整体复杂度增加，因为需要新增一系列接口和类。有时直接更改服务类使其与其它代码兼容会更简单。</p>
+<h4 id="代码示例-5">代码示例</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * Target 定义客户端代码使用的特定于域的接口.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Target</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Target() = <span style="font-weight:bold;text-decoration:underline">default</span>;
+
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> std::string Request() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;Target: The default target&#39;s behavior.&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * Adaptee 包含一些有用的行为, 但是它的接口与现有的客户机代码不兼容. 在客户
+</span><span style="color:#888;font-style:italic"> * 可以使用它之前, Adaptee 需要一些调整.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Adaptee</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    std::string SpecificRequest() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;.eetpadA eht fo roivaheb laicepS&#34;</span>;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * Adapter 让 Adpatee 的接口和 Target 的接口兼容.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Adapter</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Target
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    Adaptee *adaptee_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    Adapter(Adaptee *adaptee) : adaptee_(adaptee) {}
+    std::string Request() <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        std::string to_reverse = <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;adaptee_-&gt;SpecificRequest();
+        std::reverse(to_reverse.begin(), to_reverse.end());
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="color:#666;font-style:italic">&#34;Adapter: (TRANSLATED) &#34;</span> + to_reverse;
+    }
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 客户代码支持遵循 Target 接口的所有类. 
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>(<span style="font-weight:bold;text-decoration:underline">const</span> Target *target)
+{
+    std::cout &lt;&lt; target-&gt;Request();
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: I can work just fine with the Target objects:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    Target *target = <span style="font-weight:bold;text-decoration:underline">new</span> Target;
+    ClientCode(target);
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    Adaptee *adaptee = <span style="font-weight:bold;text-decoration:underline">new</span> Adaptee;
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: The Adaptee class has a weird interface. See, I don&#39;t understand it:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Adaptee: &#34;</span> &lt;&lt; adaptee-&gt;SpecificRequest();
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Client: But I can work with it via the Adapter:</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    Adapter *adapter = <span style="font-weight:bold;text-decoration:underline">new</span> Adapter(adaptee);
+    ClientCode(adapter);
+    std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    <span style="font-weight:bold;text-decoration:underline">delete</span> target;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> adaptee;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> adapter;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="桥接">桥接</h3>
+<h3 id="组合composite委托--继承">组合（Composite）委托 + 继承</h3>
+<h4 id="意图-6">意图</h4>
+<p><strong>组合模式</strong>是一种结构型设计模式， 你可以使用它将对象组合成树状结构， 并且能像使用独立对象一样使用它们。</p>
+<h4 id="模式结构-5">模式结构</h4>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210128171156.png" alt="组合设计模式的结构"></p>
+<ol>
+<li>
+<p><strong>组件</strong> （Component） 接口描述了树中简单项目和复杂项目所共有的操作。</p>
+</li>
+<li>
+<p><strong>叶节点</strong> （Leaf） 是树的基本结构， 它不包含子项目。</p>
+<p>一般情况下， 叶节点最终会完成大部分的实际工作， 因为它们无法将工作指派给其他部分。</p>
+</li>
+<li>
+<p><strong>容器</strong> （Container）——又名 “组合 （Composite）”——是包含叶节点或其他容器等子项目的单位。 容器不知道其子项目所属的具体类， 它只通过通用的组件接口与其子项目交互。</p>
+<p>容器接收到请求后会将工作分配给自己的子项目， 处理中间结果， 然后将最终结果返回给客户端。</p>
+</li>
+<li>
+<p><strong>客户端</strong> （Client） 通过组件接口与所有项目交互。 因此， 客户端能以相同方式与树状结构中的简单或复杂项目交互。</p>
+</li>
+</ol>
+<h4 id="优缺点-6">优缺点</h4>
 <h3 id="装饰">装饰</h3>
 <h3 id="外观">外观</h3>
 <h3 id="享元flyweight">享元（Flyweight）</h3>
 <h3 id="代理">代理</h3>
 <h2 id="行为模型">行为模型</h2>
-<h3 id="观察者模式observerevent">观察者模式Observer/Event</h3>
-<p>行为型模式。</p>
-<blockquote>
-<p>定义对象间的一种一对多（变化）的依赖关系，以便当一个对象（Subject）的状态发生变化时，所有依赖于它的对象都得到通知并自动更新。</p>
-</blockquote>
+<h3 id="观察者模式observer">观察者模式（Observer）</h3>
+<h4 id="意图-7">意图</h4>
+<p><strong>观察者模式</strong>是一种行为设计模式， 允许你定义一种订阅机制， 可在对象事件发生时通知多个 “观察” 该对象的其他对象。</p>
 <p>实现软件体系结构的松耦合。</p>
-<h4 id="模式的结构">模式的结构</h4>
-<p>观察者模式的主要角色如下：</p>
+<h4 id="模式结构-6">模式结构</h4>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210128104127.png" alt="观察者模式结构"></p>
 <ol>
-<li>抽象主题（Subject）角色：也叫抽象目标类，它提供了一个用于保存观察者对象的聚集类和增加、删除观察者对象的方法，以及通知所有观察者的抽象方法。</li>
-<li>具体主题（Concrete Subject）角色：也叫具体目标类，它实现抽象目标中的通知方法，当具体主题的内部状态发生改变时，通知所有注册过的观察者对象。</li>
-<li>抽象观察者（Observer）角色：它是一个抽象类或接口，它包含了一个更新自己的抽象方法，当接到具体主题的更改通知时被调用。</li>
-<li>具体观察者（Concrete Observer）角色：实现抽象观察者中定义的抽象方法，以便在得到目标的更改通知时更新自身的状态。</li>
+<li><strong>发布者</strong>（Publisher）会向其他对象发送值得关注的事件。事件会在发布者自身状态改变或执行特定行为后发生。发布者中包含一个允许新订阅者加入和当前订阅者离开列表的订阅构架。</li>
+<li>当新事件发生时，发送者会遍历订阅列表并调用每个订阅者对象的通知方法。该方法是在订阅者接口中声明的。</li>
+<li><strong>订阅者</strong>（Subscriber）接口声明了通知接口。在绝大多数情况下，该接口仅包含一个 <code>update</code> 更新方法。该方法可以拥有多个参数，使发布者能在更新时传递事件的详细信息。</li>
+<li><strong>具体订阅者</strong>（Concrete Subscribers）可以执行一些操作来回应发布者的通知。所有具体订阅者类都实现了同样的接口，因此发布者不需要与具体类相耦合。</li>
+<li>订阅者通常需要一些上下文信息来正确地处理更新。因此，发布者通常会将一些上下文数据作为通知方法的参数进行传递。发布者也可将自身作为参数进行传递，使订阅者直接获取所需的数据。</li>
+<li><strong>客户端</strong>（Client）会分别创建发布者和订阅者对象，然后为订阅者注册发布者更新。</li>
 </ol>
-<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E7%BB%93%E6%9E%84.png" alt="观察者模式结构"></p>
-<h4 id="优点">优点：</h4>
-<ol>
-<li>降低了目标与观察者之间的耦合关系，两者之间是抽象耦合关系。符合依赖倒置原则。</li>
-<li>目标与观察者之间建立了一套触发机制。</li>
-</ol>
-<h4 id="缺点">缺点：</h4>
-<ol>
-<li>目标与观察者之间的依赖关系并没有完全解除，而且有可能出现循环引用。</li>
-<li>当观察者对象很多时，通知的发布会花费很多时间，影响程序的效率。</li>
-</ol>
-<h4 id="模式的实现">模式的实现</h4>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+<h4 id="优缺点-7">优缺点</h4>
+<p>✔️ <em>开闭原则</em>。 你无需修改发布者代码就能引入新的订阅者类 （如果是发布者接口则可轻松引入发布者类）。</p>
+<p>✔️ 你可以在运行时建立对象之间的联系。</p>
+<p>❌ 订阅者的通知顺序是随机的。</p>
+<h4 id="代码示例-6">代码示例</h4>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 观察者设计模式
+</span><span style="color:#888;font-style:italic"> *
+</span><span style="color:#888;font-style:italic"> * 目的: 定义一个可以在被多个观察对象观察(订阅)的主题发生任何事件时通知观察对象
+</span><span style="color:#888;font-style:italic"> * 的机制.
+</span><span style="color:#888;font-style:italic"> *
+</span><span style="color:#888;font-style:italic"> * 注意有很多和这个设计模式相关的不同术语, 意思差不多. 只需要记住 Subject(主题)
+</span><span style="color:#888;font-style:italic"> * 也被叫做 Publisher(出版商), Observer(观察者)也被叫做 Subscriber(订阅者),
+</span><span style="color:#888;font-style:italic"> * 反之亦然. 同样, 动词 &#34;观察&#34;, &#34;监听&#34;, &#34;跟踪&#34; 通常指同一件事.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;list&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
-</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
-
-<span style="color:#888;font-style:italic">// 抽象观察者.
-</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Observer</span>
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">IObserver</span>
 {
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="color:#888;font-style:italic">// 纯虚函数.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> Update() = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> Update(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;message_from_subject) = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~IObserver(){};
 };
 
-<span style="color:#888;font-style:italic">// 主题或抽象通知者，一般用一个抽象类或者接口实现
-</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Subject</span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ISubject</span>
 {
-<span style="font-weight:bold;text-decoration:underline">private</span>:
-    <span style="color:#888;font-style:italic">// 维护一个观察者列表.
-</span><span style="color:#888;font-style:italic"></span>    list&lt;Observer *&gt; observers;
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~ISubject(){};
 
 <span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="color:#888;font-style:italic">// 绑定观察者.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">inline</span> <span style="font-weight:bold;text-decoration:underline">void</span> Attach(Observer *observer) { <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;observers.push_back(observer); }
-    <span style="color:#888;font-style:italic">// 解绑观察者.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">inline</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Detach</span>(Observer *observer) { <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;observers.remove(observer); }
-    <span style="color:#888;font-style:italic">// 通知所有的观察者更新.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">inline</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Notify</span>()
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> Attach(IObserver *observer) = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Detach</span>(IObserver *observer) = 0;
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Notify</span>() = 0;
+};
+
+<span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * 主题一些重要的状态, 当状态改变时通知观察者.
+</span><span style="color:#888;font-style:italic"> */</span>
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Subject</span> : <span style="font-weight:bold;text-decoration:underline">public</span> ISubject
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    std::list&lt;IObserver *&gt; list_observer_;
+    std::string message_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Subject()
     {
-        <span style="font-weight:bold;text-decoration:underline">for</span> (<span style="font-weight:bold;text-decoration:underline">auto</span> observer : observers)
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Goodbye, I was the Subject.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 订阅管理方法.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> Attach(IObserver *observer) <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        list_observer_.push_back(observer);
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Detach</span>(IObserver *observer) <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        list_observer_.remove(observer);
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">Notify</span>() <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        std::list&lt;IObserver *&gt;::iterator iterator = list_observer_.begin();
+        HowManyObserver();
+        <span style="font-weight:bold;text-decoration:underline">while</span> (iterator != list_observer_.end())
         {
-            observer-&gt;Update();
+            (*iterator)-&gt;Update(message_);
+            ++iterator;
         }
     }
-};
 
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteSubject</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Subject
-{
-<span style="font-weight:bold;text-decoration:underline">private</span>:
-    <span style="color:#888;font-style:italic">// 主题状态.
-</span><span style="color:#888;font-style:italic"></span>    string subjectState;
-
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="font-weight:bold;text-decoration:underline">inline</span> string GetState() { <span style="font-weight:bold;text-decoration:underline">return</span> subjectState; }
-    <span style="font-weight:bold;text-decoration:underline">inline</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">SetState</span>(string state) { <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;subjectState = state; }
-};
-
-<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ConcreteObserver</span> : <span style="font-weight:bold;text-decoration:underline">public</span> Observer
-{
-<span style="font-weight:bold;text-decoration:underline">private</span>:
-    string name;              <span style="color:#888;font-style:italic">// 观察者姓名.
-</span><span style="color:#888;font-style:italic"></span>    ConcreteSubject *subject; <span style="color:#888;font-style:italic">// 观察者观察的主题.
-</span><span style="color:#888;font-style:italic"></span>    string observerState;     <span style="color:#888;font-style:italic">// 观察者状态.
-</span><span style="color:#888;font-style:italic"></span>
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="color:#888;font-style:italic">// 构造函数.
-</span><span style="color:#888;font-style:italic"></span>    ConcreteObserver(string n, ConcreteSubject *s) : name(n), subject(s) {}
-
-<span style="font-weight:bold;text-decoration:underline">public</span>:
-    <span style="color:#888;font-style:italic">// 更新函数.
-</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">virtual</span> <span style="font-weight:bold;text-decoration:underline">void</span> Update()
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">CreateMessage</span>(std::string message = <span style="color:#666;font-style:italic">&#34;Empty&#34;</span>)
     {
-        observerState = <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;subject-&gt;GetState();
-        cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;observer: &#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;name &lt;&lt; <span style="color:#666;font-style:italic">&#34; updated, its new state is: &#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;observerState &lt;&lt; endl;
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;message_ = message;
+        Notify();
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">HowManyObserver</span>()
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;There are &#34;</span> &lt;&lt; list_observer_.size()
+                  &lt;&lt; <span style="color:#666;font-style:italic">&#34; observers in the list.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
     }
 
-    <span style="font-weight:bold;text-decoration:underline">inline</span> string <span style="color:#666;font-weight:bold;font-style:italic">GetState</span>() { <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;observerState; }
-    <span style="font-weight:bold;text-decoration:underline">inline</span> <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">SetState</span>(string state) { <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;observerState = state; }
+    <span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic">     * 通常, 订阅逻辑只是一个主题真正能做的一小部分. 主题通常拥有一些重要的
+</span><span style="color:#888;font-style:italic">     * 业务逻辑, 每当重要的事情即将发生（或之后发生）时触发通知方法.
+</span><span style="color:#888;font-style:italic">     */</span>
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">SomeBusinessLogic</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;message_ = <span style="color:#666;font-style:italic">&#34;change message message&#34;</span>;
+        Notify();
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;I&#39;m about to do some thing important</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
 };
+
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Observer</span> : <span style="font-weight:bold;text-decoration:underline">public</span> IObserver
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    std::string message_from_subject_;
+    Subject &amp;subject_;
+    <span style="font-weight:bold;text-decoration:underline">static</span> <span style="font-weight:bold;text-decoration:underline">int</span> static_number_;
+    <span style="font-weight:bold;text-decoration:underline">int</span> number_;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    Observer(Subject &amp;subject) : subject_(subject)
+    {
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;subject_.Attach(<span style="font-weight:bold;text-decoration:underline">this</span>);
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Hi, I&#39;m the Observer </span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span>
+                  &lt;&lt; ++Observer::static_number_ &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;number_ = Observer::static_number_;
+    }
+    <span style="font-weight:bold;text-decoration:underline">virtual</span> ~Observer() <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Goodbye, I was the Observer </span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span>
+                  &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;number_ &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> Update(<span style="font-weight:bold;text-decoration:underline">const</span> std::string &amp;message_from_subject) <span style="font-weight:bold;text-decoration:underline">override</span>
+    {
+        message_from_subject_ = message_from_subject;
+        PrintInfo();
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">RemoveMeFromTheList</span>()
+    {
+        subject_.Detach(<span style="font-weight:bold;text-decoration:underline">this</span>);
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Observer </span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; number_ &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic"> removed from the list.</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">PrintInfo</span>()
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Observer </span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;number_
+                  &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">: a new message is available --&gt; &#34;</span>
+                  &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;message_from_subject_ &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> Observer::static_number_ = 0;
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">ClientCode</span>()
+{
+    Subject *subject = <span style="font-weight:bold;text-decoration:underline">new</span> Subject;
+    Observer *observer1 = <span style="font-weight:bold;text-decoration:underline">new</span> Observer(*subject);
+    Observer *observer2 = <span style="font-weight:bold;text-decoration:underline">new</span> Observer(*subject);
+    Observer *observer3 = <span style="font-weight:bold;text-decoration:underline">new</span> Observer(*subject);
+    Observer *observer4;
+    Observer *observer5;
+
+    subject-&gt;CreateMessage(<span style="color:#666;font-style:italic">&#34;Hello World! :D&#34;</span>);
+    observer3-&gt;RemoveMeFromTheList();
+
+    subject-&gt;CreateMessage(<span style="color:#666;font-style:italic">&#34;The weather is hot today! :p&#34;</span>);
+    observer4 = <span style="font-weight:bold;text-decoration:underline">new</span> Observer(*subject);
+
+    observer2-&gt;RemoveMeFromTheList();
+    observer5 = <span style="font-weight:bold;text-decoration:underline">new</span> Observer(*subject);
+
+    subject-&gt;CreateMessage(<span style="color:#666;font-style:italic">&#34;My new car is great! ;)&#34;</span>);
+    observer5-&gt;RemoveMeFromTheList();
+
+    observer4-&gt;RemoveMeFromTheList();
+    observer1-&gt;RemoveMeFromTheList();
+
+    <span style="font-weight:bold;text-decoration:underline">delete</span> observer5;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> observer4;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> observer3;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> observer2;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> observer1;
+    <span style="font-weight:bold;text-decoration:underline">delete</span> subject;
+}
 
 <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
 {
-    ConcreteSubject *s = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteSubject();
-    s-&gt;SetState(<span style="color:#666;font-style:italic">&#34;ABC&#34;</span>);
-
-    ConcreteObserver *ox = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteObserver(<span style="color:#666;font-style:italic">&#34;x&#34;</span>, s);
-    ConcreteObserver *oy = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteObserver(<span style="color:#666;font-style:italic">&#34;y&#34;</span>, s);
-    ConcreteObserver *oz = <span style="font-weight:bold;text-decoration:underline">new</span> ConcreteObserver(<span style="color:#666;font-style:italic">&#34;z&#34;</span>, s);
-
-    s-&gt;Attach(ox);
-    s-&gt;Attach(oy);
-    s-&gt;Attach(oz);
-    s-&gt;Notify();
-
-    s-&gt;SetState(<span style="color:#666;font-style:italic">&#34;XYZ&#34;</span>);
-    s-&gt;Notify();
-
-    <span style="font-weight:bold;text-decoration:underline">delete</span> ox;
-    <span style="font-weight:bold;text-decoration:underline">delete</span> oy;
-    <span style="font-weight:bold;text-decoration:underline">delete</span> oz;
-    <span style="font-weight:bold;text-decoration:underline">delete</span> s;
+    ClientCode();
 
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
@@ -1241,9 +1440,22 @@ Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:
     </li>
     <li><a href="#结构型模式">结构型模式</a>
       <ol>
-        <li><a href="#适配器">适配器</a></li>
+        <li><a href="#适配器">适配器</a>
+          <ol>
+            <li><a href="#意图-5">意图</a></li>
+            <li><a href="#结构模式">结构模式</a></li>
+            <li><a href="#优缺点-5">优缺点</a></li>
+            <li><a href="#代码示例-5">代码示例</a></li>
+          </ol>
+        </li>
         <li><a href="#桥接">桥接</a></li>
-        <li><a href="#组合">组合</a></li>
+        <li><a href="#组合composite委托--继承">组合（Composite）委托 + 继承</a>
+          <ol>
+            <li><a href="#意图-6">意图</a></li>
+            <li><a href="#模式结构-5">模式结构</a></li>
+            <li><a href="#优缺点-6">优缺点</a></li>
+          </ol>
+        </li>
         <li><a href="#装饰">装饰</a></li>
         <li><a href="#外观">外观</a></li>
         <li><a href="#享元flyweight">享元（Flyweight）</a></li>
@@ -1252,12 +1464,12 @@ Singleton *Singleton::GetInstance(<span style="font-weight:bold;text-decoration:
     </li>
     <li><a href="#行为模型">行为模型</a>
       <ol>
-        <li><a href="#观察者模式observerevent">观察者模式Observer/Event</a>
+        <li><a href="#观察者模式observer">观察者模式（Observer）</a>
           <ol>
-            <li><a href="#模式的结构">模式的结构</a></li>
-            <li><a href="#优点">优点：</a></li>
-            <li><a href="#缺点">缺点：</a></li>
-            <li><a href="#模式的实现">模式的实现</a></li>
+            <li><a href="#意图-7">意图</a></li>
+            <li><a href="#模式结构-6">模式结构</a></li>
+            <li><a href="#优缺点-7">优缺点</a></li>
+            <li><a href="#代码示例-6">代码示例</a></li>
           </ol>
         </li>
       </ol>
