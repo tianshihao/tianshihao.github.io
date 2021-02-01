@@ -6,7 +6,61 @@
     <description>Recent content in Tags on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 25 Jan 2021 20:30:47 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 31 Jan 2021 19:09:22 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>右值</title>
+      <link>https://tianshihao.github.io/tags/%E5%8F%B3%E5%80%BC/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E5%8F%B3%E5%80%BC/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>右值引用</title>
+      <link>https://tianshihao.github.io/tags/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>强制移动</title>
+      <link>https://tianshihao.github.io/tags/%E5%BC%BA%E5%88%B6%E7%A7%BB%E5%8A%A8/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E5%BC%BA%E5%88%B6%E7%A7%BB%E5%8A%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>移动构造函数</title>
+      <link>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>移动语义</title>
+      <link>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>移动赋值运算符</title>
+      <link>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</link>
+      <pubDate>Sun, 31 Jan 2021 19:09:22 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Git</title>
       <link>https://tianshihao.github.io/tags/git/</link>
