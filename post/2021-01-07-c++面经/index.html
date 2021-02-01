@@ -342,7 +342,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 </ul>
 <p>虽然非虚函数的效率比虚函数稍高，但不具备<strong>动态联编</strong>功能。</p>
 <h2 id="5-静态函数和虚函数的区别">5. 静态函数和虚函数的区别</h2>
-<p>静态函数在编译时确定运行时机，虚函数在运行时进行动态绑定。</p>
+<p>静态函数在编译时确定运行时机，<strong>虚函数在运行时进行动态绑定</strong>。</p>
 <p>虚函数因为用了虚函数表机制，调用的时候会增加一次内存开销。</p>
 <h2 id="6-重载overload重写override和改写overwrite的区别">6. 重载（Overload）、重写（Override）和改写（Overwrite）的区别</h2>
 <table>
@@ -445,8 +445,11 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <li><strong>引用</strong>类型；</li>
 <li><strong>没有默认构造函数的对象</strong>必须使用成员初始化列表进行初始化。</li>
 </ol>
-<h2 id="9-构造函数为什么不定义成虚函数">9. 构造函数为什么不定义成虚函数</h2>
-<p>构造函数不能是虚函数。创建派生类对象时，将调用派生类的构造函数，而不是基类的构造函数，然后，派生类的构造函数将使用基类的一个构造函数，这种顺序不同于继承机制。因此，派生类不继承基类的构造函数，所以将类构造函数声明为虚的没什么意义。</p>
+<h2 id="9-构造函数为什么不定义成虚函数5">9. 构造函数为什么不定义成虚函数<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></h2>
+<h3 id="从实现角度">从实现角度</h3>
+<p>虚函数的实现机制是在类中添加一个隐含的指向虚函数表的指针，这个指向虚函数表的指针其实是存储在对象的内存空间中的。虚函数表在构造函数调用后才建立的，如果构造函数是虚的，就需要通过虚函数表来调用，可是还没有调用构造函数，对象还没有实例化，也就没有内存空间，找不到虚函数表，所以<strong>构造函数不能是虚函数</strong>。</p>
+<h3 id="从使用角度">从使用角度</h3>
+<p>虚函数主要用于在信息不全的情况下，能使重载的函数得到对应的调用。构造函数本身就是要初始化实例，那使用虚函数没有实际意义。<strong>构造函数没有必要是虚函数</strong>。虚函数的作用在于通过基类的指针或者引用来调用派生类重写的虚函数。而构造函数是在创建对象时自动调用的，不可能通过基类的指针或者引用去调用，因此也就规定构造函数不能是虚函数。</p>
 <h2 id="10-什么时候调用复制构造函数">10. 什么时候调用复制构造函数</h2>
 <ol>
 <li>对象以<strong>值传递</strong>的方式传入函数参数；</li>
@@ -892,7 +895,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <h2 id="14-volatile百度贴吧后端研发一面">14. volatile（百度贴吧后端研发一面）</h2>
 <p><code>volatile</code> 的意思是“脆弱的”，表明它修饰的变量的值十分容易被改变，所以编译器就不会对这个变量进行优化（CPU 的优化是让该变量存放到 CPU 寄存器而不是内存），进而<strong>提供稳定的访问</strong>。每次读取 <code>volatile</code> 的变量时，<strong>系统总是会从内存中读取这个变量，并且将它的值立刻保存</strong>。</p>
 <p>多线程操作，每个线程有自己的寄存器，正常改变量是在寄存器里面改，改完之后线程之间很难同步，所以使用 <code>volatile</code>，直接在内存中修改、生效，便于多线程同步。一般在多个线程操作一个变量时会给变量添加关键字 <code>volatile</code>。</p>
-<h2 id="15-函数签名signature4">15. 函数签名（Signature）<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></h2>
+<h2 id="15-函数签名signature4">15. 函数签名（Signature）<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></h2>
 <p>包含了一个函数的信息，包括<strong>函数名、参数类型、参数个数、顺序以及它所在的类和命名空间</strong>。普通函数签名并不包含函数返回值部分，如果两个函数仅仅只有函数返回值不同，那么系统是无法区分这两个函数的，此时编译器会提示语法错误。<strong>函数签名用于识别不同的函数</strong>，函数的名字只是函数签名的一部分。在编译器及链接器处理符号时，使用某种名称修饰的方法，使得每个函数签名对应一个修饰后名称（Decorated Name）。编译器在将 C++ 源代码编译成目标文件时，会将函数和变量的名字进行修饰，形成符号名，也就是说，C++ 的源代码编译后的目标文件中所使用的符号名是相应的函数和变量的修饰后名称。<strong>C++ 编译器和链接器都使用符号来识别和处理函数和变量，所以对于不同函数签名的函数，即使函数名相同，编译器和链接器都认为它们是不同的函数</strong>。</p>
 <p>不同的编译器厂商的名称修饰方法可能不同，所以不同的编译器对于同一个函数签名可能对应不同的修饰后名称。</p>
 <section class="footnotes" role="doc-endnotes">
@@ -908,7 +911,10 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <p><a href="https://zhuanlan.zhihu.com/p/260992059">https://zhuanlan.zhihu.com/p/260992059</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p><a href="https://blog.csdn.net/fengbingchun/article/details/79133749">https://blog.csdn.net/fengbingchun/article/details/79133749</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://www.cnblogs.com/lixiaohui-ambition/archive/2012/08/28/2660708.html">https://www.cnblogs.com/lixiaohui-ambition/archive/2012/08/28/2660708.html</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p><a href="https://blog.csdn.net/fengbingchun/article/details/79133749">https://blog.csdn.net/fengbingchun/article/details/79133749</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
@@ -994,7 +1000,12 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     </li>
     <li><a href="#7-关键字-override-和-final">7. 关键字 override 和 final</a></li>
     <li><a href="#8-构造函数的成员初始化列表">8. 构造函数的成员初始化列表</a></li>
-    <li><a href="#9-构造函数为什么不定义成虚函数">9. 构造函数为什么不定义成虚函数</a></li>
+    <li><a href="#9-构造函数为什么不定义成虚函数5">9. 构造函数为什么不定义成虚函数</a>
+      <ol>
+        <li><a href="#从实现角度">从实现角度</a></li>
+        <li><a href="#从使用角度">从使用角度</a></li>
+      </ol>
+    </li>
     <li><a href="#10-什么时候调用复制构造函数">10. 什么时候调用复制构造函数</a></li>
     <li><a href="#11-复制构造函数的参数是否能通过值传递">11. 复制构造函数的参数是否能通过值传递</a></li>
     <li><a href="#12-移动构造函数">12. 移动构造函数</a></li>
