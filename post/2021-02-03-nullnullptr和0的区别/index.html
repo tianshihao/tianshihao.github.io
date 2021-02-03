@@ -78,7 +78,44 @@
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p>asdfsdaf</p>
+            <h2 id="c-语言中的-null1">C 语言中的 NULL<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></h2>
+<p>在 C 语言中一般使用 <code>NULL</code> 表示空指针，它通常被定义成：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#888;font-weight:bold">#define NULL ((void *)0)
+</span><span style="color:#888;font-weight:bold"></span>
+</code></pre></div><p>也就是说，<code>NULL</code> 实际上是一个 <code>void</code> 类型指针。在使用 <code>NULL</code> 返回其它类型的指针时，<code>NULL</code> 会被隐式转换成相应的类型。</p>
+<p>在强类型的 C++ 中，<code>void *</code> 是不能被隐式转换成其它类型指针的，所以通常情况下，编译器提供的头文件会这样定义 <code>NULL</code>：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#ifdef __cplusplus
+</span><span style="color:#888;font-weight:bold">#define NULL 0
+</span><span style="color:#888;font-weight:bold">#else
+</span><span style="color:#888;font-weight:bold">#define NULL ((void *)0)
+</span><span style="color:#888;font-weight:bold">#endif
+</span><span style="color:#888;font-weight:bold"></span>
+</code></pre></div><h2 id="c-的-0">C++ 的 0</h2>
+<p>从上面的代码可以看出，C++ 中引入了 0 来表示空指针。用 0 表示指针有缺陷。例如声明以下函数：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">bar</span>(sometype1 a, sometype2 *b); <span style="color:#888;font-style:italic">// #1
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">bar</span>(sometype1 a, <span style="font-weight:bold;text-decoration:underline">int</span> i);        <span style="color:#888;font-style:italic">// #2
+</span><span style="color:#888;font-style:italic"></span>
+bar(a, b); <span style="color:#888;font-style:italic">// #3
+</span><span style="color:#888;font-style:italic"></span>bar(a, 0); <span style="color:#888;font-style:italic">// #4
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>当只存在 #1 声明时，代码正常编译运行的。但如果将 #1 重载，添加了 #2 版本，那么函数就不能够正常编译运行了：<strong>#4 中的 0 是整型，但 0 同时还能表示空指针</strong>。当然可以对代码做修改：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bar(a, <span style="font-weight:bold;text-decoration:underline">static_cast</span>&lt;sometype2 *&gt;(0)); <span style="color:#888;font-style:italic">// #4
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>但这样使用起来不方便。</p>
+<h2 id="c-的-nullptr">C++ 的 nullptr</h2>
+<p>C++11 中引入了 <code>nullptr</code> 表示空指针，使用 <code>nullptr</code> 能避免 0 指针的二义性问题。</p>
+<p><code>nullptr</code> 是一个字面值常量，类型为 <code>std::nullptr_t</code>，它可以转换为任意类型的指针。<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://www.cnblogs.com/porter/p/3611718.html">https://www.cnblogs.com/porter/p/3611718.html</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://blog.csdn.net/zzq060143/article/details/96278516">https://blog.csdn.net/zzq060143/article/details/96278516</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
 
         </div>
 
@@ -86,7 +123,13 @@
         
         <div class="article-toc" >
             <h3></h3>
-            <nav id="TableOfContents"></nav>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#c-语言中的-null1">C 语言中的 NULL</a></li>
+    <li><a href="#c-的-0">C++ 的 0</a></li>
+    <li><a href="#c-的-nullptr">C++ 的 nullptr</a></li>
+  </ol>
+</nav>
         </div>
         
         
