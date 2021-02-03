@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>namespace on 水上书</title>
+    <link>https://tianshihao.github.io/tags/namespace/</link>
+    <description>Recent content in namespace on 水上书</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 13 Dec 2020 22:55:02 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/namespace/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>名称空间</title>
+      <link>https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/</link>
+      <pubDate>Sun, 13 Dec 2020 22:55:02 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2020-12-13-%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4/</guid>
+      <description>&lt;p&gt;C++新增了这样一种功能，即通过定义一种新的声明区域来创建命名的名称空间，这样做的目的之一是提供了一个声明名称的区域。一个名称空间中的名称不会与另一个名称空间的相同名称发生冲突，同时允许程序的其他部分使用该名称空间中声明的东西。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

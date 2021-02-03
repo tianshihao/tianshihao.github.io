@@ -6,7 +6,16 @@
     <description>Recent content on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 31 Jan 2021 19:09:22 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NULL、nullptr 和 0 的区别</title>
+      <link>https://tianshihao.github.io/post/2021-02-03-nullnullptr%E5%92%8C0%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-03-nullnullptr%E5%92%8C0%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>asdfsdaf</description>
+    </item>
+    
     <item>
       <title>➡️右值引用和移动构造函数</title>
       <link>https://tianshihao.github.io/post/2021-01-31-%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/</link>

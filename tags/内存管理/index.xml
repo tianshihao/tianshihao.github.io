@@ -17,6 +17,34 @@
     </item>
     
     <item>
+      <title>存储持续性、作用域和链接性之二</title>
+      <link>https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/</link>
+      <pubDate>Sun, 13 Dec 2020 14:35:02 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/</guid>
+      <description>&lt;p&gt;除了线程存储持续性，C++使用三种不同的方案来存储数据，这些方案的区别就在于数据保留在内存中的时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自动存储持续性：在函数定义中声明的变量（包括函数参数）的存储持续性是自动的。它们在程序开始执行其所属的函数或代码块时被创建，在执行完函数或代码块时，它们使用的内存被释放。C++有两种存储持续性为自动的变量。&lt;/li&gt;
+&lt;li&gt;静态存储持续性：在函数定义外定义的变量和使用关键字&lt;code&gt;static&lt;/code&gt;定义的变量的存储持续性为静态。它们在程序整个运行过程中都存在。C++有三种存储持续性为静态的变量。&lt;/li&gt;
+&lt;li&gt;动态存储持续性：用&lt;code&gt;new&lt;/code&gt;运算符分配的内存将一直存在，直到使用&lt;code&gt;delete&lt;/code&gt;运算符将其释放或程序结束为止。这种内存的持续性为动态，有时也被成为自由存储（free store）和堆（heap）。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>存储持续性、作用域和链接性</title>
+      <link>https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/</link>
+      <pubDate>Sun, 13 Dec 2020 13:51:27 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/</guid>
+      <description>&lt;p&gt;除了线程存储持续性，C++使用三种不同的方案来存储数据，这些方案的区别就在于数据保留在内存中的时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自动存储持续性：在函数定义中声明的变量（包括函数参数）的存储持续性是自动的。它们在程序开始执行其所属的函数或代码块时被创建，在执行完函数或代码块时，它们使用的内存被释放。C++有两种存储持续性为自动的变量。&lt;/li&gt;
+&lt;li&gt;静态存储持续性：在函数定义外定义的变量和使用关键字&lt;code&gt;static&lt;/code&gt;定义的变量的存储持续性为静态。它们在程序整个运行过程中都存在。C++有三种存储持续性为静态的变量。&lt;/li&gt;
+&lt;li&gt;动态存储持续性：用&lt;code&gt;new&lt;/code&gt;运算符分配的内存将一直存在，直到使用&lt;code&gt;delete&lt;/code&gt;运算符将其释放或程序结束为止。这种内存的持续性为动态，有时也被成为自由存储（free store）和堆（heap）。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
       <title>内存管理基础</title>
       <link>https://tianshihao.github.io/post/2020-12-03-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Thu, 03 Dec 2020 19:39:37 +0000</pubDate>

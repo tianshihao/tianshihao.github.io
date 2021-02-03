@@ -876,6 +876,23 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <h3 id="114-const-修饰类成员函数">11.4 const 修饰类成员函数</h3>
 <p><code>const</code> 修饰类成员函数，其目的是<strong>防止成员函数修改被调用对象的值</strong>，如果我们不想修改一个调用对象的值，所有的成员函数都应当声明为 <code>const</code> 成员函数。</p>
 <p>如果有个成员函数想修改对象中的某一个成员怎么办？这时我们可以使用 <code>mutable</code> 关键字修饰这个成员，<code>mutable</code> 的意思也是易变的，容易改变的意思，<strong>被 <code>mutable</code> 关键字修饰的成员可以处于不断变化中</strong>。</p>
+<p>一般会重写一个类成员函数，让其既有被 <code>const</code> 修饰的版本，又有普通版本，例如以下情况：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">A</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> f()
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;not const</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">f</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;const</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+	}
+};
+
+</code></pre></div><p>这样做的意义是，或者说为什么这样做，是类 A 的 <code>const</code> 对象调用 <code>void f() const</code>，而非 <code>const</code> 对象调用 <code>void f()</code>。</p>
 <h2 id="12-以下四行代码的区别">12. 以下四行代码的区别</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *arr1 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
 <span style="font-weight:bold;text-decoration:underline">char</span> *arr2 = <span style="color:#666;font-style:italic">&#34;123&#34;</span>;
