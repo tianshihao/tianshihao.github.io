@@ -721,11 +721,11 @@ std::set&lt;std::string&gt; copySet = mySet;
 }
 <span style="font-weight:bold;text-decoration:underline">else</span>
 {
-    it++;
+    ++it;
 }
 </code></pre></div></li>
 <li>
-<p>对于关联容器<code>set</code>、<code>map</code> ，使用 <code>erase()</code> 删除元素后，当前元素的迭代器失效，但由于其结构是红黑树，删除树中某一个结点，不会影响下一个元素的迭代器，所以只需在使用 <code>erase()</code> 之前记录下一个元素的迭代器即可。正确的删除方法是</p>
+<p>对于关联容器<code>set</code>、<code>map</code> ，使用 <code>erase()</code> 删除元素后，当前元素的迭代器失效，但由于其结构是红黑树，删除树中某一个结点，不会影响下一个元素的迭代器，所以只需在使用 <code>erase()</code> 递增当前迭代器即可。正确的删除方法是</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;map&gt;</span><span style="color:#888;font-weight:bold">
 </span><span style="color:#888;font-weight:bold"></span>   
@@ -744,7 +744,7 @@ std::set&lt;std::string&gt; copySet = mySet;
     {
         <span style="font-weight:bold;text-decoration:underline">if</span> (it-&gt;first % 2 == 1)
         {
-            it = c.erase(it);
+            c.erase(it++);
         }
         <span style="font-weight:bold;text-decoration:underline">else</span>
         {
