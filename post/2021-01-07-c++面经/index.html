@@ -797,9 +797,41 @@ size of object is:      8
 }
 
 </code></pre></div><h3 id="73-const_cast">7.3 const_cast</h3>
-<p>用于修改类型的 <code>const</code> 或 <code>volatile</code> 属性。</p>
-<p>用于<strong>去除const常量属性</strong>，使其可以修改，也就是说，原本定义为 <code>const</code> 的变量在定义后就不能进行修改的，但是使用 <code>const_cast</code> 操作之后，可以通过这个指针或变量进行修改；另外还有 <code>volatile</code> 属性的转换。</p>
-<h3 id="74-reinterpret_cast">7.4 reinterpret_cast</h3>
+<p><code>const_cast</code> 是一种强制类型转化，设置指针指向对象的 <code>const</code> 和 <code>volatile</code> 属性。除了 <code>const</code> 或 <code>volatile</code> 属性以外，<code>new_type</code> 和 <code>expression</code> 的类型是一样，<strong>即 <code>const_cast</code> 只能调节类型限定符，不能更改基础类型</strong>。<code>const_cast</code> 主要有以下几种用法：</p>
+<ol>
+<li>常量指针被转化为非常量指针，并且仍然可以指向原来的对象；</li>
+<li>常量引用被转换为非常量引用，并且仍然可以指向原来的对象；</li>
+<li><code>const_cast</code> 一般用于修改底层指针，如 <code>const char *p</code> 形式。</li>
+</ol>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> g = 20;
+<span style="font-weight:bold;text-decoration:underline">int</span> *h = <span style="font-weight:bold;text-decoration:underline">const_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">int</span> *&gt;(&amp;g); <span style="color:#888;font-style:italic">// #1
+</span><span style="color:#888;font-style:italic"></span>*h = 30; <span style="color:#888;font-style:italic">// 合法. 利用指针 h 修改了 g 的值.
+</span><span style="color:#888;font-style:italic"></span>g = 30; <span style="color:#888;font-style:italic">// 非法. 仍然不能直接修改原变量.
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">int</span> g = 20;
+<span style="font-weight:bold;text-decoration:underline">int</span> &amp;h = <span style="font-weight:bold;text-decoration:underline">const_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">int</span> &amp;&gt;(g); <span style="color:#888;font-style:italic">// #2 
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *g = <span style="color:#666;font-style:italic">&#34;hello&#34;</span>;
+<span style="font-weight:bold;text-decoration:underline">char</span> *h = <span style="font-weight:bold;text-decoration:underline">const_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">char</span> *&gt;(g);
+<span style="color:#888;font-style:italic">// todo 验证是否可以通过修改指针 h 从而修改指针 g 指向的内容.
+</span></code></pre></div><p>上例中，#1 和 #2 都可通过 <code>const_cast</code> 转换得到的新变量修改原来带有 <code>const</code> 属性变量的内容。需要注意的是 #1 和 #2 中 expression 语法不同，一个是 <code>(&amp;g)</code>，一个是 <code>(g)</code>。</p>
+<p>另外 <code>const_cast</code> 还可以用在将一个指向带有 <code>const</code> 属性的指针传递给期望接收到非 <code>const</code> 属性指针作为参数的函数中<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// const_cast
+</span><span style="color:#888;font-style:italic"></span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">print</span> (<span style="font-weight:bold;text-decoration:underline">char</span> * str)
+{
+  cout &lt;&lt; str &lt;&lt; <span style="color:#666;font-style:italic">&#39;\n&#39;</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span> () {
+  <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> * c = <span style="color:#666;font-style:italic">&#34;sample text&#34;</span>;
+  print ( <span style="font-weight:bold;text-decoration:underline">const_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">char</span> *&gt; (c) );
+  <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="74-reinterpret_cast">7.4 reinterpret_cast</h3>
 <p>几乎什么都可以转，用在任意的指针之间的转换，引用之间的转换，指针和足够大的 <code>int</code> 型之间的转换，整数到指针的转换等。但是<strong>不够安全</strong>，可能会出问题，尽量少用。</p>
 <h3 id="75-c-的强制转换">7.5 C 的强制转换</h3>
 <p>C的强制转换表面上看起来功能强大什么都能转，但是转化不够明确，不能进行错误检查，<strong>容易出错</strong>。</p>
@@ -949,7 +981,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <h2 id="14-volatile百度贴吧后端研发一面">14. volatile（百度贴吧后端研发一面）</h2>
 <p><code>volatile</code> 的意思是“脆弱的”，表明它修饰的变量的值十分容易被改变，所以编译器就不会对这个变量进行优化（CPU 的优化是让该变量存放到 CPU 寄存器而不是内存），进而<strong>提供稳定的访问</strong>。每次读取 <code>volatile</code> 的变量时，<strong>系统总是会从内存中读取这个变量，并且将它的值立刻保存</strong>。</p>
 <p>多线程操作，每个线程有自己的寄存器，正常改变量是在寄存器里面改，改完之后线程之间很难同步，所以使用 <code>volatile</code>，直接在内存中修改、生效，便于多线程同步。一般在多个线程操作一个变量时会给变量添加关键字 <code>volatile</code>。</p>
-<h2 id="15-函数签名signature4">15. 函数签名（Signature）<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></h2>
+<h2 id="15-函数签名signature4">15. 函数签名（Signature）<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup></h2>
 <p>包含了一个函数的信息，包括<strong>函数名、参数类型、参数个数、顺序以及它所在的类和命名空间</strong>。普通函数签名并不包含函数返回值部分，如果两个函数仅仅只有函数返回值不同，那么系统是无法区分这两个函数的，此时编译器会提示语法错误。<strong>函数签名用于识别不同的函数</strong>，函数的名字只是函数签名的一部分。在编译器及链接器处理符号时，使用某种名称修饰的方法，使得每个函数签名对应一个修饰后名称（Decorated Name）。编译器在将 C++ 源代码编译成目标文件时，会将函数和变量的名字进行修饰，形成符号名，也就是说，C++ 的源代码编译后的目标文件中所使用的符号名是相应的函数和变量的修饰后名称。<strong>C++ 编译器和链接器都使用符号来识别和处理函数和变量，所以对于不同函数签名的函数，即使函数名相同，编译器和链接器都认为它们是不同的函数</strong>。</p>
 <p>不同的编译器厂商的名称修饰方法可能不同，所以不同的编译器对于同一个函数签名可能对应不同的修饰后名称。</p>
 <section class="footnotes" role="doc-endnotes">
@@ -968,7 +1000,10 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
 <p><a href="https://www.cnblogs.com/lixiaohui-ambition/archive/2012/08/28/2660708.html">https://www.cnblogs.com/lixiaohui-ambition/archive/2012/08/28/2660708.html</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p><a href="https://blog.csdn.net/fengbingchun/article/details/79133749">https://blog.csdn.net/fengbingchun/article/details/79133749</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="http://www.cplusplus.com/doc/tutorial/typecasting/#const_cast">http://www.cplusplus.com/doc/tutorial/typecasting/#const_cast</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p><a href="https://blog.csdn.net/fengbingchun/article/details/79133749">https://blog.csdn.net/fengbingchun/article/details/79133749</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
