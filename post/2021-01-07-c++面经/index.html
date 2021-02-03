@@ -748,19 +748,55 @@ size of object is:      8
     retuen 0;
 }
 
-</code></pre></div><h2 id="7-c的四种强制类型转换">7. C++的四种强制类型转换</h2>
-<p>四种强制类型转换操作符分别为：<code>static_cast</code>、<code>dynamic_cast</code>、<code>const_cast</code>、<code>reinterpret_cast</code>。</p>
+</code></pre></div><h2 id="7-c-的四种强制类型转换">7. C++ 的四种强制类型转换</h2>
+<p>四种强制类型转换操作符分别为：<code>static_cast</code>、<code>dynamic_cast</code>、<code>const_cast</code> 和 <code>reinterpret_cast</code>。</p>
 <h3 id="71-static_cast">7.1 static_cast</h3>
-<p>用于各种<strong>隐式转换</strong>。具体的说，就是用户各种基本数据类型之间的转换，比如把 <code>int</code> 换成 <code>char</code>，<code>float</code> 换成 <code>int</code> ，比如<strong>非 <code>const</code></strong> 转<code> const</code> ，<code>void *</code> 转指针。</p>
-<p>不能转换 <code>const</code>、<code>volatile</code>等属性。</p>
-<p>还可用于多态向上转换，即派生类的指针转换成基类指针；如果是向下转换，能成功，但是不安全，结果未知。</p>
-<h3 id="72-dynamic_cast">7.2 dynamic_cast</h3>
-<p>用于<strong>动态类型转换</strong>。具体的说，只能用于含有<strong>虚函数</strong>的类，用于类层次间的向上和向下转化，就是在基类指针到派生类指针，或者派生类到基类指针的转换。
-<code>dynamic_cast</code> 能够提供运行时类型检查。
-向下转化时，如果是非法的，对于指针返回 <code>nullptr</code>，对于引用抛异常。</p>
-<p>向上转换：指的是派生类向基类的转换。</p>
-<p>向下转换：指的是基类向派生类的转换。</p>
-<h3 id="73-const_cast">7.3 const_cast</h3>
+<p>相当于 C 语言中的强制类型转换。<strong>没有运行时类类型检查来包装转换的安全性</strong>。<code>static_cast</code> 主要有以下几种用法：</p>
+<ol>
+<li>类层次结构中基类和派生类指针或引用之间的转换；
+<ol>
+<li>用于上行转换（又称向上转换，指把派生类的指针或者引用转换成基类的指针或者引用）是安全的；</li>
+<li>用于下行转换时，由于没有动态类型检查，是不安全的。</li>
+</ol>
+</li>
+<li>用于基本数据类型之间的转换，如把 <code>int</code> 转换成 <code>char</code>，<code>float</code> 转换成 <code>int</code>；</li>
+<li>用于把空指针转换成目标类型的空指针；</li>
+<li>用于把任何类型的表达式转换成 <code>void</code> 类型。</li>
+</ol>
+<p><code>static_cast</code> 不能转换 <code>const</code>、<code>volatile</code>等属性。</p>
+<h3 id="72-dynamic_cast阅文-c-一面">7.2 dynamic_cast（阅文 C++ 一面）</h3>
+<p><code>dynamic_cast</code> 主要用于类层次之间的上行转换和下行转换，还可用于类之间的交叉转换（cross cast），<code>dynamic_cast</code> 能够提供运行时类型检查。</p>
+<p>上行转换时，和 <code>static_cast</code> 的效果是一样的。</p>
+<p>下行转换时，因为 <code>dynamic_cast</code> 具有类型检查的功能，比 <code>static_cast</code> 更安全，如果检测到转换是非法的，对于指针返回 <code>nullptr</code>，对于引用抛出异常。</p>
+<h4 id="对于指针类型">对于指针类型</h4>
+<p>在 <code>if</code> 语句中定义指针 <code>dp</code> 的好处是可以一个操作中同时完成类型转换和条件检查两项任务。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 利用 dynamic_cast 的类型转换功能检查检查转换是否合法.
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">if</span> (Derived *dp = <span style="font-weight:bold;text-decoration:underline">dynamic_cast</span>&lt;Derived *&gt;(bp))
+{
+    <span style="color:#888;font-style:italic">// 如果下行转换没有问题, 则使用 bp 指向 Derived 对象.
+</span><span style="color:#888;font-style:italic"></span>}
+<span style="color:#888;font-style:italic">// 如果转换不合法, 返回 nullptr.
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">else</span>
+{
+    <span style="color:#888;font-style:italic">// 使用 bp 指向 Base 对象.
+</span><span style="color:#888;font-style:italic"></span>}
+
+</code></pre></div><h4 id="对于引用类型">对于引用类型</h4>
+<p>引用类型转换失败时，会抛出 <code>std::bad_cast</code> 异常，该异常定义在头文件 <code>&lt;typeinfo&gt;</code> 中。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">f</span>(<span style="font-weight:bold;text-decoration:underline">const</span> Base &amp;b)
+{
+    <span style="font-weight:bold;text-decoration:underline">try</span>
+    {
+        <span style="color:#888;font-style:italic">// 使用 Base 类型引用初始化 Derived 对象引用.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">const</span> Derived &amp;d = <span style="font-weight:bold;text-decoration:underline">dynamic_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">const</span> Base &amp;&gt;(b);
+    }
+    <span style="font-weight:bold;text-decoration:underline">catch</span>(std::bad_cast)
+    {
+        <span style="color:#888;font-style:italic">// 处理类型转换失败的异常.
+</span><span style="color:#888;font-style:italic"></span>    }
+}
+
+</code></pre></div><h3 id="73-const_cast">7.3 const_cast</h3>
 <p>用于<strong>去除const常量属性</strong>，使其可以修改，也就是说，原本定义为 <code>const</code> 的变量在定义后就不能进行修改的，但是使用 <code>const_cast</code> 操作之后，可以通过这个指针或变量进行修改；另外还有 <code>volatile</code> 属性的转换。</p>
 <h3 id="74-reinterpret_cast">7.4 reinterpret_cast</h3>
 <p>几乎什么都可以转，用在任意的指针之间的转换，引用之间的转换，指针和足够大的 <code>int</code> 型之间的转换，整数到指针的转换等。但是<strong>不够安全</strong>，可能会出问题，尽量少用。</p>
@@ -1079,10 +1115,15 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
         <li><a href="#65-类的静态成员函数">6.5 类的静态成员函数</a></li>
       </ol>
     </li>
-    <li><a href="#7-c的四种强制类型转换">7. C++的四种强制类型转换</a>
+    <li><a href="#7-c-的四种强制类型转换">7. C++ 的四种强制类型转换</a>
       <ol>
         <li><a href="#71-static_cast">7.1 static_cast</a></li>
-        <li><a href="#72-dynamic_cast">7.2 dynamic_cast</a></li>
+        <li><a href="#72-dynamic_cast阅文-c-一面">7.2 dynamic_cast（阅文 C++ 一面）</a>
+          <ol>
+            <li><a href="#对于指针类型">对于指针类型</a></li>
+            <li><a href="#对于引用类型">对于引用类型</a></li>
+          </ol>
+        </li>
         <li><a href="#73-const_cast">7.3 const_cast</a></li>
         <li><a href="#74-reinterpret_cast">7.4 reinterpret_cast</a></li>
         <li><a href="#75-c-的强制转换">7.5 C 的强制转换</a></li>
