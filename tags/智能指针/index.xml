@@ -16,5 +16,14 @@
       <description>牛客上看到阅文 C++ 面试中的一道题。很简单，但考察的点挺多。我面试阅文还遇到了差不多的一道题，让我手动实现 shared_ptr，我大意了，只背了</description>
     </item>
     
+    <item>
+      <title>手动实现 shared_ptr</title>
+      <link>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/</guid>
+      <description>面试写了一个基础的 scoped_ptr，被面试官要求写 shared_ptr，一时语塞。面试官不断提示我说在现有的基础上实现 shared_ptr 很简单，真的很简</description>
+    </item>
+    
   </channel>
 </rss>

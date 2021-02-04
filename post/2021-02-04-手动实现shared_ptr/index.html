@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>手动实现 shared_ptr // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="手动实现 shared_ptr" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">手动实现 shared_ptr</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/" class="article-date">
+                <time datetime='2021-02-04T00:00:00.000&#43;00:00' itemprop="datePublished">2021-02-04</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>面试写了一个基础的 <code>scoped_ptr</code>，被面试官要求写 <code>shared_ptr</code>，一时语塞。面试官不断提示我说在现有的基础上实现 <code>shared_ptr</code> 很简单，真的很简单，宛如在不断暗示我 1+1 就是把两个数加在一起😂。我知道简单，也知道引用计数原理，但没有写过代码啊，不知道具体是怎么实现引用计数的，当时只能放弃了。</p>
+<p>今天研究了一下 <code>shared_ptr</code>，手写了简单实现，现在记录一下实现的重点。</p>
+<h2 id="引用计数">引用计数</h2>
+<p>面试时，我想是不是用 <code>static</code> 实现的引用计数？其实不能这样做，静态变量是同属一个类所有对象，这样的话这个类的所有对象，不管指向的是不是相同的内存，它们共享的都是同一个计数器。</p>
+<p>引用计数，就是在内存中开辟一块内存专门用于存储资源被引用的次数，自己保留一个指向计数器的指针，计数器初始化为 1。每次用已有的 <code>shared_ptr</code> 构造新的 <code>shared_ptr</code> 或者给已有的 <code>shared_ptr</code> 赋值时，通过指针将计数器加 1，所有指向同一个资源的 <code>shared_ptr</code> 也指向同一个计数器。</p>
+<h2 id="释放所有权">释放所有权</h2>
+<p>当 <code>shared_ptr</code> 析构或主动释放所有权时，应将引用计数减 1，然后判断引用计数是否归零，如果归零，那么就释放指针指向的内存，此后将计数器指针置为空。需要注意的是，如果将计数器指针置为空，为了防止指针主动释放所有权之后计数器指针为空，导致判断计数是否归零，需要在判断计数归零前先判断计数指针是否为空。</p>
+<h2 id="参考代码">参考代码</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;string&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="font-weight:bold;text-decoration:underline">template</span> &lt;<span style="font-weight:bold;text-decoration:underline">typename</span> T&gt;
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">SharedPtr</span>
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    <span style="color:#888;font-style:italic">// 裸指针.
+</span><span style="color:#888;font-style:italic"></span>    T *_ptr;
+    <span style="color:#888;font-style:italic">// 指向引用计数器的指针.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">int</span> *_pcount;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    SharedPtr(T *ptr) : _ptr(ptr), _pcount(<span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>(1))
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;SharedPtr &#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span> &lt;&lt; <span style="color:#666;font-style:italic">&#34; constructed!</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+
+    <span style="color:#888;font-style:italic">// 复制构造函数.
+</span><span style="color:#888;font-style:italic"></span>    SharedPtr(<span style="font-weight:bold;text-decoration:underline">const</span> SharedPtr&lt;T&gt; &amp;s) : _ptr(s._ptr), _pcount(s._pcount)
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Entering copy constructor</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">SharedPtr &#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span>
+                  &lt;&lt; <span style="color:#666;font-style:italic">&#34; copied from SharePtr &#34;</span> &lt;&lt; &amp;s &lt;&lt; std::endl;
+
+        <span style="color:#888;font-style:italic">// 引用计数加一.
+</span><span style="color:#888;font-style:italic"></span>        ++(*(_pcount));
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Leaving copy constructor</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+
+    ~SharedPtr()
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Entering destructor</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="color:#888;font-style:italic">// 重置指针为空.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Reference count decreased by one</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="color:#888;font-style:italic">// 引用计数减一.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (_pcount != <span style="font-weight:bold;text-decoration:underline">nullptr</span> &amp;&amp; --(*(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount)) == 0)
+        {
+            <span style="font-weight:bold;text-decoration:underline">delete</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+            _ptr = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+            <span style="font-weight:bold;text-decoration:underline">delete</span> _pcount;
+            _pcount = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+
+            std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Count zero, memory released</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+        }
+
+        <span style="color:#888;font-style:italic">// 将引用计数指针置为空.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;SharedPtr &#34;</span> &lt;&lt; <span style="font-weight:bold;text-decoration:underline">this</span> &lt;&lt; <span style="color:#666;font-style:italic">&#34; destructed</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">// 返回引用计数的个数.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">int</span> use_count() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount);
+    }
+    <span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">use_count</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount);
+    }
+    <span style="color:#888;font-style:italic">// 返回指针是否具有独占权, 即引用计数是否为 1.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">unique</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount) == 1 ? <span style="font-weight:bold;font-style:italic">true</span> : <span style="font-weight:bold;font-style:italic">false</span>;
+    }
+    <span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">unique</span>()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount) == 1 ? <span style="font-weight:bold;font-style:italic">true</span> : <span style="font-weight:bold;font-style:italic">false</span>;
+    }
+    <span style="color:#888;font-style:italic">// 交换两个 SharedPtr 拥有的对象.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">swap</span>()
+    {
+    }
+    <span style="color:#888;font-style:italic">// 返回裸指针.
+</span><span style="color:#888;font-style:italic"></span>    T *<span style="color:#666;font-weight:bold;font-style:italic">get</span>() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+    }
+    <span style="color:#888;font-style:italic">// 释放当前指针的资源所有权, 计数减一.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">release</span>()
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Release resource ownership</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="color:#888;font-style:italic">// 重置指针为空.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Reference count decreased by one</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="color:#888;font-style:italic">// 将当前资源引用计数减一.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (_pcount != <span style="font-weight:bold;text-decoration:underline">nullptr</span> &amp;&amp; --(*(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount)) == 0)
+        {
+            <span style="font-weight:bold;text-decoration:underline">delete</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+            <span style="font-weight:bold;text-decoration:underline">delete</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount;
+            <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+            std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Count zero, memory released</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+        }
+
+        <span style="color:#888;font-style:italic">// 将引用计数指针置为空.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    SharedPtr&lt;T&gt; &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>=(<span style="font-weight:bold;text-decoration:underline">const</span> SharedPtr&lt;T&gt; &amp;s)
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Entering assignment operator</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="font-weight:bold;text-decoration:underline">if</span> (<span style="font-weight:bold;text-decoration:underline">this</span> == &amp;s)
+        {
+            <span style="font-weight:bold;text-decoration:underline">return</span> *<span style="font-weight:bold;text-decoration:underline">this</span>;
+        }
+
+        <span style="color:#888;font-style:italic">// 释放原来的旧资源.
+</span><span style="color:#888;font-style:italic"></span>        release();
+
+        <span style="color:#888;font-style:italic">// 新资源计数加一.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr = s._ptr;
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount = s._pcount;
+        ++(*(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount));
+
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Leaving assignment operator</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+        <span style="font-weight:bold;text-decoration:underline">return</span> *<span style="font-weight:bold;text-decoration:underline">this</span>;
+    }
+    T &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>*()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr);
+    }
+    T *<span style="font-weight:bold;text-decoration:underline">operator</span>-&gt;()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+    }
+};
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    SharedPtr&lt;std::string&gt; p1(<span style="font-weight:bold;text-decoration:underline">new</span> std::string(<span style="color:#666;font-style:italic">&#34;Hello world!&#34;</span>));
+    SharedPtr&lt;std::string&gt; p2(p1);
+    SharedPtr&lt;std::string&gt; p3 = p2;
+    p3 = p2;
+
+    std::cout &lt;&lt; p2.use_count() &lt;&lt; std::endl;
+    p1.release();
+    std::cout &lt;&lt; p2.use_count() &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; *(p2.get()) &lt;&lt; std::endl;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>输出如下</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">SharedPtr 0x7ffffffedba0 constructed!
+
+Entering copy constructor
+        SharedPtr 0x7ffffffedbb0 copied from SharePtr 0x7ffffffedba0
+Leaving copy constructor
+
+Entering copy constructor
+        SharedPtr 0x7ffffffedbc0 copied from SharePtr 0x7ffffffedbb0
+Leaving copy constructor
+
+Entering assignment operator
+        Release resource ownership
+        Reference count decreased by one
+Leaving assignment operator
+
+3
+        Release resource ownership
+        Reference count decreased by one
+2
+Hello world!
+Entering destructor
+        Reference count decreased by one
+SharedPtr 0x7ffffffedbc0 destructed
+Entering destructor
+        Reference count decreased by one
+        Count zero, memory released
+SharedPtr 0x7ffffffedbb0 destructed
+Entering destructor
+        Reference count decreased by one
+SharedPtr 0x7ffffffedba0 destructed
+
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#引用计数">引用计数</a></li>
+    <li><a href="#释放所有权">释放所有权</a></li>
+    <li><a href="#参考代码">参考代码</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88">智能指针
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/shared_ptr">shared_ptr
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    <a href="/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            手动实现 ScopedPtr
+        </div>
+    </a>
+    
+    
+    <a href="/post/2021-02-03-nullnullptr%E5%92%8C0%E7%9A%84%E5%8C%BA%E5%88%AB/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">NULL、nullptr 和 0 的区别&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

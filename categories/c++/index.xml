@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>手动实现 shared_ptr</title>
+      <link>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0shared_ptr/</guid>
+      <description>面试写了一个基础的 scoped_ptr，被面试官要求写 shared_ptr，一时语塞。面试官不断提示我说在现有的基础上实现 shared_ptr 很简单，真的很简</description>
+    </item>
+    
+    <item>
       <title>NULL、nullptr 和 0 的区别</title>
       <link>https://tianshihao.github.io/post/2021-02-03-nullnullptr%E5%92%8C0%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
       <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>

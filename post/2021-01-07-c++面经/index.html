@@ -209,21 +209,12 @@ p3 = unique_ptr&lt;string&gt;(<span style="font-weight:bold;text-decoration:unde
 <p><code>shared_ptr</code> 是为了解决 <code>auto_ptr</code> 在对象所有权上的局限性(<code>auto_ptr</code> 是独占的),在使用引用计数的机制上提供了可以共享所有权的智能指针。</p>
 <p>成员函数：</p>
 <ol>
-<li>
-<p><code>use_count()</code>，返回引用计数的个数；</p>
-</li>
-<li>
-<p><code>unique()</code>，返回是否是独占所有权（use_count() 是否为 1）；</p>
-</li>
-<li>
-<p><code>swap()</code>，交换两个 <code>shared_ptr</code> 对象(即交换所拥有的对象)；</p>
-</li>
-<li>
-<p><code>reset()</code>，放弃内部对象的所有权或拥有对象的变更,会引起原有对象的引用计数的减少；</p>
-</li>
-<li>
-<p><code>get()</code>，返回内部对象（指针），由于已经重载了 <code>()</code> 方法，因此和直接使用对象是一样的。如</p>
-</li>
+<li><code>use_count()</code>，返回引用计数的个数；</li>
+<li><code>unique()</code>，返回是否是独占所有权（use_count() 是否为 1）；</li>
+<li><code>swap()</code>，交换两个 <code>shared_ptr</code> 对象（即交换所拥有的对象）；</li>
+<li><code>reset()</code>，放弃内部对象的所有权或拥有对象的变更，会引起原有对象的引用计数的减少；</li>
+<li><code>release()</code>，释放当前指针的资源所有权，计数减一；</li>
+<li><code>get()</code>，返回内部对象（指针），由于已经重载了 <code>()</code> 方法，因此和直接使用对象是一样的。如</li>
 </ol>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;p(<span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>(1));
 cout &lt;&lt; *p &lt;&lt; endl;
