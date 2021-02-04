@@ -6,7 +6,16 @@
     <description>Recent content in Tags on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 03 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>智能指针</title>
+      <link>https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>nullptr</title>
       <link>https://tianshihao.github.io/tags/nullptr/</link>

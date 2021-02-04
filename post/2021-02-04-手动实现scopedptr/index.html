@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>手动实现 ScopedPtr // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="手动实现 ScopedPtr" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">手动实现 ScopedPtr</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/" class="article-date">
+                <time datetime='2021-02-04T00:00:00.000&#43;00:00' itemprop="datePublished">2021-02-04</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>牛客上看到阅文 C++ 面试中的一道题。很简单，但考察的点挺多。我面试阅文还遇到了差不多的一道题，让我手动实现 <code>shared_ptr</code>，我大意了，只背了智能指针八股文，没写出来 <code>shared_ptr</code>。不过幸好看了这道题，起码还写出来点东西。Scoped pointer 的题目是这样的：</p>
+<p>设计实现一个 Scope pointer（作用域指针）：ScopedPtr，其具有以下特点：</p>
+<ol>
+<li>使用一个动态分配的 <code>int</code> 初始化；</li>
+<li>当该 Scope pointer 超出作用域后，会自动释放动态分配的内存；</li>
+<li>可以通过解引用操作符获取到该动态分配的 <code>int</code> 的引用；</li>
+<li>该 Scope pointer 不能被复制。</li>
+</ol>
+<p>下面是代码实现：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="font-weight:bold;text-decoration:underline">template</span> &lt;<span style="font-weight:bold;text-decoration:underline">typename</span> T&gt;
+<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ScopedPtr</span>
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    T *_ptr;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    ScopedPtr(T *ptr = <span style="font-weight:bold;text-decoration:underline">nullptr</span>) : _ptr(ptr)
+    {
+        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;ScopedPtr constructed</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    }
+    <span style="color:#888;font-style:italic">// 通过禁用复制构造函数禁止 ScopedPtr 被复制.
+</span><span style="color:#888;font-style:italic"></span>    ScopedPtr(<span style="font-weight:bold;text-decoration:underline">const</span> ScopedPtr &amp;s) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+    <span style="color:#888;font-style:italic">// 超出作用域自动释放内存.
+</span><span style="color:#888;font-style:italic"></span>    ~ScopedPtr()
+    {
+        <span style="font-weight:bold;text-decoration:underline">if</span> (_ptr)
+        {
+            std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;ScopedPtr destructed</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+            <span style="font-weight:bold;text-decoration:underline">delete</span> _ptr;
+            _ptr = <span style="font-weight:bold;text-decoration:underline">nullptr</span>;
+        }
+    }
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="color:#888;font-style:italic">// 重载运算符 *, 可以通过解引用获得该指针指向的内存的引用.
+</span><span style="color:#888;font-style:italic"></span>    T &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>*()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr);
+    }
+    T &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>*() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> *(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr);
+    }
+    T *<span style="font-weight:bold;text-decoration:underline">operator</span>-&gt;()
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+    }
+    <span style="color:#888;font-style:italic">// 被声明为常量的 ScopedPtr 调用带 const 属性的函数.
+</span><span style="color:#888;font-style:italic"></span>    T *<span style="font-weight:bold;text-decoration:underline">operator</span>-&gt;() <span style="font-weight:bold;text-decoration:underline">const</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr;
+    }
+    <span style="color:#888;font-style:italic">// 通过禁用赋值运算符禁止 ScopedPtr 被复制.
+</span><span style="color:#888;font-style:italic"></span>    ScopedPtr&lt;T&gt; &amp;<span style="font-weight:bold;text-decoration:underline">operator</span>=(<span style="font-weight:bold;text-decoration:underline">const</span> ScopedPtr &amp;s) = <span style="font-weight:bold;text-decoration:underline">delete</span>;
+};
+
+<span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">test</span>(<span style="font-weight:bold;text-decoration:underline">int</span> n)
+{
+    ScopedPtr&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; ptr(<span style="font-weight:bold;text-decoration:underline">new</span> <span style="font-weight:bold;text-decoration:underline">int</span>(n));
+
+    *ptr *= 2;
+
+    std::cout &lt;&lt; *ptr &lt;&lt; std::endl;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    <span style="font-weight:bold;text-decoration:underline">int</span> n = 1;
+    test(n);
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>实现采用了模板类，这样它可以有更高的泛用性。具体每一点要求是这样实现的：</p>
+<ol>
+<li>使用一个动态分配的 <code>int</code> 初始化 👉 类中有 <code>private</code> 数据成员 <code>T *_ptr</code>，并且将 <code>T *ptr</code> 作为构造函数参数，构造智能指针；</li>
+<li>超出作用域自动释放内存 👉 超出作用域后自动调用析构函数，在析构函数中检测当前指针 <code>T *_ptr</code> 时候指向内存，若是，则 <code>delete</code> 指向的内存空间，并将指针置为空；</li>
+<li>通过解引用操作符获取指向内存的引用 👉 重载 <code>*</code> 运算符，返回引用类型，<code>return *(this-&gt;_ptr)</code>；</li>
+<li>该智能指针不能被复制 👉 通过 <code>= delete</code> 显式禁用复制构造函数和禁止重载赋值运算符。</li>
+</ol>
+<p>代码中还有一些需要注意的地方，例如同一个函数根据是否用有 <code>const</code> 属性可以分为两个重载版本，它们的区别除了普通成员函数和 <code>const</code> 成员函数的区别外，还有一点就是 <code>const</code> 属性的类对象会调用带有 <code>const</code> 属性的重载成员函数，而普通对象会调用普通成员函数。</p>
+<p><code>boost::scoped_ptr</code> 的实现和 <code>std::auto_ptr</code> 非常类似，都是利用了一个栈上的对象去管理一个堆上的对象，从而使得堆上的对象随着栈上的对象销毁时自动删除。不同的是，<code>boost::scoped_ptr</code> 有着更严格的使用限制——不能拷贝。这就意味着：<code>boost::scoped_ptr</code> 指针是不能转换其所有权的。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents"></nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88">智能指针
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-03-nullnullptr%E5%92%8C0%E7%9A%84%E5%8C%BA%E5%88%AB/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">NULL、nullptr 和 0 的区别&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

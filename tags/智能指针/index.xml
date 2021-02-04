@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>智能指针 on 水上书</title>
+    <link>https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</link>
+    <description>Recent content in 智能指针 on 水上书</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 04 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>手动实现 ScopedPtr</title>
+      <link>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/</guid>
+      <description>牛客上看到阅文 C++ 面试中的一道题。很简单，但考察的点挺多。我面试阅文还遇到了差不多的一道题，让我手动实现 shared_ptr，我大意了，只背了</description>
+    </item>
+    
+  </channel>
+</rss>
