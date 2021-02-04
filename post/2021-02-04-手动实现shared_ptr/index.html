@@ -113,7 +113,8 @@
                   &lt;&lt; <span style="color:#666;font-style:italic">&#34; copied from SharePtr &#34;</span> &lt;&lt; &amp;s &lt;&lt; std::endl;
 
         <span style="color:#888;font-style:italic">// 引用计数加一.
-</span><span style="color:#888;font-style:italic"></span>        ++(*(_pcount));
+</span><span style="color:#888;font-style:italic"></span>        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Reference count increased by one</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+        ++(*(_pcount));
 
         std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Leaving copy constructor</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
     }
@@ -209,7 +210,8 @@
 </span><span style="color:#888;font-style:italic"></span>        release();
 
         <span style="color:#888;font-style:italic">// 新资源计数加一.
-</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr = s._ptr;
+</span><span style="color:#888;font-style:italic"></span>        std::cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\t</span><span style="color:#666;font-style:italic">Reference count increased by one</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+        <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_ptr = s._ptr;
         <span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount = s._pcount;
         ++(*(<span style="font-weight:bold;text-decoration:underline">this</span>-&gt;_pcount));
 
@@ -248,15 +250,18 @@
 
 Entering copy constructor
         SharedPtr 0x7ffffffedbb0 copied from SharePtr 0x7ffffffedba0
+        Reference count increased by one
 Leaving copy constructor
 
 Entering copy constructor
         SharedPtr 0x7ffffffedbc0 copied from SharePtr 0x7ffffffedbb0
+        Reference count increased by one
 Leaving copy constructor
 
 Entering assignment operator
         Release resource ownership
         Reference count decreased by one
+        Reference count increased by one
 Leaving assignment operator
 
 3
