@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Effective STL on 水上书</title>
+    <link>https://tianshihao.github.io/series/effective-stl/</link>
+    <description>Recent content in Effective STL on 水上书</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Fri, 05 Feb 2021 13:19:48 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/series/effective-stl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Erase-Remove 惯用法</title>
+      <link>https://tianshihao.github.io/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/</link>
+      <pubDate>Fri, 05 Feb 2021 13:19:48 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/</guid>
+      <description>看到《Effective STL》条款 9 的时候想到了我以前复习的“如何正确使用迭代器删除元素”，我面试时使用的也是里面的方法，看面试官的反应好</description>
+    </item>
+    
+    <item>
+      <title>vector 的交换技巧</title>
+      <link>https://tianshihao.github.io/post/2021-02-05-vector%E4%BA%A4%E6%8D%A2%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-05-vector%E4%BA%A4%E6%8D%A2%E6%8A%80%E5%B7%A7/</guid>
+      <description>面试被问到如何解决 vector 有过多空闲内存的问题。 假定先有一 vector 容器 vec1，它的容量是 10000，大小是 3。 vector 的内存增长问题 vector 申请的是连续内存空间，</description>
+    </item>
+    
+  </channel>
+</rss>

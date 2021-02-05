@@ -13,7 +13,7 @@
   </url>
   
   <url>
-    <loc>https://tianshihao.github.io/tags/effective-stl/</loc>
+    <loc>https://tianshihao.github.io/series/effective-stl/</loc>
     <lastmod>2021-02-05T13:19:48+08:00</lastmod>
   </url>
   
@@ -24,6 +24,11 @@
   
   <url>
     <loc>https://tianshihao.github.io/tags/erase-remove-%E6%83%AF%E7%94%A8%E6%B3%95/</loc>
+    <lastmod>2021-02-05T13:19:48+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tianshihao.github.io/series/</loc>
     <lastmod>2021-02-05T13:19:48+08:00</lastmod>
   </url>
   
@@ -384,10 +389,6 @@
   
   <url>
     <loc>https://tianshihao.github.io/tags/index/</loc>
-  </url>
-  
-  <url>
-    <loc>https://tianshihao.github.io/series/</loc>
   </url>
   
 </urlset>
