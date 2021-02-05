@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Erase-Remove 惯用法 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="Erase-Remove 惯用法" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Erase-Remove 惯用法</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/" class="article-date">
+                <time datetime='2021-02-05T13:19:48.000&#43;08:00' itemprop="datePublished">2021-02-05</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/stl">STL</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>看到《Effective STL》条款 9 的时候想到了我以前复习的“如何正确使用迭代器删除元素”，我面试时使用的也是里面的方法，看面试官的反应好像也没有什么问题，还问了我一些我早已整理过的考点。但看到条款 9 之后，我就觉得自己以前回答得没什么水平了。</p>
+<p>文本参考了条款 9 和条款 32。</p>
+<h2 id="remove">remove()</h2>
+<p><code>&lt;algorithm&gt;</code> 中的 <code>remove()</code> 的声明为：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">template</span>&lt;<span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">ForwardIt</span>, <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">T</span>&gt;
+ForwardIt remove(ForwardIt first, ForwardIt last, <span style="font-weight:bold;text-decoration:underline">const</span> T&amp; value);
+
+</code></pre></div><p>也就是从范围 [first, last) 内移除所有满足特定判别标准的元素，并返回新结尾的尾后迭代器。需要注意的是，<strong><code>remove()</code> 并不真正删除东西，因为它做不到</strong>。<code>remove()</code> 移动指定区间中的所有元素直到所有“不删除的”元素在区间的开头（相对位置和原来的一样）。它返回一个指向最后一个“不删除的”元素的下一个元素的迭代器。返回值是区间的“新<strong>逻辑</strong>终点”。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; v;
+v.reserver(10);
+<span style="font-weight:bold;text-decoration:underline">for</span>(<span style="font-weight:bold;text-decoration:underline">int</span> i = 1; i &lt;= 10; ++i)
+{
+    v.push_back(i);
+}
+
+v[3] = v[5] = v[9] = 99;
+vecitor&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;::iterator newEnd(remove(v.begin(), v.end(), 99));
+
+</code></pre></div><p>调用 <code>remove()</code> 之前：</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210205142005.png" alt="调用remove之前"></p>
+<p>调用 <code>remove()</code> 之后：</p>
+<p><img src="https://gitee.com/tianshihao4944/gitee-images-bed/raw/master/20210205142051.png" alt="调用remove之后"></p>
+<h2 id="erase-remove-惯用法">erase-remove 惯用法</h2>
+<p>如果要真正删除东西的话，应该在 <code>remove()</code> 后面接上 <code>erase()</code>。要 <code>erase()</code> 的元素很容易识别：它们是从区间的“新逻辑终点”开始持续到区间真正重点的原来区间的元素。要除去那些元素，要做的事情就是用两个迭代器调用 <code>erase()</code> 的区间形式。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; v;
+v.erase(remove(v.begin(), v.end(), 99), v.end());
+
+</code></pre></div><p>把 <code>remove</code> 的返回值作为 <code>erase()</code> 区间形式第一个实参传递很常见，这是个惯用法。</p>
+<h2 id="remove_if-和-remove_copy_if">remove_if() 和 remove_copy_if()</h2>
+<p>如果要删除的不是每个有特定值的物体，而是消除下面的判断式</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">badValue</span>(<span style="font-weight:bold;text-decoration:underline">int</span> x); <span style="color:#888;font-style:italic">// 返回 x 是否是 &#34;bad&#34;.
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>对于序列容器，要做的只是把每个 <code>remove()</code> 替换成 <code>remove_if()</code>，然后就完成了：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">c.erase(remove_if(c.begin(), c.end(), badValue), c.end());
+
+</code></pre></div><p>这样面试题“从 <code>vector</code> 中删除 3 的倍数”就变得更简单了：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreeTimes</span>(<span style="font-weight:bold;text-decoration:underline">int</span> num)
+{
+    <span style="font-weight:bold;text-decoration:underline">return</span> num % 3 == 0 ? <span style="font-weight:bold;font-style:italic">true</span> : <span style="font-weight:bold;font-style:italic">false</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    <span style="color:#888;font-style:italic">// ...
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 一行代码, 没有循环.
+</span><span style="color:#888;font-style:italic"></span>    vec.erase(std::remove_if(vec.begin(), vec.end(), ThreeTimes), vec.end());
+    <span style="color:#888;font-style:italic">// ...
+</span><span style="color:#888;font-style:italic"></span>}
+
+</code></pre></div><p>真是好笑，听到面试官问我这道题，我心中窃喜，还想着秀一秀我关于“如何正确使用迭代器删除元素”的清晰思路，哈哈，真是贻笑大方😂。</p>
+<p>对于关联容器，<code>remove_if()</code> 不是很直截了当。有两种方法处理该问题：</p>
+<ol>
+<li><code>remove_copy_if()</code>，更容易，效率较低；</li>
+<li>循环，更高效。</li>
+</ol>
+<p>关于 <code>remove_copy_if()</code>，它<strong>把需要的值拷贝到另一个新容器中</strong>，然后把原容器的内容和新的交换：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;set&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span>
+<span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">ThreeTimes</span>(<span style="font-weight:bold;text-decoration:underline">int</span> num)
+{
+    <span style="font-weight:bold;text-decoration:underline">return</span> num % 3 == 0 ? <span style="font-weight:bold;font-style:italic">true</span> : <span style="font-weight:bold;font-style:italic">false</span>;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    std::set&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; c{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::set&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; notThreeTimes; <span style="color:#888;font-style:italic">// 存储非 3 的倍数的临时容器.
+</span><span style="color:#888;font-style:italic"></span>
+    <span style="color:#888;font-style:italic">// 从 c 复制不删除的值到 notThreeTimes.
+</span><span style="color:#888;font-style:italic"></span>    std::remove_copy_if(c.begin(), c.end(),
+                        std::inserter(notThreeTimes, notThreeTimes.end()),
+                        ThreeTimes);
+
+    c.swap(notThreeTimes); <span style="color:#888;font-style:italic">// 交换 c 和 notThreeTimes.
+</span><span style="color:#888;font-style:italic"></span>
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>这种方法的缺点是它复制了所有不删除的元素，而这样的复制开销花费很大。</p>
+<p><code>for</code> 循环很简单，注意 <code>erase()</code> 时处理好迭代器就行：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">for</span>(std::set&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;::iterator i = c.begin(); i != c.end();)
+{
+    <span style="font-weight:bold;text-decoration:underline">if</span>(ThreeTimes(*i))
+    {
+        <span style="color:#888;font-style:italic">// 还可以向日志文件中写入一条消息.
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// logFile &lt;&lt; &#34;Erasing &#34; &lt;&lt; *i &lt;&lt; &#39;\n&#39;;
+</span><span style="color:#888;font-style:italic"></span>        c.erase(i++);
+    }
+    <span style="font-weight:bold;text-decoration:underline">else</span>
+    {
+        ++i;
+    }
+}
+
+</code></pre></div><p>当然，要是序列容器也需要在 <code>erase()</code> 时有其它操作，同样可以使用 <code>for</code> 循环，只需注意序列式容器使用迭代器删除元素的技巧就行。</p>
+<h2 id="结论">结论</h2>
+<p>去除一个容器中特定值的所有对象：</p>
+<ol>
+<li>如果容器是 <code>vector</code>、<code>stirng</code> 或 <code>deque</code>，使用 erase-remove 惯用法；</li>
+<li>如果容器是 <code>list</code>，使用 <code>list::remove</code>；</li>
+<li>如果容器是标准关联容器，使用它的 <code>erase()</code> 成员函数。</li>
+</ol>
+<p>去除一个容器中满足一个特定判定式的所有对象：</p>
+<ol>
+<li>如果容器是 <code>vector</code>、<code>string</code> 或 <code>deque</code>，使用 erase-remove_if 惯用法；</li>
+<li>如果容器是 <code>list</code>，使用 <code>list::romove_if()</code>；</li>
+<li>如果容器是标准关联容器，使用 <code>remove_copy_if()</code> 和 <code>swap()</code>，或写一个循环来遍历容器元素，但把迭代器传给 <code>erase()</code> 时记得后置递增它。</li>
+</ol>
+<p>在循环内做某些事情（除了删除对象之外）：</p>
+<ol>
+<li>如果容器是标准序列容器，写一个循环来遍历元素，每当调用 <code>erase()</code> 时记得用它的返回值更新迭代器；</li>
+<li>如果容器是标准关联容器，写一个循环来遍历元素，当把迭代器传给 <code>erase()</code> 时记得后置递增它。</li>
+</ol>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#remove">remove()</a></li>
+    <li><a href="#erase-remove-惯用法">erase-remove 惯用法</a></li>
+    <li><a href="#remove_if-和-remove_copy_if">remove_if() 和 remove_copy_if()</a></li>
+    <li><a href="#结论">结论</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/erase-remove-%E6%83%AF%E7%94%A8%E6%B3%95">erase-remove 惯用法
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/effective-stl">Effective STL
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-05-vector%E4%BA%A4%E6%8D%A2%E6%8A%80%E5%B7%A7/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">vector 的交换技巧&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>
