@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>vector 的交换技巧 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="vector 的交换技巧" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-05-vector%E4%BA%A4%E6%8D%A2%E6%8A%80%E5%B7%A7/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">vector 的交换技巧</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-05-vector%E4%BA%A4%E6%8D%A2%E6%8A%80%E5%B7%A7/" class="article-date">
+                <time datetime='2021-02-05T00:00:00.000&#43;00:00' itemprop="datePublished">2021-02-05</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/stl">STL</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>面试被问到如何解决 vector 有过多空闲内存的问题。</p>
+<p>假定先有一 <code>vector</code> 容器 <code>vec1</code>，它的容量是 10000，大小是 3。</p>
+<h2 id="vector-的内存增长问题">vector 的内存增长问题</h2>
+<p><code>vector</code> 申请的是连续内存空间，其实际分配的内存比当前所需的内存要多一些，也就是说，<code>vector</code> 容器预留了一些额外的存储区。而当 <code>vector</code> 需要分配新的内存时，会申请当前容量二倍的内存，也就是二倍增长。</p>
+<h2 id="resize-和-reverse">resize() 和 reverse()</h2>
+<p><code>resize()</code> 并不能解决内存浪费的问题。使用 <code>resize()</code> 可以将一个容量和大小均为 10000 的 <code>vector</code> 的大小改为 3，但 <code>resize()</code> 并不是将其余的内存释放掉，后面的内存仍然被占用，因为此时 <code>vector</code> 的容量（<code>capacity()</code>）仍为 10000。</p>
+<p>这时候想到，要是先用 <code>resize()</code> 减小容器的大小，再使用 <code>reverse()</code> 减少容器的容量，不就好了么？但这样也不行，当使用 <code>reverse()</code> 调整容器容量时，若 <code>new_cap</code> 大于当前 <code>capacity()</code>，则会新的存储空间，执行复制原容器元素，销毁原容器；但若 <code>new_cap</code> 小于当前 <code>capacity()</code> 时，则<strong>什么也不做</strong>。</p>
+<h2 id="交换技巧">交换技巧</h2>
+<p>交换技巧，使用到了 <code>swap(vector&amp; other)</code>，它会将 <code>vector</code> 与 <code>other</code> 相交换，且不在单独的元素上调用任何移动、复制或交换操作。利用 <code>swap()</code> 释放多余的存储空间的操作如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec1).swap(vec1);
+
+</code></pre></div><p>表达式 <code>vector&lt;int&gt;(vec1)</code> 建立一个临时 <code>vector</code>，它是 <code>vec1</code> 的一份拷贝，<code>vector</code> 的复制构造函数做了这个工作。并且，这个复制品只复制了复制元素所需要的内存，所以这个临时 <code>vector</code> 没有多余的容量。</p>
+<p>然后，让临时 <code>vector</code> 和 <code>vec1</code> 交换数据，<code>vec1</code> 拥有了临时 <code>vector</code> 的修整过的容量，而临时 <code>vector</code> 则拥有了发胀的容量。最后语句执行完毕，临时 <code>vector</code> 被析构，空间被释放，大功告成。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#vector-的内存增长问题">vector 的内存增长问题</a></li>
+    <li><a href="#resize-和-reverse">resize() 和 reverse()</a></li>
+    <li><a href="#交换技巧">交换技巧</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/vector">vector
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-04-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0scopedptr/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">手动实现 ScopedPtr&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>
