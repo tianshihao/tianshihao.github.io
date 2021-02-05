@@ -84,7 +84,7 @@
 <p><code>vector</code> 申请的是连续内存空间，其实际分配的内存比当前所需的内存要多一些，也就是说，<code>vector</code> 容器预留了一些额外的存储区。而当 <code>vector</code> 需要分配新的内存时，会申请当前容量二倍的内存，也就是二倍增长。</p>
 <h2 id="resize-和-reverse">resize() 和 reverse()</h2>
 <p><code>resize()</code> 并不能解决内存浪费的问题。使用 <code>resize()</code> 可以将一个容量和大小均为 10000 的 <code>vector</code> 的大小改为 3，但 <code>resize()</code> 并不是将其余的内存释放掉，后面的内存仍然被占用，因为此时 <code>vector</code> 的容量（<code>capacity()</code>）仍为 10000。</p>
-<p>这时候想到，要是先用 <code>resize()</code> 减小容器的大小，再使用 <code>reverse()</code> 减少容器的容量，不就好了么？但这样也不行，当使用 <code>reverse()</code> 调整容器容量时，若 <code>new_cap</code> 大于当前 <code>capacity()</code>，则会分配新的存储空间，复制原容器元素，销毁原容器；但若 <code>new_cap</code> 小于当前 <code>capacity()</code> 时，则<strong>什么也不做</strong>。</p>
+<p>这时候想到，要是先用 <code>resize()</code> 减小容器的大小，再使用 <code>reverse()</code> 减少容器的容量，不就好了么？但这样也不行，当使用 <code>reverse()</code> 调整容器容量时，若 <code>new_cap</code> 大于当前 <code>capacity()</code>，则会分配新的存储空间，复制原容器元素，销毁原容器；但若 <code>new_cap</code> 小于当前 <code>capacity()</code>，则<strong>什么也不做</strong>。</p>
 <h2 id="交换技巧">交换技巧</h2>
 <p>交换技巧，使用到了 <code>swap(vector&amp; other)</code>，它会将 <code>vector</code> 与 <code>other</code> 相交换，且不在单独的元素上调用任何移动、复制或交换操作。利用 <code>swap()</code> 释放多余的存储空间的操作如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec1).swap(vec1);
