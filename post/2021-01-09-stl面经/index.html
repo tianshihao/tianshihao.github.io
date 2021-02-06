@@ -622,7 +622,7 @@ std::set&lt;std::string&gt; copySet = mySet;
 &gt; <span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">unordered_map</span>;
 
 </code></pre></div><p><code>unodered_map</code> 是关联容器，函数由带唯一键的键-值pair。搜索、插入和移除操作拥有<strong>平均常数复杂度</strong>。</p>
-<p>元素在内部<strong>不</strong>以任何特定顺序<strong>排序</strong>，而是<strong>组织进桶</strong>中。元素放进哪个桶完全依赖其键的哈希。这允许对但<strong>单独元素的快速访问</strong>，因为一旦计算哈希，则它准确指代元素所放进的桶。</p>
+<p>元素在内部<strong>不</strong>以任何特定顺序<strong>排序</strong>，而是<strong>组织进桶</strong>中。元素放进哪个桶完全依赖其键的哈希。这允许对但<strong>单独元素的快速访问</strong>，因为一旦计算哈希，则它准确指代元素所放进的桶。当桶的大小超过 8 时，就自动转换为红黑树进行组织。</p>
 <p>注意 <code>unordered_map</code> 重载了运算符 <code>[]</code>，返回到映射到等于 <code>key</code> 的键的值的引用，若这种键不存在则进行插入。还可以更新既存值。</p>
 <h4 id="1122-unordered_map-上的常见操作复杂度效率">1.12.2 unordered_map 上的常见操作复杂度（效率）</h4>
 <ul>

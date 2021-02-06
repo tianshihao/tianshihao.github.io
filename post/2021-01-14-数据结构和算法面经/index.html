@@ -163,7 +163,26 @@
     cout &lt;&lt; fun(123321) &lt;&lt; endl;
     <span style="font-weight:bold;text-decoration:underline">return</span> 0;
 }
-</code></pre></div>
+</code></pre></div><h2 id="解决哈希冲突的方式">解决哈希冲突的方式</h2>
+<h3 id="线性探查">线性探查</h3>
+<p>当该元素的哈希值对应的位置不能存放元素时，就依次向后查找，直到找到一个空位置。查找时也相同，当哈希值对应的位置上的元素与要寻找的元素不同时，就依次向后查找，直到找到符合条件的元素或这空位置。</p>
+<p>优点：无需附加空间；具有局部性，可以利用系统缓存，减少 IO。</p>
+<p>缺点：容易产生聚集。</p>
+<h3 id="二次探查">二次探查</h3>
+<p>当该元素的哈希值对应的位置不能存放元素时，就向后找 \(1^2, 2^2, 3^2, \cdots , i^2 \) 个位置。</p>
+<p>优点：有效避免“聚集现象。</p>
+<p>缺点：不能探测到哈希表上的所有存储单元，但至少能探测一半。</p>
+<h3 id="双散列函数">双散列函数</h3>
+<p>当第一个散列函数发生冲突时，就使用第二个散列函数进行哈希，作为步长。</p>
+<h3 id="拉链法">拉链法</h3>
+<p>在每一个桶中维护一个链表，由哈希值寻找到这个桶，然后将元素插入到对应的链表中。</p>
+<p>优点：无“聚集”现象。</p>
+<h3 id="建立公共溢出区">建立公共溢出区</h3>
+<p>当发生冲突时，将所有冲突的数据放在公共溢出区。</p>
+<h2 id="哈希表的装填因子">哈希表的装填因子</h2>
+<p>$$\alpha = \frac{n}{m} $$</p>
+<p><em>n</em> 为关键字个数，<em>m</em> 为表长。</p>
+
         </div>
 
         
@@ -176,6 +195,16 @@
     <li><a href="#带头结点和不带头结点的链表">带头结点和不带头结点的链表</a></li>
     <li><a href="#判断一个数是2的倍数">判断一个数是2的倍数</a></li>
     <li><a href="#求一个数中有几个1">求一个数中有几个1</a></li>
+    <li><a href="#解决哈希冲突的方式">解决哈希冲突的方式</a>
+      <ol>
+        <li><a href="#线性探查">线性探查</a></li>
+        <li><a href="#二次探查">二次探查</a></li>
+        <li><a href="#双散列函数">双散列函数</a></li>
+        <li><a href="#拉链法">拉链法</a></li>
+        <li><a href="#建立公共溢出区">建立公共溢出区</a></li>
+      </ol>
+    </li>
+    <li><a href="#哈希表的装填因子">哈希表的装填因子</a></li>
   </ol>
 </nav>
         </div>
@@ -234,6 +263,15 @@
     </div>
     
 
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
     
     <script>
         document.getElementById('main-nav-toggle').addEventListener('click', function () {
