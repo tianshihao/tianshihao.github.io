@@ -6,7 +6,16 @@
     <description>Recent content in STL on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 05 Feb 2021 13:19:48 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/stl/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Feb 2021 20:09:40 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/categories/stl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>条款35-实现简单的忽略大小写的字符串比较</title>
+      <link>https://tianshihao.github.io/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/</link>
+      <pubDate>Fri, 05 Feb 2021 20:09:40 +0800</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/</guid>
+      <description>方法一，mismatch() /** * @brief 忽略大小写比较字符. * @param c1 字符 c1. * @param c2 字符 c2. * @return int 若 c1 &amp;lt; c2, 则返回 -1; 若 c1 == c2, 则返回 0; 若 c1 &amp;gt; c2, 则返回 1. */ int ciCharCompare(char c1,</description>
+    </item>
+    
     <item>
       <title>Erase-Remove 惯用法</title>
       <link>https://tianshihao.github.io/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/</link>

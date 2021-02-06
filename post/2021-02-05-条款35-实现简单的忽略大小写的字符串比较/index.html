@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>条款35-实现简单的忽略大小写的字符串比较 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+
+
+    <meta property="og:title" content="条款35-实现简单的忽略大小写的字符串比较" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/series">系列</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">条款35-实现简单的忽略大小写的字符串比较</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/" class="article-date">
+                <time datetime='2021-02-05T20:09:40.000&#43;08:00' itemprop="datePublished">2021-02-05</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/stl">STL</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="方法一mismatch">方法一，mismatch()</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">/**
+</span><span style="color:#888;font-style:italic"> * @brief 忽略大小写比较字符.
+</span><span style="color:#888;font-style:italic"> * @param c1 字符 c1. 
+</span><span style="color:#888;font-style:italic"> * @param c2 字符 c2.
+</span><span style="color:#888;font-style:italic"> * @return int 若 c1 &lt; c2, 则返回 -1; 若 c1 == c2, 则返回 0; 若 c1 &gt; c2, 则返回 1.
+</span><span style="color:#888;font-style:italic"> */</span>
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">ciCharCompare</span>(<span style="font-weight:bold;text-decoration:underline">char</span> c1, <span style="font-weight:bold;text-decoration:underline">char</span> c2)
+{
+    <span style="color:#888;font-style:italic">// tolower() 的参数和返回值的类型是 int, 除非这个 int 是 EOF,
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 否则它的值必须能表现为一个 unsigned char.
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 在 C 和 C++ 中, char 可能或不可能是有符号的, 当 char 有符号时,
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 唯一确认它的值可以表现为 unsigned char 的方式就是在调用 tolower() 之前
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 转换一下.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">int</span> lc1 = tolower(<span style="font-weight:bold;text-decoration:underline">static_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">char</span>&gt;(c1));
+    <span style="font-weight:bold;text-decoration:underline">int</span> lc2 = tolower(<span style="font-weight:bold;text-decoration:underline">static_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">char</span>&gt;(c2));
+
+    <span style="font-weight:bold;text-decoration:underline">if</span> (lc1 &lt; lc2)
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> -1;
+    }
+    <span style="font-weight:bold;text-decoration:underline">if</span> (lc1 &gt; lc2)
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> 1;
+    }
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">ciStringCompareImpl</span>(<span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s1, <span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s2)
+{
+    <span style="color:#888;font-style:italic">// PSCI = &#34;a pair of string::const_iterator&#34;.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">typedef</span> pair&lt;string::const_iterator, string::const_iterator&gt; PSCI;
+
+    <span style="color:#888;font-style:italic">// mismatch() 算法返回一对迭代器, 表示了区间中第一个对应的字符不相同的位置.
+</span><span style="color:#888;font-style:italic"></span>    PSCI p = mismatch(s1.begin(), s1.end(),
+                      s2.begin(),
+                      not2(ptr_fun(ciCharCompare)));
+
+    <span style="color:#888;font-style:italic">// 如果为真.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">if</span> (p.first == s1.end())
+    {
+        <span style="color:#888;font-style:italic">// s1 等于 s2.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (p.second == s2.end())
+        {
+            <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+        }
+        <span style="color:#888;font-style:italic">// 或者 s1 比 s2 短.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">else</span>
+        {
+            <span style="font-weight:bold;text-decoration:underline">return</span> -1;
+        }
+    }
+
+    <span style="color:#888;font-style:italic">// 两个字符串的关系和不匹配的字符一样.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">return</span> ciCharCompare(*p.first, *p.second);
+}
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">ciStringCompare</span>(<span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s1, <span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s2)
+{
+    <span style="font-weight:bold;text-decoration:underline">if</span> (s1.size() &lt;= s2.size())
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> ciStringComparelmpl(s1, s2);
+    }
+    <span style="font-weight:bold;text-decoration:underline">else</span>
+    {
+        <span style="font-weight:bold;text-decoration:underline">return</span> -ciStringComparelmpl(s2, s1);
+    }
+}
+
+</code></pre></div><h2 id="方法二lexicographical_compare">方法二，lexicographical_compare()</h2>
+<p>将字符串比较工作交给 STL 中名字第二长的算法——<code>lexicographical_compare()</code>，为其提供一个判断式接口比较函数 <code>ciCharLess()</code>。</p>
+<p><code>lexicographical_campare()</code> 是 <code>strcmp()</code> 的泛型版本，其对任何类型的值的<strong>区间</strong>都起作用，可以传入一个决定两个值是否满足一个<strong>用户定义标准</strong>的二元判断式。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">ciCharLess</span>(<span style="font-weight:bold;text-decoration:underline">char</span> c1, <span style="font-weight:bold;text-decoration:underline">char</span> c2)
+{
+    <span style="font-weight:bold;text-decoration:underline">return</span> tolower(<span style="font-weight:bold;text-decoration:underline">static_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">char</span>&gt;(c1)) &lt;
+           tolower(<span style="font-weight:bold;text-decoration:underline">static_cast</span>&lt;<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">char</span>&gt;(c2));
+}
+
+<span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">ciStringCompare</span>(<span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s1, <span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s2)
+{
+    <span style="font-weight:bold;text-decoration:underline">return</span> lexicographical_compare(s1.begin(), s1.end(),
+                                   s2.begin(), s2.end(),
+                                   ciCharLess);
+}
+
+</code></pre></div><h2 id="方法三strcmp">方法三，strcmp()</h2>
+<p>牺牲移植性，不关心国际化，取而代之，将两个字符串都转换为 <code>const char*</code> 指针，然后对指针使用 <code>strcmp()</code>。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">ciStringCompare</span>(<span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s1, <span style="font-weight:bold;text-decoration:underline">const</span> string &amp;s2)
+{
+    <span style="font-weight:bold;text-decoration:underline">return</span> strcmp(s1.c_str(), s2.c_str());
+}
+
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#方法一mismatch">方法一，mismatch()</a></li>
+    <li><a href="#方法二lexicographical_compare">方法二，lexicographical_compare()</a></li>
+    <li><a href="#方法三strcmp">方法三，strcmp()</a></li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/effective-stl-item-35">Effective STL Item 35
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-05-erase-remove%E6%83%AF%E7%94%A8%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Erase-Remove 惯用法&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>
