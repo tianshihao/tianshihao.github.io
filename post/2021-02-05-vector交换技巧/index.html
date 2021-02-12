@@ -81,18 +81,69 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>面试被问到如何解决 vector 有过多空闲内存的问题。</p>
-<p>假定先有一 <code>vector</code> 容器 <code>vec1</code>，它的容量是 10000，大小是 3。</p>
+<p>假定先有一 <code>vector</code> 容器 <code>vec</code>，它的容量是 10000，大小是 3。</p>
 <h2 id="vector-的内存增长问题">vector 的内存增长问题</h2>
 <p><code>vector</code> 申请的是连续内存空间，其实际分配的内存比当前所需的内存要多一些，也就是说，<code>vector</code> 容器预留了一些额外的存储区。而当 <code>vector</code> 需要分配新的内存时，会申请当前容量二倍的内存，也就是二倍增长。</p>
 <h2 id="resize-和-reverse">resize() 和 reverse()</h2>
 <p><code>resize()</code> 并不能解决内存浪费的问题。使用 <code>resize()</code> 可以将一个容量和大小均为 10000 的 <code>vector</code> 的大小改为 3，但 <code>resize()</code> 并不是将其余的内存释放掉，后面的内存仍然被占用，因为此时 <code>vector</code> 的容量（<code>capacity()</code>）仍为 10000。</p>
-<p>这时候想到，要是先用 <code>resize()</code> 减小容器的大小，再使用 <code>reverse()</code> 减少容器的容量，不就好了么？但这样也不行，当使用 <code>reverse()</code> 调整容器容量时，若 <code>new_cap</code> 大于当前 <code>capacity()</code>，则会分配新的存储空间，复制原容器元素，销毁原容器；但若 <code>new_cap</code> 小于当前 <code>capacity()</code>，则<strong>什么也不做</strong>。</p>
+<p>这时候想到，要是先用 <code>resize()</code> 减小容器的大小，再使用 <code>reverse()</code> 减少容器的容量，不就好了么？但这样也不行，当使用 <code>reverse()</code> 调整容器容量时，若 <code>new_cap</code> 大于当前 <code>capacity()</code>，则会分配新的存储空间，复制原容器元素，销毁原容器；但<strong>若 <code>new_cap</code> 小于当前 <code>capacity()</code>，则什么也不做</strong>。</p>
+<p>例如以下代码：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iomanip&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;vector&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    <span style="color:#888;font-style:italic">// 初始化时预算分配 10000 的大小.
+</span><span style="color:#888;font-style:italic"></span>    vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; vec(10000, 1);
+
+    cout &lt;&lt; setiosflags(ios::left);
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;Initial</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s size(): &#34;</span> &lt;&lt; vec.size() &lt;&lt; endl
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s capacity(): &#34;</span> &lt;&lt; vec.capacity() &lt;&lt; endl
+         &lt;&lt; endl;
+
+    <span style="color:#888;font-style:italic">// 调整容器大小. 假定现在只需要 3 的大小.
+</span><span style="color:#888;font-style:italic"></span>    vec.resize(3);
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;After resize()</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s size(): &#34;</span> &lt;&lt; vec.size() &lt;&lt; endl
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s capacity(): &#34;</span> &lt;&lt; vec.capacity() &lt;&lt; endl
+         &lt;&lt; endl;
+
+    <span style="color:#888;font-style:italic">// 调整容器容量.
+</span><span style="color:#888;font-style:italic"></span>    vec.reserve(3);
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;After reserve()</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s size(): &#34;</span> &lt;&lt; vec.size() &lt;&lt; endl
+         &lt;&lt; setw(20) &lt;&lt; <span style="color:#666;font-style:italic">&#34;vec&#39;s capacity(): &#34;</span> &lt;&lt; vec.capacity() &lt;&lt; endl
+         &lt;&lt; endl;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>输出为：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Initial
+vec<span style="">&#39;</span>s size():       10000
+vec<span style="">&#39;</span>s capacity():   10000
+
+After resize()
+vec<span style="">&#39;</span>s size():       3
+vec<span style="">&#39;</span>s capacity():   10000
+
+After reserve()
+vec<span style="">&#39;</span>s size():       3
+vec<span style="">&#39;</span>s capacity():   10000
+
+</code></pre></div><p>可以看到 <code>resize()</code> 和 <code>reverse()</code> 无法处理浪费的空间。</p>
 <h2 id="交换技巧">交换技巧</h2>
 <p>交换技巧，使用到了 <code>swap(vector&amp; other)</code>，它会将 <code>vector</code> 与 <code>other</code> 相交换，且不在单独的元素上调用任何移动、复制或交换操作。利用 <code>swap()</code> 释放多余的存储空间的操作如下：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec1).swap(vec1);
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec1).swap(vec2);
 
-</code></pre></div><p>表达式 <code>vector&lt;int&gt;(vec1)</code> 建立一个临时 <code>vector</code>，它是 <code>vec1</code> 的一份拷贝，<code>vector</code> 的复制构造函数做了这个工作。并且，这个复制品只复制了复制元素所需要的内存，所以这个临时 <code>vector</code> 没有多余的容量。</p>
-<p>然后，让临时 <code>vector</code> 和 <code>vec1</code> 交换数据，<code>vec1</code> 拥有了临时 <code>vector</code> 的修整过的容量，而临时 <code>vector</code> 则拥有了发胀的容量。最后语句执行完毕，临时 <code>vector</code> 被析构，空间被释放，大功告成。</p>
+</code></pre></div><p>表达式 <code>vector&lt;int&gt;(vec1)</code> 建立一个临时 <code>vector</code>，它是 <code>vec</code> 的一份拷贝，<code>vector</code> 的复制构造函数做了这个工作。并且，这个复制品只复制了复制元素所需要的内存，所以这个临时 <code>vector</code> 没有多余的容量。</p>
+<p>然后，让临时 <code>vector</code> 和 <code>vec</code> 交换数据，<code>vec</code> 拥有了临时 <code>vector</code> 的修整过的容量，而临时 <code>vector</code> 则拥有了发胀的容量。最后语句执行完毕，临时 <code>vector</code> 被析构，空间被释放，大功告成。</p>
 
         </div>
 

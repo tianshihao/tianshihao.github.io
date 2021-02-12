@@ -343,14 +343,14 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <h2 id="5-静态函数和虚函数的区别">5. 静态函数和虚函数的区别</h2>
 <p>静态函数在编译时确定运行时机，<strong>虚函数在运行时进行动态绑定</strong>。</p>
 <p>虚函数因为用了虚函数表机制，调用的时候会增加一次内存开销。</p>
-<h2 id="6-重载overload重写override和改写overwrite的区别">6. 重载（Overload）、重写（Override）和改写（Overwrite）的区别</h2>
+<h2 id="6-重载overload重写override和覆盖overwrite的区别">6. 重载（Overload）、重写（Override）和覆盖（Overwrite）的区别</h2>
 <table>
 <thead>
 <tr>
 <th>相较于原函数</th>
 <th>重载（Overload）</th>
 <th>覆盖（Override）</th>
-<th>改写（Overwrite）</th>
+<th>覆盖（Overwrite）</th>
 </tr>
 </thead>
 <tbody>
@@ -388,7 +388,7 @@ cout &lt;&lt; *p.get() &lt;&lt; endl;
 <td>说明</td>
 <td>编译时多态</td>
 <td>运行时多态</td>
-<td>如果派生类函数和基类函数参数列表相同、返回值相同且基类函数被 <code>virtual</code> 修饰，那么此时就是覆盖，其余所有情况均为改写。</td>
+<td>如果派生类函数和基类函数参数列表相同、返回值相同且基类函数被 <code>virtual</code> 修饰，那么此时就是重写，其余所有情况均为覆盖。</td>
 </tr>
 </tbody>
 </table>
@@ -1110,7 +1110,7 @@ p = &amp;b; <span style="color:#888;font-style:italic">// 错误
     </li>
     <li><a href="#4-虚函数的工作原理">4. 虚函数的工作原理</a></li>
     <li><a href="#5-静态函数和虚函数的区别">5. 静态函数和虚函数的区别</a></li>
-    <li><a href="#6-重载overload重写override和改写overwrite的区别">6. 重载（Overload）、重写（Override）和改写（Overwrite）的区别</a>
+    <li><a href="#6-重载overload重写override和覆盖overwrite的区别">6. 重载（Overload）、重写（Override）和覆盖（Overwrite）的区别</a>
       <ol>
         <li><a href="#代码示例">代码示例</a></li>
       </ol>
