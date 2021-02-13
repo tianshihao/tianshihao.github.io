@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>递归函数的参数设置 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="讨论全局变量、值传递和引用传递在递归函数中的特点">
+
+    <meta property="og:title" content="递归函数的参数设置" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-13-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/series">系列</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">递归函数的参数设置</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-13-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" class="article-date">
+                <time datetime='2021-02-13T00:00:00.000&#43;00:00' itemprop="datePublished">2021-02-13</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近在刷dfs、回溯时，发现不同的题解中用了不同的参数设置，导致算法的流程的不同，在此记录一下。</p>
+<h2 id="全局变量">全局变量</h2>
+<p>在回溯过程中，每次递归之后必须撤销对变量的修改，才能保证下次递归时变量返回正确的状态。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Solution</span>
+{
+<span style="font-weight:bold;text-decoration:underline">private</span>:
+    vector&lt;vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; ans;
+    vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; tmp;
+
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> backtrace(vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; &amp;nums, <span style="font-weight:bold;text-decoration:underline">int</span> ind)
+    {
+        <span style="color:#888;font-style:italic">// 结束条件.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (ind == nums.size())
+        {
+            ans.emplace_back(tmp);
+            <span style="font-weight:bold;text-decoration:underline">return</span>;
+        }
+
+        <span style="color:#888;font-style:italic">// 跳过该元素并进入下一层.
+</span><span style="color:#888;font-style:italic"></span>        dfs(nums, ind + 1);
+
+        <span style="color:#888;font-style:italic">// 选择该元素.
+</span><span style="color:#888;font-style:italic"></span>        tmp.emplace_back(nums[ind]);
+
+        <span style="color:#888;font-style:italic">// 进入下一层.
+</span><span style="color:#888;font-style:italic"></span>        dfs(nums, ind + 1);
+
+        <span style="color:#888;font-style:italic">// 撤销选择.
+</span><span style="color:#888;font-style:italic"></span>        tmp.pop_back();
+    }
+
+    vector&lt;vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; combination(vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; &amp;nums)
+    {
+        dfs(nums, 0);
+
+        <span style="font-weight:bold;text-decoration:underline">return</span> ans;
+    }
+};
+
+</code></pre></div><h3 id="引用传递">引用传递</h3>
+<p>相当于使用全局变量，<strong>在回溯时需要撤销选择</strong>。</p>
+<p>对引用变量做的任何修改都是对它所引用的变量内存位置中数据的修改，所以数据只有一份。递归结束读取栈中的存取的返回地址和局部变量，而局部变量是内存数据的引用，而引用的本质就是所引用对象的地址，地址没有改变，那么内存中的数据也不会改变，递归做的修改仍然存在，需要手动撤销选择。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Solution</span>
+{
+<span style="font-weight:bold;text-decoration:underline">public</span>:
+    <span style="font-weight:bold;text-decoration:underline">void</span> backtrace(vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; &amp;nums, vector&lt;vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; &amp;ans, vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; &amp;tmp, <span style="font-weight:bold;text-decoration:underline">int</span> ind)
+    {
+        <span style="color:#888;font-style:italic">// 结束条件.
+</span><span style="color:#888;font-style:italic"></span>        <span style="font-weight:bold;text-decoration:underline">if</span> (ind == nums.size())
+        {
+            ans.emplace_back(tmp);
+            <span style="font-weight:bold;text-decoration:underline">return</span>;
+        }
+
+        <span style="color:#888;font-style:italic">// 跳过该元素并进入下一层.
+</span><span style="color:#888;font-style:italic"></span>        dfs(nums, ans, tmp, ind + 1);
+
+        <span style="color:#888;font-style:italic">// 选择该元素.
+</span><span style="color:#888;font-style:italic"></span>        tmp.emplace_back(nums[ind]);
+
+        <span style="color:#888;font-style:italic">// 进入下一层.
+</span><span style="color:#888;font-style:italic"></span>        dfs(nums, ans, tmp, ind + 1);
+
+        <span style="color:#888;font-style:italic">// 撤销选择.
+</span><span style="color:#888;font-style:italic"></span>        tmp.pop_back();
+    }
+
+    vector&lt;vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; combination(vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; &amp;nums)
+    {
+        <span style="color:#888;font-style:italic">// 需要先定义递归用到的变量.
+</span><span style="color:#888;font-style:italic"></span>        vector&lt;vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;&gt; ans;
+        vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; tmp;
+
+        <span style="color:#888;font-style:italic">// 将变量以引用传递的方式传递给形参.
+</span><span style="color:#888;font-style:italic"></span>        dfs(nums, ans, tmp, 0);
+
+        <span style="font-weight:bold;text-decoration:underline">return</span> ans;
+    }
+};
+
+</code></pre></div><h3 id="值传递">值传递</h3>
+<p>退回到上次保存的调用堆栈中保存的状态，所以在递归结束时，变量状态回到上次调用保存的状态，本次对变量做的修改会消失。</p>
+<p>不需要手动恢复。</p>
+<p>在回溯中，不能使用值传递的方式保存需要最后返回的元素，例如最后的结果 <code>ans</code> 和存储路径分支的 <code>tmp</code>，因为在递归结束后它们会返回最初的状态，丢失所有的信息。</p>
+<p>但是记录递归层数的 <code>ind</code> 适合用值传递的方式使用，当回退当上一层时，读取调用堆栈中的内存，<code>ind</code> 将自动恢复。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#全局变量">全局变量</a>
+      <ol>
+        <li><a href="#引用传递">引用传递</a></li>
+        <li><a href="#值传递">值传递</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%BC%95%E7%94%A8%E5%BD%A2%E5%8F%82">引用形参
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">全局变量
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">条款35-实现简单的忽略大小写的字符串比较&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>

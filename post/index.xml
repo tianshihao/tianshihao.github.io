@@ -6,7 +6,16 @@
     <description>Recent content in 文章 on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 05 Feb 2021 20:09:40 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 13 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>递归函数的参数设置</title>
+      <link>https://tianshihao.github.io/post/2021-02-13-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-13-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/</guid>
+      <description>最近在刷dfs、回溯时，发现不同的题解中用了不同的参数设置，导致算法的流程的不同，在此记录一下。 全局变量 在回溯过程中，每次递归之后必须撤销对</description>
+    </item>
+    
     <item>
       <title>条款35-实现简单的忽略大小写的字符串比较</title>
       <link>https://tianshihao.github.io/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/</link>

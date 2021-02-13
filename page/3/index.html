@@ -61,6 +61,61 @@
                 
                 
                 <header class="article-header">
+                    <h1 itemprop="name"><a class="article-title" href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/">存储持续性、作用域和链接性之二</a></h1>
+                </header>
+                
+                <div class="article-meta">
+                    <a href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/" class="article-date">
+                        <time datetime='2020-12-13T14:35:02.000&#43;00:00' itemprop="datePublished">2020-12-13</time>
+                    </a>
+                    
+                    
+                    <div class="post-categories">
+                        <div class="article-category">
+                            
+                            
+                            <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="article-entry" itemprop="articleBody">
+                    <p>
+                        
+                    <p>除了线程存储持续性，C++使用三种不同的方案来存储数据，这些方案的区别就在于数据保留在内存中的时间。</p>
+<ul>
+<li>自动存储持续性：在函数定义中声明的变量（包括函数参数）的存储持续性是自动的。它们在程序开始执行其所属的函数或代码块时被创建，在执行完函数或代码块时，它们使用的内存被释放。C++有两种存储持续性为自动的变量。</li>
+<li>静态存储持续性：在函数定义外定义的变量和使用关键字<code>static</code>定义的变量的存储持续性为静态。它们在程序整个运行过程中都存在。C++有三种存储持续性为静态的变量。</li>
+<li>动态存储持续性：用<code>new</code>运算符分配的内存将一直存在，直到使用<code>delete</code>运算符将其释放或程序结束为止。这种内存的持续性为动态，有时也被成为自由存储（free store）和堆（heap）。</li>
+</ul>
+                    </p>
+                    <p class="article-more-link">
+                        <a href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7%E4%B9%8B%E4%BA%8C/"></a>
+                    </p>
+                </div>
+
+                
+                <footer class="article-footer">
+                    <ul class="article-tag-list">
+                        
+                        <li class="article-tag-list-item">
+                            <a class="article-tag-list-link" href="https://tianshihao.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">内存管理
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </footer>
+                
+            </div>
+        </article>
+        
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+                
+                
+                <header class="article-header">
                     <h1 itemprop="name"><a class="article-title" href="/post/2020-12-13-%E5%AD%98%E5%82%A8%E6%8C%81%E7%BB%AD%E6%80%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%93%BE%E6%8E%A5%E6%80%A7/">存储持续性、作用域和链接性</a></h1>
                 </header>
                 
