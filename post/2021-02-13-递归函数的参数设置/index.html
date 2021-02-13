@@ -120,7 +120,7 @@
     }
 };
 
-</code></pre></div><h3 id="引用传递">引用传递</h3>
+</code></pre></div><h2 id="引用传递">引用传递</h2>
 <p>相当于使用全局变量，<strong>在回溯时需要撤销选择</strong>。</p>
 <p>对引用变量做的任何修改都是对它所引用的变量内存位置中数据的修改，所以数据只有一份。递归结束读取栈中的存取的返回地址和局部变量，而局部变量是内存数据的引用，而引用的本质就是所引用对象的地址，地址没有改变，那么内存中的数据也不会改变，递归做的修改仍然存在，需要手动撤销选择。</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">class</span> <span style="color:#666;font-weight:bold;font-style:italic">Solution</span>
@@ -161,7 +161,7 @@
     }
 };
 
-</code></pre></div><h3 id="值传递">值传递</h3>
+</code></pre></div><h2 id="值传递">值传递</h2>
 <p>退回到上次保存的调用堆栈中保存的状态，所以在递归结束时，变量状态回到上次调用保存的状态，本次对变量做的修改会消失。</p>
 <p>不需要手动恢复。</p>
 <p>在回溯中，不能使用值传递的方式保存需要最后返回的元素，例如最后的结果 <code>ans</code> 和存储路径分支的 <code>tmp</code>，因为在递归结束后它们会返回最初的状态，丢失所有的信息。</p>
@@ -175,12 +175,9 @@
             <h3></h3>
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#全局变量">全局变量</a>
-      <ol>
-        <li><a href="#引用传递">引用传递</a></li>
-        <li><a href="#值传递">值传递</a></li>
-      </ol>
-    </li>
+    <li><a href="#全局变量">全局变量</a></li>
+    <li><a href="#引用传递">引用传递</a></li>
+    <li><a href="#值传递">值传递</a></li>
   </ol>
 </nav>
         </div>
