@@ -181,13 +181,14 @@
 <li>TCP 传输的是<strong>字节流</strong>，数据包是没有边界的，会出现<strong>粘包</strong>的问题；而 UDP 传输的<strong>报文</strong>，数据包是独立的，不会出现粘包的问题；</li>
 <li>如果强调数据的<strong>完整</strong>和<strong>正确</strong>使用 TCP，如果强调<strong>性能</strong>和<strong>速度</strong>使用 UDP。</li>
 </ol>
+<h2 id="ip-层如何区分-tcp-和-udp">IP 层如何区分 TCP 和 UDP</h2>
+<p>根据<strong>端口</strong>区分，看 IP 头中的<strong>协议标识字段</strong>，6 是 TCP，17 是 UDP。</p>
 <h2 id="基于-tcp-和-udp-的应用层协议">基于 TCP 和 UDP 的应用层协议</h2>
-<p>基于 TCP 的应用层协议：SMTP、TELNET、HTTP、FTP。</p>
-<p>基于 UDP 的应用层协议：DNS、TFTP（简单文件传输协议）、RIP（路由选择协议）、DHCP、BOOTP（是 DHCP 的前身）、IGMP（Internet 组管理协议）。</p>
+<p>基于 TCP 的应用层协议：<strong>SMTP</strong>、TELNET、<strong>HTTP</strong>、<strong>HTTPS</strong>、<strong>FTP</strong>。</p>
+<p>基于 UDP 的应用层协议：<strong>DNS</strong>、TFTP（简单文件传输协议）、<strong>RIP</strong>（路由选择协议）、<strong>DHCP</strong>、BOOTP（是 DHCP 的前身）、IGMP（Internet 组管理协议）。</p>
 <h2 id="4-tcp-和-udp-相关的协议与端口号">4. TCP 和 UDP 相关的协议与端口号</h2>
-<p>TCP 族的协议有 HTTP、HTTPS、SMTP、TelNet、FTP 等，UDP 族的协议有 DNS、DHCP 等。</p>
-<p>详情如下</p>
-<p>TCP</p>
+<p>TCP 族的协议有 HTTP、HTTPS、SMTP、TelNet、FTP 等，UDP 族的协议有 DNS、DHCP 等，详情如下：</p>
+<h3 id="tcp">TCP</h3>
 <table>
 <thead>
 <tr>
@@ -314,7 +315,7 @@
 </tbody>
 </table>
 <h2 id="5-为什么-dns-既使用-tcp-又使用-udp">5. 为什么 DNS 既使用 TCP 又使用 UDP？</h2>
-<p>UDP 报文的最大长度为 512 字节，TCP 则允许报文的长度超过 512 字节。当 DNS 查询超过 512 字节时，协议的 TC 标志出现删除标志，这是使用 TCP 发送。通常传统的 UDP 报文一般不会大于 512 字节。</p>
+<p><strong>UDP 报文的最大长度为 512 字节</strong>，TCP 则允许报文的长度超过 512 字节。当 DNS 查询超过 512 字节时，协议的 TC 标志出现删除标志，这是使用 TCP 发送。通常传统的 UDP 报文一般不会大于 512 字节。</p>
 <p>区域传送时，使用 TCP，主要有两点考虑。</p>
 <ol>
 <li>辅助域名服务器会定时（一般 3 小时）向主域名服务器进行查询以便了解数据是否有变动。若有变动，则进行一次区域传送，进行数据同步。区域传送使用 TCP 而不是 UDP，因为数据同步传送的数量比一个请求和应答的数据量要多得多；</li>
@@ -689,13 +690,13 @@
 <li>HTTPS 协议<strong>需要服务端申请证书</strong>，<strong>浏览器端安装对应的根证书</strong>；</li>
 <li>HTTP 协议端口是 <strong>80</strong>，HTTPS 协议端口是 <strong>443</strong>。</li>
 </ol>
-<h2 id="由-http-升级为-https需要做哪些操作">由 HTTP 升级为 HTTPS需要做哪些操作</h2>
+<h2 id="由-http-升级为-https-需要做哪些操作">由 HTTP 升级为 HTTPS 需要做哪些操作</h2>
 <p>HTTPS 协议需要到 CA 申请证书，一般免费证书较少，因而需要一定费用。</p>
 <h2 id="https-怎么确保安全性">HTTPS 怎么确保安全性</h2>
-<p>例如 SSL 协议，<strong>SSL是传输层的协议</strong>。</p>
+<p>例如 SSL 协议，<strong>SSL 是传输层的协议</strong>。</p>
 <p>HTTPS 包括<strong>非对称加密</strong>和<strong>对称加密</strong>两个阶段，<strong>在客户端与服务器建立连接的时候使用非对称加密，连接建立以后使用的是对称加密</strong>。</p>
 <ol>
-<li>客户使用 HTTPS 的 <strong>URL</strong> 访问 Web 服务器，要求与 Web 服务器建立 SSL 连接；</li>
+<li>客户端使用 HTTPS 的 <strong>URL</strong> 访问 Web 服务器，要求与 Web 服务器建立 SSL 连接；</li>
 <li>Web 服务器收到客户端请求后，会将网站的公钥传送一份给客户端，私钥自己保存；</li>
 <li>客户端的浏览器根据双方同意的安全等级，生成对称加密使用的密钥，称为<strong>会话密钥</strong>，然后利用网站的公钥将会话密钥加密，并传送给网站；</li>
 <li>Web 服务器利用自己的私钥解密出会话密钥；</li>
@@ -722,14 +723,11 @@
 <p>缺点：</p>
 <ol>
 <li>HTTPS 握手阶段延时较高，在进行 HTTPS 会话之前还需要进行 SSL 握手，因此 HTTPS 协议握手阶段延时增加；</li>
-<li>HTTPS 部署成本高，一方面由于 HTTPS 协议需要使用证书来验证自身的安全性，需要购买 CA 证书；另一方面由于采用 HTTPS 协议需要进行加解密计算，占用 CPU 资源较多，需要的服务器配置或数目高；</li>
-<li></li>
+<li>HTTPS 部署成本高，一方面由于 HTTPS 协议需要使用证书来验证自身的安全性，需要购买 CA 证书；另一方面由于采用 HTTPS 协议需要进行加解密计算，占用 CPU 资源较多，需要的服务器配置或数目高。</li>
 </ol>
 <h2 id="socket-开发具体的网络层怎么做网络编程基本步骤">SOCKET 开发具体的网络层怎么做、网络编程基本步骤</h2>
 <p>服务端：socket-&gt;bind-&gt;listen-&gt;accept</p>
 <p>客户端：socket-&gt;connnect</p>
-<h2 id="ip-层如何区分-tcp-和-udp">IP 层如何区分 TCP 和 UDP</h2>
-<p>根据<strong>端口</strong>区分，看 IP 头中的<strong>协议标识字段</strong>，6 是 TCP，17 是 UDP。</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -768,8 +766,13 @@
     <li><a href="#1-建立-tcp-服务器的各个系统调用">1. 建立 TCP 服务器的各个系统调用</a></li>
     <li><a href="#2-udp-如何实现可靠传输">2. UDP 如何实现可靠传输</a></li>
     <li><a href="#3-tcp-和-udp-的区别">3. TCP 和 UDP 的区别</a></li>
+    <li><a href="#ip-层如何区分-tcp-和-udp">IP 层如何区分 TCP 和 UDP</a></li>
     <li><a href="#基于-tcp-和-udp-的应用层协议">基于 TCP 和 UDP 的应用层协议</a></li>
-    <li><a href="#4-tcp-和-udp-相关的协议与端口号">4. TCP 和 UDP 相关的协议与端口号</a></li>
+    <li><a href="#4-tcp-和-udp-相关的协议与端口号">4. TCP 和 UDP 相关的协议与端口号</a>
+      <ol>
+        <li><a href="#tcp">TCP</a></li>
+      </ol>
+    </li>
     <li><a href="#5-为什么-dns-既使用-tcp-又使用-udp">5. 为什么 DNS 既使用 TCP 又使用 UDP？</a></li>
     <li><a href="#6-tcpudpip-等协议头部的认识">6. TCP、UDP、IP 等协议头部的认识</a></li>
     <li><a href="#7-在浏览器中输入-url-后执行的全部过程重点">7. 在浏览器中输入 URL 后执行的全部过程（重点）</a></li>
@@ -848,12 +851,11 @@
     </li>
     <li><a href="#http10-和-http11-的区别">HTTP/1.0 和 HTTP/1.1 的区别</a></li>
     <li><a href="#http-和-https-的区别">HTTP 和 HTTPS 的区别</a></li>
-    <li><a href="#由-http-升级为-https需要做哪些操作">由 HTTP 升级为 HTTPS需要做哪些操作</a></li>
+    <li><a href="#由-http-升级为-https-需要做哪些操作">由 HTTP 升级为 HTTPS 需要做哪些操作</a></li>
     <li><a href="#https-怎么确保安全性">HTTPS 怎么确保安全性</a></li>
     <li><a href="#对数字证书的了解">对数字证书的了解</a></li>
     <li><a href="#https-的优缺点">HTTPS 的优缺点</a></li>
     <li><a href="#socket-开发具体的网络层怎么做网络编程基本步骤">SOCKET 开发具体的网络层怎么做、网络编程基本步骤</a></li>
-    <li><a href="#ip-层如何区分-tcp-和-udp">IP 层如何区分 TCP 和 UDP</a></li>
   </ol>
 </nav>
         </div>
