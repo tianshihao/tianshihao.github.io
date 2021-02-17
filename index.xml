@@ -9,10 +9,10 @@
     <lastBuildDate>Wed, 17 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>实用字符串操作指南</title>
-      <link>https://tianshihao.github.io/post/2021-02-17-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/</link>
+      <link>https://tianshihao.github.io/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/</link>
       <pubDate>Wed, 17 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://tianshihao.github.io/post/2021-02-17-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/</guid>
+      <guid>https://tianshihao.github.io/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/</guid>
       <description>字符串解析不难，但容易手忙脚乱，所以这里整理一下实用的字符串操作。 宽字节这里不做讨论。 C 风格 atoi, atol, atoll 函数定义如下： // 定义于头文件 &amp;lt;cstdlib&amp;gt; int atoi(const char *str); long atol(const</description>
     </item>
     

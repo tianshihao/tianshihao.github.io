@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>实用字符串操作指南 // 水上书</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="总结常见的字符串操作">
+
+    <meta property="og:title" content="实用字符串操作指南" />
+<meta property="og:description"
+    content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="zh" />
+<meta property="og:url" content="https://tianshihao.github.io/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://tianshihao.github.io/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://tianshihao.github.io/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://tianshihao.github.io/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.80.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://tianshihao.github.io/">水上书</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/post">文章</a>
+                
+                <a class="main-nav-link" href="/categories">分类</a>
+                
+                <a class="main-nav-link" href="/tags">标签</a>
+                
+                <a class="main-nav-link" href="/series">系列</a>
+                
+                <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">实用字符串操作指南</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/" class="article-date">
+                <time datetime='2021-02-17T00:00:00.000&#43;00:00' itemprop="datePublished">2021-02-17</time>
+            </a>
+            
+            
+            <div class="post-categories">
+                <div class="article-category">
+                    
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/c&#43;&#43;">C&#43;&#43;</a>
+                    
+                    
+                    <span>&gt;</span>
+                    
+                    <a class="article-category-link" href="https://tianshihao.github.io/categories/%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>字符串解析不难，但容易手忙脚乱，所以这里整理一下实用的字符串操作。</p>
+<p>宽字节这里不做讨论。</p>
+<h2 id="c-风格">C 风格</h2>
+<h3 id="atoi-atol-atoll">atoi, atol, atoll</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;cstdlib&gt;
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">int</span>       <span style="color:#666;font-weight:bold;font-style:italic">atoi</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str);
+<span style="font-weight:bold;text-decoration:underline">long</span>      <span style="color:#666;font-weight:bold;font-style:italic">atol</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str);
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">long</span> <span style="color:#666;font-weight:bold;font-style:italic">atoll</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str);
+
+</code></pre></div><p>功能是转译 <code>str</code> 所指的字节字符串中的整数值。</p>
+<p>舍弃任何空白字符，直至找到首个非空白字符，然后接收尽可能多的字符以组成合法的整数表示，并将其转换为整数值。</p>
+<p>可以消除前导零，正负号必须在前导零之前，否则，转译的结果是 0。</p>
+<p>若转换值超出范围，则行为未定义；若不能进行转换，则返回 0。</p>
+<blockquote>
+<p><code>atoi</code> 是 “ASCII to integer” 的缩写。</p>
+</blockquote>
+<h3 id="atof">atof</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;cstdlib&gt;
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">double</span> <span style="color:#666;font-weight:bold;font-style:italic">atof</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span>* str);
+
+</code></pre></div><p>转译 <code>str</code> 所指向的字节字符串中的浮点值。</p>
+<p>函数会舍弃所有由 <code>isspace()</code> 确定的空白字符，直至找到首个非空白字符。然后它会尽可能多地取字符，以构成合法的浮点数表示，并将它们转换成浮点值。合法的浮点数如下：</p>
+<ul>
+<li>十进制浮点数，由下列部分组成：
+<ul>
+<li>（可选）正负号</li>
+<li>非空的十进制数字序列，可选地包含一个小数点字符（定义有效数字）</li>
+<li>（可选）e 或 E，并跟随可选的正或符号，以及非空十进制数字序列（以 10 为底定义指数）</li>
+</ul>
+</li>
+<li>十六进制浮点数，由下列部分组成：
+<ul>
+<li>（可选）正负号</li>
+<li><strong>0x</strong> 或 <strong>0X</strong>，二进制的标志</li>
+<li>非空的十六进制数字序列，以及非空十进制数字序列（以 2 为底定义指数）</li>
+</ul>
+</li>
+<li>无穷大，它由下列部分组成
+<ul>
+<li>（可选）正负号</li>
+<li><strong>INF</strong> 或 <strong>INFINITY</strong>，忽略大小写</li>
+</ul>
+</li>
+<li>非数（NaN）表达式，它由下列部分组成：
+<ul>
+<li>（可选）正负号</li>
+<li>NAN 或 NAN（字符序列），忽略 NAN 大小写</li>
+</ul>
+</li>
+</ul>
+<p>以下遇到的合法的浮点数表示都是这个。</p>
+<p>若转换值超出范围，返回值未定义；若不能转换，则返回 <code>0.0</code>。</p>
+<h3 id="strtol-strtoll">strtol, strtoll</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;cstdlib&gt;
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="color:#666;font-weight:bold;font-style:italic">strtol</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str, <span style="font-weight:bold;text-decoration:underline">char</span> **str_end, <span style="font-weight:bold;text-decoration:underline">int</span> base);
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">long</span> <span style="color:#666;font-weight:bold;font-style:italic">strtol</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str, <span style="font-weight:bold;text-decoration:underline">char</span> **str_end, <span style="font-weight:bold;text-decoration:underline">int</span> base);
+
+</code></pre></div><p>转译 <code>str</code> 所指向的字节字符串中的整数值。功能同 <code>atoi</code>。</p>
+<p>不同的是，函数设置的 <code>str_end</code> 在完成转译之后会指向最后被转译的<strong>后一个字符</strong>。若 <code>str_end</code> 为空，则可以忽略它。此外，还可以通过设置参数 <code>base</code> （底数）设置数值进制，例如 2、8、10、16等，底数的合法集是 {0, 2, 3, &hellip;, 36}。底数 2 对应的合法数字集是 {0, 1}，底数 3 对应的合法数字集是 {0, 1, 2}，以此类推。对于大于 10 的底数，合法数字包含字母字符，从对于底数 11 的 Aa 到对于底数 36 的 Zz。</p>
+<p>如果底数 <code>base</code> 为 0，那么会自动检测数值进制：若前缀为 0，则为八进制；若前缀为 <strong>0x</strong> 或 <strong>0X</strong>，则为十六进制；否则为十进制。</p>
+<p>若转换值超出对应类型的范围外，则发生值域错误；若不能进行转换，则返回 <code>0</code>。</p>
+<p>简单应用，利用 <code>str_end</code> 指向最后一个被转译字符的后一个字符的特性截取 IP 地址。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;cstdlib&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;vector&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    <span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *<span style="font-weight:bold;text-decoration:underline">const</span> ipAddress = <span style="color:#666;font-style:italic">&#34;192.168.0.1&#34;</span>;
+
+    <span style="color:#888;font-style:italic">// 存储 IP 地址的 4 个段.
+</span><span style="color:#888;font-style:italic"></span>    vector&lt;<span style="font-weight:bold;text-decoration:underline">long</span>&gt; segments(4);
+
+    <span style="color:#888;font-style:italic">// 先定义一个指针.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">char</span> *pEnd;
+
+    segments[0] = strtol(ipAddress, &amp;pEnd, 10);
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;pEnd &#34;</span> &lt;&lt; &amp;pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34; point to next element &#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; *pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;\t</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34; pEnd stand for &#34;</span> &lt;&lt; pEnd &lt;&lt; endl;
+    <span style="color:#888;font-style:italic">// 此时 pEnd 指向分隔符 &#39;.&#39;, 令其自增 1, 指向下一个数字段的开始.
+</span><span style="color:#888;font-style:italic"></span>    segments[1] = strtol(++pEnd, &amp;pEnd, 10);
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;pEnd &#34;</span> &lt;&lt; &amp;pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34; point to next element &#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; *pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;\t</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34; pEnd stand for &#34;</span> &lt;&lt; pEnd &lt;&lt; endl;
+    segments[2] = strtol(++pEnd, &amp;pEnd, 10);
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;pEnd &#34;</span> &lt;&lt; &amp;pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34; point to next element &#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; *pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;\t</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34; pEnd stand for &#34;</span> &lt;&lt; pEnd &lt;&lt; endl;
+    segments[3] = strtol(++pEnd, &amp;pEnd, 10);
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;pEnd &#34;</span> &lt;&lt; &amp;pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34; point to next element &#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;</span><span style="color:#666;font-style:italic">&#34;</span> &lt;&lt; *pEnd &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\&#34;\t</span><span style="color:#666;font-style:italic">&#34;</span>
+         &lt;&lt; <span style="color:#666;font-style:italic">&#34; pEnd stand for &#34;</span> &lt;&lt; pEnd &lt;&lt; endl;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>上述程序输出为：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pEnd 0x7fffea6f56b0 point to next element &#34;.&#34;    pEnd stand for .168.0.1
+pEnd 0x7fffea6f56b0 point to next element &#34;.&#34;    pEnd stand for .0.1
+pEnd 0x7fffea6f56b0 point to next element &#34;.&#34;    pEnd stand for .1
+pEnd 0x7fffea6f56b0 point to next element &#34;&#34;     pEnd stand for 
+
+</code></pre></div><h3 id="strtoul-strtoull">strtoul, strtoull</h3>
+<p><code>strtoul</code> 和 <code>strtoull</code> 同 <code>strtol</code> 和 <code>strtoull</code>，虽然转译的是无符号整数值，但也能转译负数。</p>
+<h3 id="strtof-strtod-strtold">strtof, strtod, strtold</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;cstdlib&gt;
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">float</span>       <span style="color:#666;font-weight:bold;font-style:italic">strtof</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str, <span style="font-weight:bold;text-decoration:underline">char</span> **str_end);
+<span style="font-weight:bold;text-decoration:underline">double</span>      <span style="color:#666;font-weight:bold;font-style:italic">strtod</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str, <span style="font-weight:bold;text-decoration:underline">char</span> **str_end);
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">double</span> <span style="color:#666;font-weight:bold;font-style:italic">strtold</span>(<span style="font-weight:bold;text-decoration:underline">const</span> <span style="font-weight:bold;text-decoration:underline">char</span> *str, <span style="font-weight:bold;text-decoration:underline">char</span> **str_end);
+
+</code></pre></div><p>和 <code>strtol</code> 等一样，但需要注意的是，参数中没有底数 <code>base</code>，不过规定了合法的浮点数，和 <code>atof</code> 相同。</p>
+<h2 id="c-风格-1">C++ 风格</h2>
+<h3 id="stoi-stol-stoll">stoi, stol, stoll</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;string&gt;
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span>       <span style="color:#666;font-weight:bold;font-style:italic">stoi</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0, <span style="font-weight:bold;text-decoration:underline">int</span> base = 10);
+<span style="font-weight:bold;text-decoration:underline">long</span>      <span style="color:#666;font-weight:bold;font-style:italic">stol</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0, <span style="font-weight:bold;text-decoration:underline">int</span> base = 10);
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">long</span> <span style="color:#666;font-weight:bold;font-style:italic">stoll</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0, <span style="font-weight:bold;text-decoration:underline">int</span> base = 10);
+
+</code></pre></div><p>转译字符串 <code>str</code> 中的有符号整数值。其上三个内部分别调用 <code>strtol</code>、<code>strtol</code> 和 <code>strtoll</code>。</p>
+<p>同样，还是舍弃空白符，尽可能多地组成底数为 <code>base</code> 的整数表示。合法的整数值由下列部分组成：</p>
+<ul>
+<li>（可选）正负号</li>
+<li>（可选）指示八进制底数的前缀（<strong>0</strong>）（仅当底数为 <code>8</code> 或 <code>0</code> 时使用）</li>
+<li>（可选）指示十六进制底数的前缀（<strong>0x</strong> 或 <strong>0X</strong>）（仅当底数为 <code>16</code> 或 <code>0</code> 时使用）</li>
+<li>一个数字序列</li>
+</ul>
+<p>底数的合法集同样是 {0,2,3,&hellip;,36}，若 <code>base</code> 为 0，则自动检测数值进制。</p>
+<p>注意 <code>stoi</code> 中 <code>pos</code> 和 <code>strtol</code> 中的 <code>str_end</code> 不同，它表示的是已处理字符的个数的地址，已处理字符的个数保留在 <code>*pos</code> 中，这点和 <code>strtol</code> 不同。</p>
+<p>可以将上述的分割 IP 地址的例子改为由 <code>stoi</code> 实现。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;vector&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    <span style="font-weight:bold;text-decoration:underline">const</span> string ipAddress = <span style="color:#666;font-style:italic">&#34;172.31.255.12&#34;</span>;
+
+    <span style="color:#888;font-style:italic">// 存储 IP 地址的 4 个段.
+</span><span style="color:#888;font-style:italic"></span>    vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; segments(4);
+
+    <span style="color:#888;font-style:italic">// 先定义一个指针并分配空间.  不同于 strtol, 只需定义一个 char 指针,
+</span><span style="color:#888;font-style:italic"></span>    <span style="color:#888;font-style:italic">// 无需分配空间.
+</span><span style="color:#888;font-style:italic"></span>    size_t *pos = <span style="font-weight:bold;text-decoration:underline">new</span> size_t();
+    <span style="color:#888;font-style:italic">// 截取子串的开始位置.
+</span><span style="color:#888;font-style:italic"></span>    <span style="font-weight:bold;text-decoration:underline">int</span> start = 0;
+
+    <span style="font-weight:bold;text-decoration:underline">for</span> (<span style="font-weight:bold;text-decoration:underline">int</span> i = 0; i &lt; 4; ++i)
+    {
+        segments[i] = stoi(ipAddress.substr(start), pos, 10);
+        <span style="color:#888;font-style:italic">// 使用每次转译处理的字符数更新子串开始的位置, 注意加 1 是为了跳过
+</span><span style="color:#888;font-style:italic"></span>        <span style="color:#888;font-style:italic">// 分隔符 &#39;.&#39;.
+</span><span style="color:#888;font-style:italic"></span>        start += *pos + 1;
+    }
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><h3 id="stoul-stoull">stoul, stoull</h3>
+<p>基本同 <code>stol</code> 和 <code>stoll</code>。</p>
+<h3 id="stof-stod-stold">stof, stod, stold</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;string&gt;
+</span><span style="color:#888;font-style:italic"></span>
+<span style="font-weight:bold;text-decoration:underline">float</span> <span style="color:#666;font-weight:bold;font-style:italic">stof</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0);
+<span style="font-weight:bold;text-decoration:underline">double</span> <span style="color:#666;font-weight:bold;font-style:italic">stod</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0);
+<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">double</span> <span style="color:#666;font-weight:bold;font-style:italic">stold</span>(<span style="font-weight:bold;text-decoration:underline">const</span> std::string&amp; str, std::size_t* pos = 0);
+</code></pre></div><p>注意合法的浮点值。</p>
+<h3 id="to_string">to_string</h3>
+<p>函数定义如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-style:italic">// 定义于头文件 &lt;string&gt;
+</span><span style="color:#888;font-style:italic"></span>std::string to_string(<span style="font-weight:bold;text-decoration:underline">int</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">long</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">long</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">unsigned</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">long</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">unsigned</span> <span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">long</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">float</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">double</span> value);
+std::string to_string(<span style="font-weight:bold;text-decoration:underline">long</span> <span style="font-weight:bold;text-decoration:underline">double</span> value);
+
+
+</code></pre></div><p>把给定的十进制数转换为字符串，返回转换后的字符串。</p>
+<h2 id="空白字符检测">空白字符检测</h2>
+<p>除了 <code>atoi</code> 没有明确使用 <code>isspace()</code> 检测空白字符，其余所有数值转换函数都使用 <code>isspace()</code> 检测空白字符。所谓空白字符包括：</p>
+<ul>
+<li>空格 (<code>0x20</code>, ' &lsquo;)</li>
+<li>换页 (<code>0x0c</code>, &lsquo;<strong>\f</strong>')</li>
+<li>换行 (<code>0x0a</code>, &lsquo;<strong>\n</strong>')</li>
+<li>回车 (<code>0x0d</code>, &lsquo;<strong>\r</strong>')</li>
+<li>水平制表符 (<code>0x09</code>, &lsquo;<strong>\t</strong>')</li>
+<li>垂直制表符 (<code>0x0b</code>, &lsquo;<strong>\v</strong>')</li>
+</ul>
+<h2 id="总结">总结</h2>
+<h3 id="c-风格字符串">C 风格字符串</h3>
+<table>
+<thead>
+<tr>
+<th>C 风格字符串</th>
+<th>符号</th>
+<th>参数</th>
+<th>进制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>atoi，atol，atoll</td>
+<td>有符号</td>
+<td>1 个，要转换的字节字符</td>
+<td></td>
+</tr>
+<tr>
+<td>atof</td>
+<td>有符号</td>
+<td>1 个，要转换的字节字符。</td>
+<td>进制自动判断，支持 8、10、16 进制</td>
+</tr>
+<tr>
+<td>strtol，strtoll</td>
+<td>有符号</td>
+<td>3 个，要转换的字节字符，转换后的下一个位置的指针，底数。</td>
+<td>支持 0、2、3、……36 进制，8、10、16 进制可自动判断</td>
+</tr>
+<tr>
+<td>strtoul，strtoull</td>
+<td>无符号</td>
+<td>3 个，要转换的字节字符，转换后的下一个位置的指针，底数。</td>
+<td>支持 0、2、3、……36 进制，8、10、16 进制可自动判断</td>
+</tr>
+<tr>
+<td>strtof，strtod，strtold</td>
+<td>有符号</td>
+<td>2个，要转换的字节字符，转换后的下一个位置的指针。</td>
+<td>进制自动判断，支持 8、10、16 进制</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c-风格字符串-1">C++ 风格字符串</h3>
+<table>
+<thead>
+<tr>
+<th>C++ 风格字符串</th>
+<th>符号</th>
+<th>参数</th>
+<th>进制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stoi, stol, stoll</td>
+<td>有</td>
+<td>3 个，要转换的字符串，<strong>保存已处理字符的数量的地址</strong>，底数</td>
+<td>支持 0、2、3、……、36 进制，底数为 0 时自动判断八进制和十六进制</td>
+</tr>
+<tr>
+<td>stoul, stoull</td>
+<td>无</td>
+<td>3 个，要转换的字符串，<strong>保存已处理字符的数量的地址</strong>，底数</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>stof, stod, stold</td>
+<td>有</td>
+<td>3 个，要转换的字符串，<strong>保存已处理字符的数量的地址</strong></td>
+<td>同 <code>strtof</code></td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3></h3>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#c-风格">C 风格</a>
+      <ol>
+        <li><a href="#atoi-atol-atoll">atoi, atol, atoll</a></li>
+        <li><a href="#atof">atof</a></li>
+        <li><a href="#strtol-strtoll">strtol, strtoll</a></li>
+        <li><a href="#strtoul-strtoull">strtoul, strtoull</a></li>
+        <li><a href="#strtof-strtod-strtold">strtof, strtod, strtold</a></li>
+      </ol>
+    </li>
+    <li><a href="#c-风格-1">C++ 风格</a>
+      <ol>
+        <li><a href="#stoi-stol-stoll">stoi, stol, stoll</a></li>
+        <li><a href="#stoul-stoull">stoul, stoull</a></li>
+        <li><a href="#stof-stod-stold">stof, stod, stold</a></li>
+        <li><a href="#to_string">to_string</a></li>
+      </ol>
+    </li>
+    <li><a href="#空白字符检测">空白字符检测</a></li>
+    <li><a href="#总结">总结</a>
+      <ol>
+        <li><a href="#c-风格字符串">C 风格字符串</a></li>
+        <li><a href="#c-风格字符串-1">C++ 风格字符串</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+        
+        
+
+        
+
+
+        
+    </div>
+    
+<nav id="article-nav">
+    
+    
+    <a href="/post/2021-02-13-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">递归函数的参数设置&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2021 水上书
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a
+                href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+        integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+        integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"
+        integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+    <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+</div>
+</body>
+</html>
