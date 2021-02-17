@@ -6,7 +6,16 @@
     <description>Recent content in 字符串 on 水上书</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 05 Feb 2021 20:09:40 +0800</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 17 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tianshihao.github.io/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>实用字符串操作指南</title>
+      <link>https://tianshihao.github.io/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Wed, 17 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tianshihao.github.io/post/2021-02-17-%E5%AE%9E%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/</guid>
+      <description>字符串解析不难，但容易手忙脚乱，所以这里整理一下实用的字符串操作。 宽字节这里不做讨论。 C 风格 atoi, atol, atoll 函数定义如下： // 定义于头文件 &amp;lt;cstdlib&amp;gt; int atoi(const char *str); long atol(const</description>
+    </item>
+    
     <item>
       <title>条款35-实现简单的忽略大小写的字符串比较</title>
       <link>https://tianshihao.github.io/post/2021-02-05-%E6%9D%A1%E6%AC%BE35-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/</link>
