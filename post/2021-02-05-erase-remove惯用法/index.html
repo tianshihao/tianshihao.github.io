@@ -109,6 +109,7 @@ v.erase(remove(v.begin(), v.end(), 99), v.end());
 
 </code></pre></div><p>把 <code>remove</code> 的返回值作为 <code>erase()</code> 区间形式第一个实参传递很常见，这是个惯用法。</p>
 <h2 id="remove_if-和-remove_copy_if">remove_if() 和 remove_copy_if()</h2>
+<h3 id="序列容器">序列容器</h3>
 <p>如果要删除的不是每个有特定值的物体，而是消除下面的判断式</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">bool</span> <span style="color:#666;font-weight:bold;font-style:italic">badValue</span>(<span style="font-weight:bold;text-decoration:underline">int</span> x); <span style="color:#888;font-style:italic">// 返回 x 是否是 &#34;bad&#34;.
 </span><span style="color:#888;font-style:italic"></span>
@@ -130,6 +131,49 @@ v.erase(remove(v.begin(), v.end(), 99), v.end());
 </span><span style="color:#888;font-style:italic"></span>}
 
 </code></pre></div><p>真是好笑，听到面试官问我这道题，我心中窃喜，还想着秀一秀我关于“如何正确使用迭代器删除元素”的清晰思路，哈哈，真是贻笑大方😂。</p>
+<p>更完美的版本：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;iostream&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold">#include</span> <span style="color:#888;font-weight:bold">&lt;vector&gt;</span><span style="color:#888;font-weight:bold">
+</span><span style="color:#888;font-weight:bold"></span><span style="font-weight:bold;text-decoration:underline">using</span> <span style="font-weight:bold;text-decoration:underline">namespace</span> std;
+
+<span style="font-weight:bold;text-decoration:underline">int</span> <span style="color:#666;font-weight:bold;font-style:italic">main</span>()
+{
+    vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt; vec{19, 21, 28, 13, 16, 2, 3, 29, 12,
+                    4, 25, 17, 26, 5, 20, 18, 30, 6, 22,
+                    11, 24, 14, 7, 23, 1, 15, 27, 8, 9, 10};
+
+    <span style="color:#888;font-style:italic">// 使用 lambda 函数作为谓词. 当然 -&gt; bool 可以省略.
+</span><span style="color:#888;font-style:italic"></span>    vec.erase(
+        remove_if(vec.begin(),
+                  vec.end(),
+                  [&amp;](<span style="font-weight:bold;text-decoration:underline">int</span> num) -&gt; <span style="font-weight:bold;text-decoration:underline">bool</span> { <span style="font-weight:bold;text-decoration:underline">return</span> num % 3 == 0; }),
+        vec.end());
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;after erase-remove</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size: &#34;</span> &lt;&lt; vec.size() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;capacity: &#34;</span> &lt;&lt; vec.capacity() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    <span style="color:#888;font-style:italic">// 使用交换技巧收缩空间.
+</span><span style="color:#888;font-style:italic"></span>    vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec).swap(vec);
+
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;after swap trick</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;size: &#34;</span> &lt;&lt; vec.size() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+    cout &lt;&lt; <span style="color:#666;font-style:italic">&#34;capacity: &#34;</span> &lt;&lt; vec.capacity() &lt;&lt; <span style="color:#666;font-style:italic">&#34;</span><span style="color:#666;font-style:italic">\n</span><span style="color:#666;font-style:italic">&#34;</span>;
+
+    <span style="font-weight:bold;text-decoration:underline">return</span> 0;
+}
+
+</code></pre></div><p>输出如下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">after erase-remove
+size: 20
+capacity: 30
+
+after swap trick
+size: 20
+capacity: 20
+
+</code></pre></div><h3 id="关联容器">关联容器</h3>
 <p>对于关联容器，<code>remove_if()</code> 不是很直截了当。有两种方法处理该问题：</p>
 <ol>
 <li><code>remove_copy_if()</code>，更容易，效率较低；</li>
@@ -205,7 +249,12 @@ v.erase(remove(v.begin(), v.end(), 99), v.end());
   <ol>
     <li><a href="#remove">remove()</a></li>
     <li><a href="#erase-remove-惯用法">erase-remove 惯用法</a></li>
-    <li><a href="#remove_if-和-remove_copy_if">remove_if() 和 remove_copy_if()</a></li>
+    <li><a href="#remove_if-和-remove_copy_if">remove_if() 和 remove_copy_if()</a>
+      <ol>
+        <li><a href="#序列容器">序列容器</a></li>
+        <li><a href="#关联容器">关联容器</a></li>
+      </ol>
+    </li>
     <li><a href="#结论">结论</a></li>
   </ol>
 </nav>

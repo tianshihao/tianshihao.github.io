@@ -140,9 +140,9 @@ vec<span style="">&#39;</span>s capacity():   10000
 </code></pre></div><p>可以看到 <code>resize()</code> 和 <code>reverse()</code> 无法处理浪费的空间。</p>
 <h2 id="交换技巧">交换技巧</h2>
 <p>交换技巧，使用到了 <code>swap(vector&amp; other)</code>，它会将 <code>vector</code> 与 <code>other</code> 相交换，且不在单独的元素上调用任何移动、复制或交换操作。利用 <code>swap()</code> 释放多余的存储空间的操作如下：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec1).swap(vec2);
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;<span style="font-weight:bold;text-decoration:underline">int</span>&gt;(vec).swap(vec);
 
-</code></pre></div><p>表达式 <code>vector&lt;int&gt;(vec1)</code> 建立一个临时 <code>vector</code>，它是 <code>vec</code> 的一份拷贝，<code>vector</code> 的复制构造函数做了这个工作。并且，这个复制品只复制了复制元素所需要的内存，所以这个临时 <code>vector</code> 没有多余的容量。</p>
+</code></pre></div><p>表达式 <code>vector&lt;int&gt;(vec)</code> 建立一个临时 <code>vector</code>，它是 <code>vec</code> 的一份拷贝，<code>vector</code> 的复制构造函数做了这个工作。并且，这个复制品只复制了复制元素所需要的内存，所以这个临时 <code>vector</code> 没有多余的容量。</p>
 <p>然后，让临时 <code>vector</code> 和 <code>vec</code> 交换数据，<code>vec</code> 拥有了临时 <code>vector</code> 的修整过的容量，而临时 <code>vector</code> 则拥有了发胀的容量。最后语句执行完毕，临时 <code>vector</code> 被析构，空间被释放，大功告成。</p>
 
         </div>
