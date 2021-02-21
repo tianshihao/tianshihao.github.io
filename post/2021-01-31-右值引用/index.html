@@ -81,13 +81,14 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>什么是右值引用？为了让编译器知道什么时候需要复制，什么时候不需要，实现移动语义，这时候就需要右值引用。右值引用最长发挥左右的地方在移动构造函数，它使用右值引用作为参数，该引用关联到右值实参。移动构造函数至调整记录，将数据所有权转移给新的对象，过程中，移动构造函数可能修改其实参，所以右值引用不该是 <code>const</code>。</p>
-<h2 id="右值">右值</h2>
-<p>右指是相对于左值而言。左值是一个可以表示数据的表达式，<strong>程序可获取其地址</strong>。最初，左值可出现在赋值语句左边，故由此得名。相对而言，右值就是可出现在赋值表达式右边，表示可以知道的它的值，但不能对其应用地址运算符的值。右值包括字面常量（C-风格字符串除外，它表示地址）、诸如 <code>x + y </code>等表达式以及返回值的函数（条件是该函数返回的不是引用）。</p>
+<h2 id="左值和右值">左值和右值</h2>
+<p>右值是相对于左值而言。左值是一个可以表示数据的表达式，<strong>程序可获取其地址</strong>。最初，左值可出现在赋值语句左边，故由此得名。相对而言，右值就是可出现在赋值表达式右边，表示可以知道的它的值，但不能对其应用地址运算符的值。右值包括字面常量（C-风格字符串除外，它表示地址）、诸如 <code>x + y </code>等表达式以及返回值的函数（条件是该函数返回的不是引用）。</p>
 <p>变量和文字常量都有存储区，并且有相关的类型。区别在于<strong>变量是可寻址的</strong>（addressable）。对于每一个变量都有两个值与其相联：</p>
 <ol>
 <li>它的数据值，存储在某个内存地址中。有时这个值也被称为对象的右值（rvalue）。我们也可认为右值的意思是被读取的值（read value）。文字常量和变量都可被用作右值。</li>
 <li>它的地址值，即存储数据值的那块内存的地址。它有时被称为变量的左值（lvalue）。也可认为左值的意思是位置值（location value）。文字常量不能被用作左值。</li>
 </ol>
+<p>因此<strong>可取地址、有名字的就是左值；不能取地址、没有名字的就是右值（将亡值、纯右值）</strong>。</p>
 <p>有些变量既可以当作左值又可以当作右值。</p>
 <p>代码示例</p>
 <p><code>i++</code>：先使用 <code>i</code> 的值，再给 <code>i</code> 加 1，作为<strong>右值</strong>；</p>
@@ -109,7 +110,12 @@ i = i + 1;
 
 </code></pre></div><p>注意，<code>r2</code> 关联到的是<strong>当时</strong>计算 <code>x + y</code> 得到的结果，也就是说 <code>r2</code> 关联到的是 23，即使以后修改了 <code>x</code> 或 <code>y</code>，也不会影响到 <code>r2</code>。</p>
 <p>将右值关联到右值引用导致该右值被存储到特定的位置，且可以获取该位置的地址。</p>
-<h2 id="移动语义">移动语义</h2>
+<p>右值引用通常不能绑定到任何左值，要想绑定一个左值到一个右值引用，通常需要 <code>std::move</code> 将左值强制转换为右值，例如：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">int</span> a;
+<span style="font-weight:bold;text-decoration:underline">int</span> &amp;&amp;r1 = a;            <span style="color:#888;font-style:italic">// 编译失败
+</span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">int</span> &amp;&amp;r2 = std::move(a); <span style="color:#888;font-style:italic">// 编译成功
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><h2 id="移动语义">移动语义</h2>
 <p>假设有一个函数，它返回一个 <code>vector&lt;string&gt;</code> 对象：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector&lt;string&gt; allcaps(<span style="font-weight:bold;text-decoration:underline">const</span> vector&lt;string&gt; &amp; vs)
 {
@@ -177,6 +183,8 @@ vector&lt;string&gt; vstr_copy1(vstr);          <span style="color:#888;font-sty
 }
 
 </code></pre></div><h2 id="强制移动">强制移动</h2>
+<h2 id="左值引用和右值引用的区别">左值引用和右值引用的区别</h2>
+<p>左值引用和原变量相当于同一个变量。右值引用和左值引用的区别是，右值是一个临时变量，且是不变的，变量的所有权会转移。可以理解为右值引用初始化后，被引用的对象消失，后面一般不再使用。</p>
         </div>
 
         
@@ -185,12 +193,13 @@ vector&lt;string&gt; vstr_copy1(vstr);          <span style="color:#888;font-sty
             <h3></h3>
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#右值">右值</a></li>
+    <li><a href="#左值和右值">左值和右值</a></li>
     <li><a href="#右值引用">右值引用</a></li>
     <li><a href="#移动语义">移动语义</a></li>
     <li><a href="#移动构造函数">移动构造函数</a></li>
     <li><a href="#移动赋值运算符">移动赋值运算符</a></li>
     <li><a href="#强制移动">强制移动</a></li>
+    <li><a href="#左值引用和右值引用的区别">左值引用和右值引用的区别</a></li>
   </ol>
 </nav>
         </div>
