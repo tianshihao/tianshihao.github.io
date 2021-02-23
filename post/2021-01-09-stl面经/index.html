@@ -692,10 +692,12 @@ std::set&lt;std::string&gt; copySet = mySet;
 <p>其函数原型为</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">resize</span>(size_type count);									<span style="color:#888;font-style:italic">// (1)
 </span><span style="color:#888;font-style:italic"></span><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">resize</span>(size_type count, <span style="font-weight:bold;text-decoration:underline">const</span> value_type&amp; value);		 <span style="color:#888;font-style:italic">// (2)
-</span></code></pre></div><p>重设容器大小容纳 <code>count</code> 个元素。若当前大小大于 <code>count</code>，则减小容器为其首 <code>count</code> 个元素。若当前大小小于 <code>count</code>，1) 则后附额外的默认插入的元素；2）则后附额外的 <code>value</code> 的副本。</p>
+</span><span style="color:#888;font-style:italic"></span>
+</code></pre></div><p>重设容器大小容纳 <code>count</code> 个元素。若当前大小大于 <code>count</code>，则减小容器为其首 <code>count</code> 个元素。若当前大小小于 <code>count</code>，1) 则后附额外的默认插入的元素；2）则后附额外的 <code>value</code> 的副本。</p>
 <h5 id="reserve">reserve()</h5>
 <p>其函数原型为</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="font-weight:bold;text-decoration:underline">void</span> <span style="color:#666;font-weight:bold;font-style:italic">reserve</span>(size_type new_cap);
+
 </code></pre></div><p>增加 <code>vector</code> 的容量到大于或等于 <code>new_cap</code> 的值。</p>
 <ol>
 <li>若 <code>new_cap</code> 大于当前的 <code>capacity()</code>，则分配新存储空间，把之前 <code>vector</code> 中的对象通过复制构造函数复制过来，销毁之前的内存（包括所有迭代器，包含尾后迭代器和所有到元素的引用都被非法化）；</li>
