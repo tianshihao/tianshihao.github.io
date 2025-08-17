@@ -1,0 +1,69 @@
+DefaultContentLanguage = "en"
+author = "He Yeshuang"
+baseURL = "https://example.com/"
+copyright = "Copyright © 2008–2019"
+disqusShortname = "YOURSHORTNAME"
+enableInlineShortcodes = true
+footnoteReturnLinkContents = "^"
+googleAnalytics = "UA-1234567890" # or "G-xxxxxxxx" in Google Analytics v4, in hugo v0.82+
+hasCJKLanguage = true
+languageCode = "cn"
+theme = "hugo-theme-tokiwa"
+title = "Hugo Themes"
+
+[markup]
+  [markup.highlight]
+  style = "monokailight"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+description = """
+Tokiwa-iro is the theme color of this site.
+"""
+math = true # for introducing $KaTEX$
+env = "production" # for Google Analytics and DISQUS.
+useChineseFonts = true # for font Noto Serif etc.
+bannerFont = "fonts/exampleFont" # custom your own font for the title.
+postDateFormat = "2006-1-2" # override custom date format posts.
+fuse = true # for searchbox. "JSON" must added to output contents. See [outputs].
+
+[menu]
+# Shown in the side menu.
+  [[menu.main]]
+    name = "Posts"
+    weight = 1
+    identifier = "posts"
+    url = "/posts/"
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2
+  [[menu.main]]
+  name = "Categories"
+  url = "/categories/"
+  weight = 2
+  [[menu.main]]
+  identifier = "about"
+  name = "About"
+  url = "/about/"
+  weight = 3
+
+[taxonomies]
+category = "categories"
+series = "series"
+tag = "tags"
+
+[params.social]
+github="http://github.com/tianshihao"
+# instagram="http://example.com/"
+# bilibili="http://example.com/"
+# weibo="http://example.com/"
+# zhihu="http://example.com/"
+# twitter="http://twitter.com/"
+# gitlab="http://gitlab.com/"
+# youtube="http://youtube.com/"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
