@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "albert.tabout",
+    "christian-kohler.path-intellisense",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "github.codespaces",
+    "github.copilot-chat",
+    "github.copilot",
+    "miguelsolorio.fluent-icons",
+    "pkief.material-icon-theme",
+    "sdras.night-owl",
+    "vscodevim.vim"
+  ]
+}
