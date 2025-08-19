@@ -3,6 +3,7 @@ date = '2025-03-29T20:21:00+08:00'
 draft = false
 title = '《深度探索C++对象模型》（Inside The C++ Object Model）读书笔记'
 tags = ['C++']
+toc = true
 +++
 
 # 《深度探索 C++对象模型》（Inside The C++ Object Model）读书笔记
