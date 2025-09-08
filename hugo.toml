@@ -4,8 +4,8 @@ title = "笔记本子"
 author = "Shihao Tian"
 copyright = "Copyright © 2025"
 languageCode = "cn"
-DefaultContentLanguage = "en"
-disqusShortname = "YOURSHORTNAME"
+DefaultContentLanguage = "zh-cn"
+disqusShortname = ""
 googleAnalytics = "UA-1234567890" # or "G-xxxxxxxx" for Google Analytics v4
 enableInlineShortcodes = true
 footnoteReturnLinkContents = "^"
@@ -46,6 +46,10 @@ fuse = true                 # Fuse.js enabled for searchbox
   [[menu.main]]
     name = "Categories"
     url = "/categories/"
+    weight = 3
+  [[menu.main]]
+    name = "Series"
+    url = "/series/"
     weight = 3
   [[menu.main]]
     identifier = "about"
