@@ -9,17 +9,11 @@ series = ["STL源代码笔记"]
 
 # `std::unordered_map`源代码笔记 2
 
-### 2.2 分配器
+## 3. 算法
 
-前面讲了哈希表中节点的定义、继承关系、数据成员，以及管理其生命周期的 `_Scoped_node` RAII 类。`Scoped_node`负责管理`__node_type`的生命周期，在其构造函数中，使用分配器完成内存分配和`__node_type`的构造。
+### 3.1 `insert()`
 
-`Scoped_node`继承了`_Hashtable_alloc`，因此在构造`Scoped_node`的时候直接传入`_Hashtable`的`this`指针作为分配器。
-
-`Scoped_node`继承的`_Hashtable_alloc`其实是一个分配器适配器，它通过`__alloc_rebind`将用户传入的分配器类型（如`std::allocator<std::pair<const _Key, _Tp>>`）重新绑定为适用于节点类型（`_Hash_node`）的分配器类型。这样，哈希表就可以使用用户指定的分配器来管理节点的内存。
-
-### 2.3 `insert()`
-
-常见操作，考虑这样一段代码：
+常见操作，向哈希表中插入一个新的键值对。考虑这样一段代码：
 
 ```cpp
 #include <iostream>
@@ -102,9 +96,9 @@ Key: 1, Value: initializer list
 - 先构造 `MyStruct` 临时对象，并移动到 `std::pair`（一次移动构造）；
 - 但 `insert(p)` 传递的是左值，节点内只能拷贝构造（调用一次拷贝构造）。
 
-#### 2.3.1 构造`_Scoped_node`
+#### 3.1.1 构造`_Scoped_node`
 
-从上面的现象可以发现，数据实际是在`_Hashtable::_M_emplace()`中被真正传递给哈希表的，即`insert()`操作的第一步是构造`_Scoped_node`。
+观察`insert()`的调用栈，发现不论是插入左值还是右值，数据实际都是在`_Hashtable::_M_emplace()`中被真正传递给哈希表的。`_M_emplace()`首先会使用传入的数据构造成一个 RAII 的`_Scoped_node`，确保在插入过程中资源的正确管理。
 
 ```cpp
   template<typename _Key, typename _Value,
@@ -134,9 +128,9 @@ Key: 1, Value: initializer list
       }
 ```
 
-#### 2.3.2 计算哈希值
+#### 3.1.2 计算哈希值
 
-有了`_Scoped_node`之后，就可以计算哈希值了。首先使用`_M_extract()`提取出键，然后使用`_M_hash_code()`计算哈希值。这两个方法都是`_Hashtable`从`_Hashtable_base`继承来的。
+有了`_Scoped_node`之后，就可以计算哈希值了。首先使用`_M_extract()`提取出键，其默认值为 `__detail::_Select1st`，从`pair`中取出第一个元素，然后使用`_M_hash_code()`计算哈希值，其默认值为`std::hash<_Key>` 。这两个方法都是`_Hashtable`从`_Hashtable_base`继承来的。
 
 代码中关于哈希函数存储和调用的机制有些晦涩但也很巧妙，这里仔细分析一下。
 
@@ -144,7 +138,7 @@ Key: 1, Value: initializer list
 
 理论上，函数指针、`std::function`以及 lambda 表达式都可以用来替代函数对象，但它们既不能存储状态，也不能使用 EBO 优化做到空间零开销。所以从存储空间角度来讲，函数对象比`std::function`、lambda 表达式以及函数指针更节省空间、更具优势。
 
-但 STL 不能假设用户自定义的函数对象一定能被 EBO 优化。为此，STL 设计了`_Hashtable_ebo_helper<int _Nm, typename _Tp, bool __use_ebo>`模板辅助类：
+但 STL 不能假设用户自定义的函数对象一定能被 EBO 优化。为此，STL 设计了`_Hashtable_ebo_helper<int _Nm, typename _Tp, bool __use_ebo>`模板辅助类来完成 EBO：
 
 - 如果用户的函数对象`_Tp`是空类（无非静态数据成员）且可继承（不为`final`），则`_Hashtable_ebo_helper`通过继承`_Tp`的方式存储它，实现零空间开销。
   - 此时`__use_ebo`的值计算结果为`true`，即可以提供一个`__use_ebo`为`true`的特化，实现 EBO。
@@ -152,9 +146,13 @@ Key: 1, Value: initializer list
   - 此时`__use_ebo`的值计算结果为`false`，即提供一个`__use_ebo`为`false`的特化，实现普通存储。
 - 并且该模板辅助类提供统一的 getter 接口访问函数对象，方便使用。
 
-还需要注意的是，`_Hashtable`并不是通过持有`_Hashtable_ebo_helper`数据成员的方式来存储函数对象的，而是通过继承链间接“持有”所有函数对象的。这样，所有能 EBO 的函数对象都不会占用空间，最大化节省内存。因为每存储一个使用了 EBO 的`_Hashtable_ebo_helper`特化实例对象，就会占用 1 字的空间（C++标准要求每个对象有唯一地址），持有多个函数对象，就会占用更多空间。如持有的不是 EBO 之后的函数对象，占用的存储空间之会更多。`_Hashtable`是通过继承的方式“持有”函数对象的。例如`_Hashtable`直接继承`_Hashtable_base`，`_Hashtablebase`再直接或者间接继承`_Hashtable_ebo_helper`，实现函数对象在`_Hashtable`中的存储。这样，使用了 EBO 的函数对象就不会占用任何空间，实现了空间零开销。
+还需要注意的是，`_Hashtable`并不是通过持有`_Hashtable_ebo_helper`数据成员的方式来存储函数对象的，而是通过继承链间接“持有”所有函数对象的。这样，所有被使用了 EBO 的函数对象都不会占用空间，最大化节省内存。因为每存储一个使用了 EBO 的`_Hashtable_ebo_helper`特化实例对象，就会占用 1 字的空间（C++标准要求每个对象有唯一地址），持有多个函数对象，就会占用更多空间。如持有的函数对象没有被 EBO，占用的存储空间之会更多。
 
-总之，STL 通过模板类封装函数对象，并利用 EBO 优化，既保证了空间零开销，又能为所有函数对象提供统一的接口。`_Hashtable` 内部就是通过模板类 `_Hashtable_ebo_helper` 实现这一点的。
+**`_Hashtable`是通过继承的方式“持有”函数对象的**。`_Hashtable`直接继承`_Hashtable_base`，`_Hashtablebase`再直接以及间接继承了多个`_Hashtable_ebo_helper`，每一个`_Hashtable_ebo_helper`继承了用户提供的函数对象，最终，实现了函数对象在`_Hashtable`中的存储。这样，使用了 EBO 的函数对象就不会占用任何空间，实现了空间零开销。继承关系如下图所示：
+
+![hashtable_base](/hashtable_base.svg)
+
+> 总之，STL 通过模板类`_Hashtable_ebo_helper`封装函数对象，并利用 EBO 优化，既保证了空间零开销，又能为所有函数对象的访问提供了统一的接口。
 
 ```cpp
   /**
@@ -207,17 +205,22 @@ Key: 1, Value: initializer list
     };
 ```
 
-将函数对象模板参数放到基类`_Hashtable_ebo_helper`中后，派生类提供访问方法，然后在`_Hashtable`中使用派生类提供的接口调用用户提供的函数对象。如`_Hash_code_base`继承了`_Hashtable_ebo_helper<0, _ExtractKey>`和`_Hashtable_ebo_helper<1, _Hash>`，同时`_Hash_code_base`提供了两个接口`_M_extract()`和`_M_ranged_hash()`访问`_Hashtable_ebo_helper`存储的`_ExtractKey`和`_Hash`。
+模板辅助类`_Hashtable_ebo_helper`的特化除了会检测模板参数是否可以 EBO 之外，还会提供统一的访问接口`_M_get()`返回存储的函数对象，方便`Hashtable`中调用函数对象。如`_Hash_code_base`继承了`_Hashtable_ebo_helper<0, _ExtractKey>`和`_Hashtable_ebo_helper<1, _Hash>`，同时`_Hash_code_base`提供了两个接口`_M_extract()`和`_M_ranged_hash()`，它们分别使用对应的`_Hashtable_ebo_helper::_M_get()`和`_Hashtable_ebo_helper::_M_cget()`返回存储存储的`_ExtractKey`和`_Hash`。
+
+很妙的设计。
 
 ```cpp
   // 其中一个特化
-  /// Specialization: ranged hash function, no caching hash codes.  H1
-  /// and H2 are provided but ignored.  We define a dummy hash code type.
+  /// Specialization: hash function and range-hashing function, no
+  /// caching of hash codes.
+  /// Provides typedef and accessor required by C++ 11.
   template<typename _Key, typename _Value, typename _ExtractKey,
-	   typename _H1, typename _H2, typename _Hash>
-    struct _Hash_code_base<_Key, _Value, _ExtractKey, _H1, _H2, _Hash, false>
+	   typename _H1, typename _H2>
+    struct _Hash_code_base<_Key, _Value, _ExtractKey, _H1, _H2,
+			   _Default_ranged_hash, false>
     : private _Hashtable_ebo_helper<0, _ExtractKey>,
-      private _Hashtable_ebo_helper<1, _Hash>
+      private _Hashtable_ebo_helper<1, _H1>,
+      private _Hashtable_ebo_helper<2, _H2>
     {
     private:
       using __ebo_extract_key = _Hashtable_ebo_helper<0, _ExtractKey>;
@@ -246,23 +249,33 @@ Key: 1, Value: initializer list
       const _ExtractKey&
       _M_extract() const { return __ebo_extract_key::_M_cget(); }
 
+      // H1 是哈希函数对象，负责将键映射为哈希值
       const _H1&
       _M_h1() const { return __ebo_h1::_M_cget(); }
 
+      // H2 是分桶哈希函数对象，将哈希值映射为桶索引
       const _H2&
       _M_h2() const { return __ebo_h2::_M_cget(); }
     };
 ```
 
-注意，`_M_hash_code()`、`_M_extract()`、`_M_h1()`、`_M_h2()`以及`_Hash_code_base`的构造函数都是`protected`，这意味着它们只能在`_Hash_code_base`及其派生类中访问。`_Hashtable`会间接继承这个`_Hash_code_base`，从而可以访问这些成员。实际上`_Hashtable`在 `_M_emplace()` 的时候就是这么计算哈希值的：
+注意，`_M_hash_code()`、`_M_extract()`、`_M_h1()`、`_M_h2()`以及`_Hash_code_base`的构造函数，它们的访问等级都是`protected`，这意味着它们只能在`_Hash_code_base`及其派生类中访问，不允许单独使用。这符合`_Hash_code_base`作为抽象出来的策略基类的设计。`_Hashtable`会间接继承这个`_Hash_code_base`，从而可以访问这些成员。
+
+了解了`_Hashtable_ebo_helper`的设计之后，理解计算哈希值的过程就很简单了。
+
+首先，`_M_emplace()`使用`_M_extract()`提取出键，其默认值为 `__detail::_Select1st`，从`pair`中取出第一个元素。这里的`_M_extract()`实际上是调用了`_Hash_code_base`的`_M_extract()`。
+
+```cpp
+	const key_type& __k = this->_M_extract()(__node._M_node->_M_v());
+```
+
+然后就是使用`_M_hash_code()`计算哈希值。`_M_hash_code()`间接调用`__ebo_h1::_M_cget()`，即`_Hashtable_ebo_helper<1, _Hash>::_M_cget()`，返回函数对象`_Hash`。`_Hash`接收键`__k`，计算并返回其哈希值。`_Hash`的默认值是`std::hash<_Key>`，这是 C++ 标准库提供的通用哈希函数对象。
 
 ```cpp
 	__hash_code __code = this->_M_hash_code(__k);
 ```
 
-`_M_hash_code()`继承自`_Hash_code_base`，而`_Hash_code_base`继承自`_Hashtable_ebo_helper<1, _Hash>`，通过`_M_h1()`访问存储的哈希函数对象，然后调用该对象计算哈希值。
-
-#### 2.3.3 计算桶索引
+#### 3.1.3 计算桶索引
 
 有了哈希值之后，就可以计算桶索引了。使用`_M_bucket_index()`方法，根据键和哈
 
