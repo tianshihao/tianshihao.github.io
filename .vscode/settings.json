@@ -1,3 +1,4 @@
 {
   "vim.autoSwitchInputMethod.enable": true,
+  "workbench.preferredLightColorTheme": "Quiet Light",
 }
