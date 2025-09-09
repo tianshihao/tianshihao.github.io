@@ -7,9 +7,7 @@ toc = true
 series = ["STL源代码笔记"]
 +++
 
-# `std::unordered_map`源代码笔记 1
-
-## 1. 概括
+# 1. 概括
 
 cppreference 上是这么说的：
 
@@ -21,22 +19,21 @@ cppreference 上是这么说的：
 
 所以`std::unordered_map`本质上就是一个基于哈希桶数组实现的哈希表。
 
-### 1.1 `std::unordered_map`和`__umap_hashtable`的定义
+## 1.1 `std::unordered_map`和`__umap_hashtable`的定义
 
 先观察一下`std::unordered_map`的定义：
 
 ```cpp
-  template<typename _Key, typename _Tp,
-     typename _Hash = hash<_Key>,
-     typename _Pred = equal_to<_Key>,
-     typename _Alloc = allocator<std::pair<const _Key, _Tp>>>
-    class unordered_map
-    {
-      // 可以内部持有的其实是模板__umap_hashtable的实例
-      typedef __umap_hashtable<_Key, _Tp, _Hash, _Pred, _Alloc>  _Hashtable;
-      _Hashtable _M_h;
-    }
-
+template<typename _Key, typename _Tp,
+	 typename _Hash = hash<_Key>,
+	 typename _Pred = equal_to<_Key>,
+	 typename _Alloc = allocator<std::pair<const _Key, _Tp>>>
+	class unordered_map
+	{
+		// 可以内部持有的其实是模板__umap_hashtable的实例
+		typedef __umap_hashtable<_Key, _Tp, _Hash, _Pred, _Alloc>  _Hashtable;
+		_Hashtable _M_h;
+	}
 ```
 
 这些模板参数的含义分别是：
@@ -52,86 +49,86 @@ cppreference 上是这么说的：
 还可以发现`std::unordered_map`持有的实际是`__umap_hashtable`，继续看`__umap_hashtable`的定义，发现`__umap_hashtable`是`_Hashtable`实例化的别名，**所以实际上的哈希表是`_Hashtable`**。通过构造`__umap_hashtable`把`std::unordered_map`的模板参数传递给了`_Hashtable`。
 
 ```cpp
-  /// Base types for unordered_map.
-  template<bool _Cache>
-    using __umap_traits = __detail::_Hashtable_traits<_Cache, false, true>;
+/// Base types for unordered_map.
+template<bool _Cache>
+	using __umap_traits = __detail::_Hashtable_traits<_Cache, false, true>;
 
-  template<typename _Key,
-     typename _Tp,
-     typename _Hash = hash<_Key>,
-     typename _Pred = std::equal_to<_Key>,
-     typename _Alloc = std::allocator<std::pair<const _Key, _Tp> >,
-     typename _Tr = __umap_traits<__cache_default<_Key, _Hash>::value>>
-    // 这里，__umap_hashtable是_Hashtable实例化的别名
-    using __umap_hashtable = _Hashtable<_Key, std::pair<const _Key, _Tp>,
-                                        _Alloc, __detail::_Select1st,
-                _Pred, _Hash,
-                __detail::_Mod_range_hashing,
-                __detail::_Default_ranged_hash,
-                __detail::_Prime_rehash_policy, _Tr>;
+template<typename _Key,
+	 typename _Tp,
+	 typename _Hash = hash<_Key>,
+	 typename _Pred = std::equal_to<_Key>,
+	 typename _Alloc = std::allocator<std::pair<const _Key, _Tp> >,
+	 typename _Tr = __umap_traits<__cache_default<_Key, _Hash>::value>>
+	// 这里，__umap_hashtable是_Hashtable实例化的别名
+	using __umap_hashtable = _Hashtable<_Key, std::pair<const _Key, _Tp>,
+																			_Alloc, __detail::_Select1st,
+							_Pred, _Hash,
+							__detail::_Mod_range_hashing,
+							__detail::_Default_ranged_hash,
+							__detail::_Prime_rehash_policy, _Tr>;
 ```
 
-### 1.2 `_Hashtable`的定义
+## 1.2 `_Hashtable`的定义
 
 继续看`_Hashtable`的类型，`_Hashtable`的类型定义在`/usr/include/c++/10/bits/hashtable.h`里面。
 
 ```cpp
-  template<typename _Key, typename _Value, typename _Alloc,
-     typename _ExtractKey, typename _Equal,
-     typename _H1, typename _H2, typename _Hash,
-     typename _RehashPolicy, typename _Traits>
-    class _Hashtable
-    : public __detail::_Hashtable_base<_Key, _Value, _ExtractKey, _Equal,
-				       _H1, _H2, _Hash, _Traits>,
-      public __detail::_Map_base<_Key, _Value, _Alloc, _ExtractKey, _Equal,
-				 _H1, _H2, _Hash, _RehashPolicy, _Traits>,
-      public __detail::_Insert<_Key, _Value, _Alloc, _ExtractKey, _Equal,
-			       _H1, _H2, _Hash, _RehashPolicy, _Traits>,
-      public __detail::_Rehash_base<_Key, _Value, _Alloc, _ExtractKey, _Equal,
-				    _H1, _H2, _Hash, _RehashPolicy, _Traits>,
-      public __detail::_Equality<_Key, _Value, _Alloc, _ExtractKey, _Equal,
-				 _H1, _H2, _Hash, _RehashPolicy, _Traits>,
-      private __detail::_Hashtable_alloc<
-	__alloc_rebind<_Alloc,
-		       __detail::_Hash_node<_Value,
-					    _Traits::__hash_cached::value>>>,
-      private _Hashtable_enable_default_ctor<_Equal, _H1, _Alloc>
-    {
-    private:
-      __bucket_type*		_M_buckets		= &_M_single_bucket;
-      size_type			_M_bucket_count		= 1;
-      __node_base		_M_before_begin;
-      size_type			_M_element_count	= 0;
-      _RehashPolicy		_M_rehash_policy;
+template<typename _Key, typename _Value, typename _Alloc,
+	 typename _ExtractKey, typename _Equal,
+	 typename _H1, typename _H2, typename _Hash,
+	 typename _RehashPolicy, typename _Traits>
+	class _Hashtable
+	: public __detail::_Hashtable_base<_Key, _Value, _ExtractKey, _Equal,
+						 _H1, _H2, _Hash, _Traits>,
+		public __detail::_Map_base<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+			 _H1, _H2, _Hash, _RehashPolicy, _Traits>,
+		public __detail::_Insert<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+					 _H1, _H2, _Hash, _RehashPolicy, _Traits>,
+		public __detail::_Rehash_base<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+					_H1, _H2, _Hash, _RehashPolicy, _Traits>,
+		public __detail::_Equality<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+			 _H1, _H2, _Hash, _RehashPolicy, _Traits>,
+		private __detail::_Hashtable_alloc<
+__alloc_rebind<_Alloc,
+				 __detail::_Hash_node<_Value,
+						_Traits::__hash_cached::value>>>,
+		private _Hashtable_enable_default_ctor<_Equal, _H1, _Alloc>
+	{
+	private:
+		__bucket_type*		_M_buckets		= &_M_single_bucket;
+		size_type			_M_bucket_count		= 1;
+		__node_base		_M_before_begin;
+		size_type			_M_element_count	= 0;
+		_RehashPolicy		_M_rehash_policy;
 
-      // A single bucket used when only need for 1 bucket. Especially
-      // interesting in move semantic to leave hashtable with only 1 bucket
-      // which is not allocated so that we can have those operations noexcept
-      // qualified.
-      // Note that we can't leave hashtable with 0 bucket without adding
-      // numerous checks in the code to avoid 0 modulus.
-      __bucket_type		_M_single_bucket	= nullptr;
-    }
+		// A single bucket used when only need for 1 bucket. Especially
+		// interesting in move semantic to leave hashtable with only 1 bucket
+		// which is not allocated so that we can have those operations noexcept
+		// qualified.
+		// Note that we can't leave hashtable with 0 bucket without adding
+		// numerous checks in the code to avoid 0 modulus.
+		__bucket_type		_M_single_bucket	= nullptr;
+	}
 ```
 
 `_Hashtable`的定义乍一看很复杂，但可以分为 3 类来解读：模板参数、继承、数据成员。
 
-#### 1.2.1 模板参数
+### 1.2.1 模板参数
 
 其中`_Hashtable`模板参数的含义分别是：
 
-| 模板参数        | 类型                                               | 默认值                                           | 可自定义 |
-| :-------------- | :------------------------------------------------- | :----------------------------------------------- | :------- |
-| `_Key`          | 映射中键的类型                                     | (无)                                             | 是       |
-| `_Value`        | 映射中值的类型，通常为`std::pair<const _Key, _Tp>` | (无)                                             | 是       |
-| `_Alloc`        | 用于分配内存的分配器类型                           | `std::allocator<std::pair<const _Key, _Tp>>`     | 是       |
-| `_ExtractKey`   | 从值中提取键的函数对象                             | `__detail::_Select1st`，从`pair`中取出第一个元素 | 否       |
-| `_Equal`        | 比较键是否相等的函数对象                           | `std::equal_to<_Key>`                            | 是       |
-| `_H1`           | 哈希函数对象，将键映射为哈希值                     | `std::hash<_Key>`                                | 是       |
-| `_H2`           | 分桶哈希函数对象，将哈希值映射为桶索引             | `__detail::_Mod_range_hashing`                   | 否       |
-| `_Hash`         | 组合哈希函数对象，等价于`_H2(_H1(key))`            | `__detail::_Default_ranged_hash`                 | 否       |
-| `_RehashPolicy` | 控制重新哈希策略的类型                             | `__detail::_Prime_rehash_policy`                 | 否       |
-| `_Traits`       | 提供额外类型信息的特性类                           | `__detail::_Hashtable_traits`                    | 否       |
+| 模板参数        | 类型                                                                     | 默认值                                                                              | 可自定义 |
+| :-------------- | :----------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------- |
+| `_Key`          | 映射中键的类型                                                           | (无)                                                                                | 是       |
+| `_Value`        | 映射中值的类型，通常为`std::pair<const _Key, _Tp>`                       | (无)                                                                                | 是       |
+| `_Alloc`        | 用于分配内存的分配器类型                                                 | `std::allocator<std::pair<const _Key, _Tp>>`                                        | 是       |
+| `_ExtractKey`   | 从值中提取键的函数对象                                                   | `__detail::_Select1st`，从`pair`中取出第一个元素                                    | 否       |
+| `_Equal`        | 比较键是否相等的函数对象                                                 | `std::equal_to<_Key>`                                                               | 是       |
+| `_H1`           | 哈希函数对象，将键映射为哈希值，对应`std::unordered_map`的模板参数`Hash` | `std::hash<_Key>`                                                                   | 是       |
+| `_H2`           | 分桶哈希函数对象，将哈希值映射为桶索引                                   | `__detail::_Mod_range_hashing`，使用键的哈希值对桶的数量（内置变量，不是 size）取模 | 否       |
+| `_Hash`         | 组合哈希函数对象，等价于`_H2(_H1(key))`                                  | `__detail::_Default_ranged_hash`                                                    | 否       |
+| `_RehashPolicy` | 控制重新哈希策略的类型                                                   | `__detail::_Prime_rehash_policy`                                                    | 否       |
+| `_Traits`       | 提供额外类型信息的特性类                                                 | `__detail::_Hashtable_traits`                                                       | 否       |
 
 再结合上面`__umap_hashtable`的定义可以发现，`__umap_hashtable`是一个特定配置的`_Hashtable`，而`std::unordered_map`持有`__umap_hashtable`，因此`std::unordered_map`是一个特定配置的`_Hashtable`。
 
@@ -139,7 +136,7 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 
 或者还一种说法：STL 通过 typedef/using 机制，将底层复杂的 `_Hashtable` 封装为 `__umap_hashtable`，并由`std::unordered_map` 持有，从而只暴露用户关心的参数，隐藏实现细节，简化了接口。
 
-#### 1.2.2 继承
+### 1.2.2 继承
 
 `unordered_map` 封装的 `_Hashtable` 继承结构非常复杂，主要是为了实现高效、灵活且可扩展的哈希表。
 
@@ -166,34 +163,34 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 
 这种多重继承的设计，将哈希表的各个功能模块化，便于代码复用和维护。每个基类只关注自己的职责，减少了耦合，提高了可读性和可扩展性。对于不同类型的哈希容器（如 map、set），只需组合不同的基类即可实现定制化行为。这也是 STL 容器内部常用的“策略模式”与“分层继承”思想的体现。
 
-#### 1.2.3 数据成员
+### 1.2.3 数据成员
 
 主要的数据成员为：
 
 ```cpp
-    {
-    private:
-        __bucket_type*    _M_buckets    = &_M_single_bucket; // 桶数组
-        size_type         _M_bucket_count = 1; // 桶的数量，初始会有一个空桶，所以大小是1
-        __node_base       _M_before_begin; // 头节点，指向第一个元素的前一个节点，todo，后面补充
-        size_type         _M_element_count = 0; // hashtable中元素的数量，即size
-        _RehashPolicy     _M_rehash_policy; // rehash策略
+{
+private:
+		__bucket_type*    _M_buckets    = &_M_single_bucket; // 桶数组
+		size_type         _M_bucket_count = 1; // 桶的数量，初始会有一个空桶，所以大小是1
+		__node_base       _M_before_begin; // 头节点，指向第一个元素的前一个节点，todo，后面补充
+		size_type         _M_element_count = 0; // hashtable中元素的数量，即size
+		_RehashPolicy     _M_rehash_policy; // rehash策略
 
-        // A single bucket used when only need for 1 bucket. Especially
-        // interesting in move semantic to leave hashtable with only 1 bucket
-        // which is not allocated so that we can have those operations noexcept
-        // qualified.
-        // Note that we can't leave hashtable with 0 bucket without adding
-        // numerous checks in the code to avoid 0 modulus.
-        __bucket_type   _M_single_bucket  = nullptr; // 单个桶的指针，初始时只有一个空桶
-    }
+		// A single bucket used when only need for 1 bucket. Especially
+		// interesting in move semantic to leave hashtable with only 1 bucket
+		// which is not allocated so that we can have those operations noexcept
+		// qualified.
+		// Note that we can't leave hashtable with 0 bucket without adding
+		// numerous checks in the code to avoid 0 modulus.
+		__bucket_type   _M_single_bucket  = nullptr; // 单个桶的指针，初始时只有一个空桶
+}
 ```
 
-## 2. 数据结构
+# 2. 数据结构
 
 要理解 `std::unordered_map` 的实现，首先需要了解其底层数据结构。`std::unordered_map` 是基于哈希表实现的，而哈希表的核心数据结构是桶（bucket）数组，桶数组中存储的链表的节点，每个节点存储一个实际的键值对。
 
-### 2.1 节点
+## 2.1 节点
 
 哈希表不可避免地会遇到哈希冲突：不同的 key 经过哈希函数后，可能会被分配到同一个桶。为了解决冲突，`std::unordered_map`（底层 `_Hashtable`）采用**链表法**，即每个桶存储一个链表的头指针，链表中的每个节点存储一个实际的键值对，并通过 next 指针串联。
 
@@ -209,101 +206,101 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 
 这种继承和指针抽象，使得哈希表的节点管理既高效又灵活。
 
-#### 2.1.1 `__node_base`
+### 2.1.1 `__node_base`
 
 `__node_base` 是所有哈希表节点的基类，主要用于实现链表结构，就是个简单的链表节点，其定义如下：
 
 ```cpp
-  // 节点基类，只包含 next 指针，一个很简单的链表节点
-  struct _Hash_node_base {
-    _Hash_node_base* _M_nxt;
+// 节点基类，只包含 next 指针，一个很简单的链表节点
+struct _Hash_node_base {
+	_Hash_node_base* _M_nxt;
 
-    _Hash_node_base() noexcept : _M_nxt(nullptr) { }
-    _Hash_node_base(_Hash_node_base* __next) noexcept : _M_nxt(__next) { }
-  };
+	_Hash_node_base() noexcept : _M_nxt(nullptr) { }
+	_Hash_node_base(_Hash_node_base* __next) noexcept : _M_nxt(__next) { }
+};
 
-  // _Hashtable_alloc 负责分配内存，管理节点的生命周期
-  template<typename _NodeAlloc>
-    struct _Hashtable_alloc : private _Hashtable_ebo_helper<0, _NodeAlloc>
-    {
-      using __node_base = __detail::_Hash_node_base;
-      using __bucket_type = __node_base*;
-    }
+// _Hashtable_alloc 负责分配内存，管理节点的生命周期
+template<typename _NodeAlloc>
+	struct _Hashtable_alloc : private _Hashtable_ebo_helper<0, _NodeAlloc>
+	{
+		using __node_base = __detail::_Hash_node_base;
+		using __bucket_type = __node_base*;
+	}
 ```
 
 `__Hash_node_base`即`__node_base`定义了默认构造函数和一个接受下一个节点指针的构造函数。由于这个类唯一的数据成员`_Hash_node_base* _M_nxt`是 trivial 的，且它没有显式定义复制构造函数，没有虚函数，所以编译器会为其生成默认的复制构造函数。赋值运算符、移动构造函数以及移动赋值运算符同理。
 
 这个基类只包含一个指向下一个节点的指针 `_M_nxt`，用于将同一个桶内的节点串成链表。所有实际存储数据的节点类型最终都会继承自这个基类。这样，哈希表可以用基类指针统一管理所有节点，实现链表操作的多态性和灵活性。
 
-#### 2.1.2 `_Hash_node_value_base`
+### 2.1.2 `_Hash_node_value_base`
 
 `_Hash_node_value_base`继承自 `_Hash_node_base`，即`__node_base`，在`__node_base`的基础上多了一个存储键值对的成员，但它并不是实际的节点类型`__node_type`，而是中间的过渡类型。里面的`_Value`其实就是`std::unordered_map`中`Key`和`_Tp`构成的`pair`，类型为`std::pair<const _Key, _Tp>`，在前面[`std::unordered_map`和`__umap_hashtable`的定义](#stdunordered_map和__umap_hashtable的定义)中可以看到，它是`std::unordered_map`实际使用的`_Hashtable`实例的别名。
 
 ```cpp
-  /**
-   *  struct _Hash_node_value_base
-   *
-   *  Node type with the value to store.
-   */
-  template<typename _Value>
-    struct _Hash_node_value_base : _Hash_node_base
-    {
-      typedef _Value value_type;
+/**
+ *  struct _Hash_node_value_base
+ *
+ *  Node type with the value to store.
+ */
+template<typename _Value>
+	struct _Hash_node_value_base : _Hash_node_base
+	{
+		typedef _Value value_type;
 
-      __gnu_cxx::__aligned_buffer<_Value> _M_storage;
+		__gnu_cxx::__aligned_buffer<_Value> _M_storage;
 
-      _Value*
-      _M_valptr() noexcept
-      { return _M_storage._M_ptr(); }
+		_Value*
+		_M_valptr() noexcept
+		{ return _M_storage._M_ptr(); }
 
-      _Value&
-      _M_v() noexcept
-      { return *_M_valptr(); }
+		_Value&
+		_M_v() noexcept
+		{ return *_M_valptr(); }
 
-      // ...
-    };
+		// ...
+	};
 ```
 
-#### 2.1.3 `__node_type`
+### 2.1.3 `__node_type`
 
 `__node_type` 是哈希表链表节点的实际类型，其类型为 `_Hash_node`的特化版本，特化版本继承自 `_Hash_node_value_base`，其定义如下：
 
 ```cpp
-  /**
-   *  Primary template struct _Hash_node.
-   */
-  template<typename _Value, bool _Cache_hash_code>
-    struct _Hash_node;
+/**
+ *  Primary template struct _Hash_node.
+ */
+template<typename _Value, bool _Cache_hash_code>
+	struct _Hash_node;
 
-  /**
-   *  Specialization for nodes with caches, struct _Hash_node.
-   *
-   *  Base class is __detail::_Hash_node_value_base.
-   */
-  template<typename _Value>
-    struct _Hash_node<_Value, true> : _Hash_node_value_base<_Value>
-    {
-      std::size_t  _M_hash_code;
+/**
+ *  Specialization for nodes with caches, struct _Hash_node.
+ *
+ *  Base class is __detail::_Hash_node_value_base.
+ */
+template<typename _Value>
+	struct _Hash_node<_Value, true> : _Hash_node_value_base<_Value>
+	{
+		std::size_t  _M_hash_code;
 
-      _Hash_node*
-      _M_next() const noexcept
-      { return static_cast<_Hash_node*>(this->_M_nxt); }
-    };
+		_Hash_node*
+		_M_next() const noexcept
+		{ return static_cast<_Hash_node*>(this->_M_nxt); }
+	};
 
-  /**
-   *  Specialization for nodes without caches, struct _Hash_node.
-   *
-   *  Base class is __detail::_Hash_node_value_base.
-   */
-  template<typename _Value>
-    struct _Hash_node<_Value, false> : _Hash_node_value_base<_Value>
-    {
-      _Hash_node*
-      _M_next() const noexcept
-      { return static_cast<_Hash_node*>(this->_M_nxt); }
-    };
+/**
+ *  Specialization for nodes without caches, struct _Hash_node.
+ *
+ *  Base class is __detail::_Hash_node_value_base.
+ */
+template<typename _Value>
+	struct _Hash_node<_Value, false> : _Hash_node_value_base<_Value>
+	{
+		_Hash_node*
+		_M_next() const noexcept
+		{ return static_cast<_Hash_node*>(this->_M_nxt); }
+	};
 
-  using __node_type = __detail::_Hash_node<_Value, __hash_cached::value>;
+using __node_type = __detail::_Hash_node<_Value, __hash_cached::value>;
 ```
 
 `_Hash_node`添加了`_M_next()`方法，用于获取下一个节点的指针。至此，`_Hash_node`的接口就完整了，可以被链表使用了。
@@ -349,7 +346,7 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 - 通过继承体系和模板特化，STL 实现了节点结构的灵活扩展和高效访问。
 - `_Hash_node_base`（`__node_base`）派生`_Hash_node_value_base`派生`_Hash_node`（`__node_type`）。
 
-##### 如何决定`_Hash_node`是否缓存哈希值？
+#### 如何决定`_Hash_node`是否缓存哈希值？
 
 这一过程完全由类型萃取（traits）和模板参数自动推导，无需用户干预。其核心逻辑如下：
 
@@ -371,14 +368,14 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
   - `__unique_keys`：key 是否唯一
 
 ```cpp
-  // __cache_default计算得到_Cache，传递给_Hashtable_traits
-  template<bool _Cache_hash_code, bool _Constant_iterators, bool _Unique_keys>
-    struct _Hashtable_traits
-    {
-      using __hash_cached = __bool_constant<_Cache_hash_code>;
-      using __constant_iterators = __bool_constant<_Constant_iterators>;
-      using __unique_keys = __bool_constant<_Unique_keys>;
-    };
+// __cache_default计算得到_Cache，传递给_Hashtable_traits
+template<bool _Cache_hash_code, bool _Constant_iterators, bool _Unique_keys>
+	struct _Hashtable_traits
+	{
+		using __hash_cached = __bool_constant<_Cache_hash_code>;
+		using __constant_iterators = __bool_constant<_Constant_iterators>;
+		using __unique_keys = __bool_constant<_Unique_keys>;
+	};
 ```
 
 - 这些成员类型都是 `__bool_constant<...>`，即 `std::integral_constant<bool, ...>`，有静态成员 `value`，值为传入的模板参数。
@@ -390,8 +387,8 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
   ```cpp
   template<typename _Tp, typename _Hash>
   using __cache_default = __not_<__and_<
-    __is_fast_hash<_Hash>,
-    __is_nothrow_invocable<const _Hash&, const _Tp&>
+  	__is_fast_hash<_Hash>,
+  	__is_nothrow_invocable<const _Hash&, const _Tp&>
   >>;
   ```
 
@@ -420,45 +417,45 @@ using __node_type = __detail::_Hash_node<_Value, __hash_cached::value>;
 
 - 这套设计让类型信息和行为（如是否缓存哈希值）在模板参数层面自动推导，用户无需关心，代码更灵活高效。
 
-#### 2.1.4 `_Scoped_node`
+### 2.1.4 `_Scoped_node`
 
 然而，在实际操作过程中，比如`std::unordered_map`的`insert()`（对应`_Hashtable()`的`_M_insert()`或者`_M_emplace()`），并不会直接对`__node_type`进行操作，而是使用一个名为 `_Scoped_node` 的 RAII 类来管理节点的生命周期。它定义在`_Hashtable`内部，其定义如下：
 
 ```cpp
-      // Simple RAII type for managing a node containing an element
-      struct _Scoped_node
-      {
-  // Take ownership of a node with a constructed element.
-  _Scoped_node(__node_type* __n, __hashtable_alloc* __h)
-  : _M_h(__h), _M_node(__n) { }
+		// Simple RAII type for managing a node containing an element
+		struct _Scoped_node
+		{
+// Take ownership of a node with a constructed element.
+_Scoped_node(__node_type* __n, __hashtable_alloc* __h)
+: _M_h(__h), _M_node(__n) { }
 
-  // Allocate a node and construct an element within it.
-  template<typename... _Args>
-    _Scoped_node(__hashtable_alloc* __h, _Args&&... __args)
-    : _M_h(__h),
-      _M_node(__h->_M_allocate_node(std::forward<_Args>(__args)...))
-    { }
+// Allocate a node and construct an element within it.
+template<typename... _Args>
+	_Scoped_node(__hashtable_alloc* __h, _Args&&... __args)
+	: _M_h(__h),
+		_M_node(__h->_M_allocate_node(std::forward<_Args>(__args)...))
+	{ }
 
-  // Destroy element and deallocate node.
-  ~_Scoped_node() { if (_M_node) _M_h->_M_deallocate_node(_M_node); };
+// Destroy element and deallocate node.
+~_Scoped_node() { if (_M_node) _M_h->_M_deallocate_node(_M_node); };
 
-  _Scoped_node(const _Scoped_node&) = delete;
-  _Scoped_node& operator=(const _Scoped_node&) = delete;
+_Scoped_node(const _Scoped_node&) = delete;
+_Scoped_node& operator=(const _Scoped_node&) = delete;
 
-  __hashtable_alloc* _M_h;
-  __node_type* _M_node;
-      };
+__hashtable_alloc* _M_h;
+__node_type* _M_node;
+		};
 ```
 
 `_Scoped_node`的设计是典型的 RAII，有两个数据成员，两种构造方式。
 
-##### 2.1.4.1 数据成员
+#### 2.1.4.1 数据成员
 
 - `__hashtable_alloc* _M_h`：指向分配器，用于分配和释放节点。因为`_Hashtable`的资源管理全部使用 Allocator，所以这个指针是必须的。
   - `_Scoped_node`在`_Hashtable`内部使用，而`_Hashtable`继承了`_Hashtable_alloc`，因此这也是为什么在构造`_Scoped_node`的时候传入`_Hashtable`的`this`指针作为`__hashtable_alloc`的原因。
 - `__node_type* _M_node`：指向的节点。
 
-##### 2.1.4.2 构造函数
+#### 2.1.4.2 构造函数
 
 **1. 直接接管已有节点**
 
@@ -486,14 +483,14 @@ _Scoped_node(__hashtable_alloc* __h, _Args&&... __args)
 { }
 ```
 
-##### 2.1.4.3 其它主要函数
+#### 2.1.4.3 其它主要函数
 
 1. `_Scoped_node`的析构函数也是通过 allocator 释放节点的。
 2. `_Scoped_node`禁止复制操作，这样设计是为了防止同一个节点被多个`_Scoped_node`管理，避免重复释放或悬垂指针，确保资源的唯一所有权。这是典型的 RAII 独占语义。
    1. todo，`__node_type`是可以被复制的么？`__node_base`持有一个指针，是 trivial 的，`_Hash_node_value_base`持有的`typedef _Value value_type;`是 trivial 的么？
 3. 虽然`_Scoped_node`没有显示定义移动构造函数和移动赋值运算符，但由于其成员都是指针类型，编译器会自动生成默认的移动构造和移动赋值操作。这样可以安全地转移节点所有权。
 
-### 2.2 分配器
+## 2.2 分配器
 
 前面讲了哈希表中节点的定义、继承关系、数据成员，以及管理其生命周期的 `_Scoped_node` RAII 类。`Scoped_node`负责管理`__node_type`的生命周期，在其构造函数中，使用分配器完成内存分配和`__node_type`的构造。
 
