@@ -7,11 +7,11 @@ toc = true
 series = ["STL源代码笔记"]
 +++
 
-# `std::unordered_map`源代码笔记 2
+# 3. 算法
 
-## 3. 算法
+## 3.1 `insert()`
 
-### 3.1 `insert()`
+### 3.1.1 概述
 
 常见操作，向哈希表中插入一个新的键值对。考虑这样一段代码：
 
@@ -49,12 +49,18 @@ void Insert() {
   // insert with initializer list
   umap.insert({1, MyStruct("initializer list")});
 
+  std::cout << "----" << std::endl;
+
   // insert with lvalue
   auto p{std::make_pair(4, MyStruct("lvalue"))};
   umap.insert(p);
 
+  std::cout << "----" << std::endl;
+
   // insert with rvalue
   umap.insert(std::make_pair(5, MyStruct("rvalue")));
+
+  std::cout << "----" << std::endl;
 
   for (const auto& pair : umap) {
     std::cout << "Key: " << pair.first << ", Value: " << pair.second << '\n';
@@ -74,12 +80,15 @@ int main() {
 Invoking constructor for: initializer list
 Invoking move constructor for: initializer list
 Invoking move constructor for: initializer list
+----
 Invoking constructor for: lvalue
 Invoking move constructor for: lvalue
 Invoking copy constructor for: lvalue
+----
 Invoking constructor for: rvalue
 Invoking move constructor for: rvalue
 Invoking move constructor for: rvalue
+----
 Key: 5, Value: rvalue
 Key: 4, Value: lvalue
 Key: 1, Value: initializer list
@@ -89,14 +98,20 @@ Key: 1, Value: initializer list
 
 - 首先构造一个 `MyStruct` 临时对象；
 - 该对象被移动到 `std::pair` 中（调用一次移动构造）；
-- 然后 `std::pair` 作为右值传递给 `insert()`，后被完美转发到`_Hashtable`的`_M_emplace()`，其中数据被构造为哈希表内部的数据结构（又一次移动构造）。
+- 然后 `std::pair` 作为右值传递给 `insert()`，后被完美转发到`_Hashtable::_M_emplace()`（插入操作的具体实现），`std::pair`作为参数构造哈希表内部节点（又一次移动构造）。
 
 对于插入左值的情况，流程略有不同：
 
 - 先构造 `MyStruct` 临时对象，并移动到 `std::pair`（一次移动构造）；
-- 但 `insert(p)` 传递的是左值，节点内只能拷贝构造（调用一次拷贝构造）。
+- 同样被完美转发到`_Hashtable::_M_emplace()`，但左值只能复制（调用一次拷贝构造）。
 
-#### 3.1.1 构造`_Scoped_node`
+总结：
+
+- 不管是左值还是右值，`insert()`都需要先构造一个`pair`。
+- `insert()`接收的是已经构造好的`pair`。
+- `insert()`会把接收到的`pair`原封不动地（完美转发）传递给`_Hashtable::_M_emplace()`，然后在`_M_emplace()`用其构造哈希表内部节点。
+
+### 3.1.2 构造`_Scoped_node`
 
 观察`insert()`的调用栈，发现不论是插入左值还是右值，数据实际都是在`_Hashtable::_M_emplace()`中被真正传递给哈希表的。`_M_emplace()`首先会使用传入的数据构造成一个 RAII 的`_Scoped_node`，确保在插入过程中资源的正确管理。
 
@@ -128,7 +143,7 @@ Key: 1, Value: initializer list
       }
 ```
 
-#### 3.1.2 计算哈希值
+### 3.1.3 计算哈希值
 
 有了`_Scoped_node`之后，就可以计算哈希值了。首先使用`_M_extract()`提取出键，其默认值为 `__detail::_Select1st`，从`pair`中取出第一个元素，然后使用`_M_hash_code()`计算哈希值，其默认值为`std::hash<_Key>` 。这两个方法都是`_Hashtable`从`_Hashtable_base`继承来的。
 
@@ -411,7 +426,7 @@ void test_hasher() {
 }
 ```
 
-#### 3.1.3 计算桶索引
+### 3.1.4 计算桶索引
 
 有了哈希值之后，就可以计算桶索引了。计算桶索引的方法同样被封装到了`__hash_code_base`当中，其默认值是`__detail::_Mod_range_hashing`，用户不能通过`std::unordered_map`的模板参数设置该方法。`__detail::_Mod_range_hashing`的实现非常简单，就是使用键的哈希值`__code`对桶数量`_M_bucket_count`取模，符合使用 EBO 的条件。首次插入元素时，由于桶数量为 0，桶索引总是 0。这并不是说第一个元素会被放到 0 号桶中，因为第一次插入也会触发扩容（初始负载因子为 1，超出限制），扩容之后桶的数量不为 0，此时会重新计算桶索引。
 
@@ -440,7 +455,7 @@ _M_bucket_index(const key_type& __k, __hash_code __c) const
 { return __hash_code_base::_M_bucket_index(__k, __c, _M_bucket_count); }
 ```
 
-#### 3.1.4 检查等价节点
+### 3.1.5 检查等价节点
 
 在插入新节点之前，哈希表需要先判断当前桶中是否已经存在一个“等价节点”。这个检查由 `_M_find_node()` 完成：
 
@@ -485,7 +500,7 @@ return nullptr;
 
 桶数组 `_M_buckets` 是一个指向桶数组的指针，每个元素都是指向链表头节点的指针，因此可以高效地定位和返回等价节点的前驱节点。
 
-#### 3.1.5 插入新节点
+### 3.1.6 插入新节点
 
 如果没有找到等价节点，说明可以插入新节点。插入逻辑由 `_M_insert_unique_node()` 完成，其核心流程如下：
 
@@ -548,11 +563,39 @@ _M_insert_unique_node(const key_type& __k, size_type __bkt,
 
 这里把一开始的例子做一些修改来说明（[向哈希表中插入元素](#31-insert)）插入过程，假设现在向哈希表中先后插入键值对`(1, "one")`、`(4, "four")`、`(5, "five")`。那么一开始哈希表桶的数量是 1，即`_M_bucket_count = 1`，这是因为一开始有一个单桶（todo 后面解释），`_M_before_begin`为`nullptr`，`_M_buckets`为`nullptr`，`_M_element_count`为 0，初始负载因子是 1。
 
-因此当插入第一个键值对`(1, "one")`时，会触发扩容，扩容后桶数组`_M_buckets`的大小`_M_bucket_count`变为质数 13。此时链表的头节点是`nullptr`，其前驱节点是`_M_before_begin`。
+因此当插入第一个键值对`(1, "one")`时，会触发扩容，扩容后桶数组`_M_buckets`的大小`_M_bucket_count`变为**质数 13**。此时链表的头节点是`nullptr`，其前驱节点是`_M_before_begin`。
 
 ![_M_before_begin -> nullptr](/_M_insert_bucket_begin_1.svg)
 
-扩容之后会重新计算桶索引`__bkt`。由于 key 是 1，`std::hash<int>`计算得到的哈希值也是 1，桶索引`__bkt = 1 % 13 = 1`。按照头插法，节点`(1, "one")`被插入到头节点`nullptr`之前，头节点前驱节点`_M_before_begin`之后。
+扩容之后会重新计算桶索引`__bkt`。由于 key 是 1，`std::hash<int>`计算得到的哈希值也是 1，桶索引是哈希值对`_M_bucket_count`求模`__bkt = 1 % 13 = 1`。之后节点将按照**头插法**（`_M_insert_bucket_begin()`）插入到合适的位置。
+
+```cpp
+  _M_insert_bucket_begin(size_type __bkt, __node_type* __node)
+  {
+    if (_M_buckets[__bkt])
+{
+  // Bucket is not empty, we just need to insert the new node
+  // after the bucket before begin.
+  __node->_M_nxt = _M_buckets[__bkt]->_M_nxt;
+  _M_buckets[__bkt]->_M_nxt = __node;
+}
+    else
+{
+  // The bucket is empty, the new node is inserted at the
+  // beginning of the singly-linked list and the bucket will
+  // contain _M_before_begin pointer.
+  __node->_M_nxt = _M_before_begin._M_nxt;
+  _M_before_begin._M_nxt = __node;
+  if (__node->_M_nxt)
+    // We must update former begin bucket that is pointing to
+    // _M_before_begin.
+    _M_buckets[_M_bucket_index(__node->_M_next())] = __node;
+  _M_buckets[__bkt] = &_M_before_begin;
+}
+  }
+```
+
+一开始节点`(1, "one")`对应的 1 号桶为空，插入到头节点`nullptr`之前，头节点前驱节点`_M_before_begin`之后。
 
 ![_M_before_begin -> 1 -> nullptr](/_M_insert_bucket_begin_2.svg)
 
@@ -598,9 +641,17 @@ _M_buckets[__bkt] = &_M_before_begin;
 
 ![_M_before_begin=buckets[12] -> 12 -> 8 -> 4 -> 1 -> nullptr](/_M_insert_bucket_begin_8.svg)
 
-todo，这里需要讲解插入过程，最好画图实现。
+上面是插入节点 1、4、8、12 都是向空桶中插入节点的情况。如果插入节点对应的桶非空呢？比如再插入节点`(17, "seventeen")`？这就简单多了。节点 17 的哈希值是 17，桶索引是`17 % 13 = 4`，桶 4 非空，因此直接将节点 17 插入到节点 4 对应的链表头节点`(8, "eight")`之后即可。
 
-1. **更新元素计数并返回迭代器**
+![_M_before_begin=bucket[12] -> 12 -> 8 > 7 -> 4 -> 1 -> nullptr](/_M_insert_bucket_begin_9.svg)
+
+看到这里看明白哈希表的链表组织形式了。整体上只有一个单链表，`_M_before_begin`是整个链表的前驱节点。但是一个链表如何满足多个桶的需求呢？最直接的想法就是一个桶一个链表啊。其实方法很简单，就是把这些原来分散的单链表拼接起来。换句话说，**`_M_before_begin`指向的单链表是分段的，哈希表使用的是逻辑上分段的单链表，实现了多个桶的需求**。把上面的图换一个形式，就清晰了：
+
+![singly_linked_list_of_hashtable](/singly_linked_list_of_hashtable.svg)
+
+> **每个桶指向对应子链表的前驱节点，即指向的是上一个子链表的尾节点。如果插入的时候桶是空的，就把新节点插入到`_M_before_begin`之后，对应桶指向`_M_before_begin`。相当于把新的子链表插入到了整个链表的最前面。如果插入的时候桶非空，就把新节点插入到对应子链表的头节点之前即可**。
+
+5. **更新元素计数并返回迭代器**
 
 - `++_M_element_count;`，元素计数加一。
 - `return iterator(__node);`，返回指向新节点的迭代器。
@@ -611,158 +662,118 @@ todo，这里需要讲解插入过程，最好画图实现。
 - 桶内链表头插入，避免遍历。
 - rehash 时会重新分配桶并迁移节点，确保负载因子合理。
 
-#### 3.1.6 重新哈希
+### 3.1.7 重新哈希
 
-哈希表在插入新元素时，可能会触发重新哈希（rehash）操作，以保证负载因子在合理范围内，从而维持高效的查找性能。负载因子（load factor）是衡量哈希表空间利用率和性能的关键指标，定义为：
+哈希表插入新元素时，可能会触发重新哈希（rehash），以保证负载因子（load factor）在合理范围内，维持查找性能。负载因子定义为：
 
 > 负载因子 = 元素数量 / 桶数量
->
-> `__builtin_ceill(__n / (long double)_M_max_load_factor)`
 
-负载因子越高，说明每个桶平均存储的元素越多，哈希冲突概率也越大，查找效率会下降。为了保证哈希表的高效性，通常会设置一个最大负载因子（如 1.0）。当插入新元素后，负载因子超过该阈值时，就会自动进行 rehash（扩容并重新分配桶）。一般而言，在插入第一个元素时，哈希表总会进行扩容。
+负载因子高，哈希冲突概率大，查找效率下降。通常设置最大负载因子（如 1.0），插入新元素后超出阈值则自动 rehash（扩容并重新分配桶）。首次插入元素时也会扩容。
 
-**`std::unordered_map` 默认采用 `_Prime_rehash_policy` 作为 rehash 策略**，**该策略生成的新的桶的数量通常是一个可以使负载因子保持足够小的质数**。有两个数据成员和一个静态数据成员：
+`std::unordered_map` 默认采用 `_Prime_rehash_policy` 作为 rehash 策略，生成的桶数量通常为质数，以提升哈希分布均匀性。主要成员：
 
-- `float _M_max_load_factor`：最大负载因子，默认值为 1.0。
-- `mutable std::size_t _M_next_resize`：下次扩容的桶数量阈值，初始为 0，表示第一次插入元素时一定会扩容。
-- `static const std::size_t _S_growth_factor`：增长因子，默认值为 2。
+- `float _M_max_load_factor`：最大负载因子，默认 1.0。
+- `mutable std::size_t _M_next_resize`：下次扩容的桶数量阈值，初始为 0。
+- `static const std::size_t _S_growth_factor`：增长因子，默认 2。
 
-其设计目标和主要功能如下：
-
-- 动态判断何时需要扩容，保证负载因子不超过最大值。
-- 计算合适的桶数量，并保证桶数量为质数，从而提升哈希分布的均匀性，减少冲突。
-- 管理扩容阈值和内部状态，自动完成 rehash，无需用户干预。
-
-具体流程如下：
+主要流程：
 
 1. **最大负载因子管理**：
 
-- 通过 `max_load_factor()` 获取最大负载因子（默认 1.0），即每个桶允许的最大平均元素数。
+- 通过 `max_load_factor()` 获取最大负载因子。
 
 2. **扩容判断**：
 
-- 每次插入新元素前，调用 `_M_need_rehash(__n_bkt, __n_elt, __n_ins)` 判断插入后负载因子是否超标。`__n_bkt` 是当前桶数量，`__n_elt` 是当前元素数量，`__n_ins` 是即将插入的元素数。
-- 如果需要扩容，返回 `make_pair(true, n)`，其中 n 是新的桶数量。不过不需要则返回 `make_pair(false, 0)`。
-- 没有找到`_M_need_rehash()`的定义，只有声明。
+- 插入前，调用 `_M_need_rehash(__n_bkt, __n_elt, __n_ins)` 判断插入后负载因子是否超标。若需扩容，返回新桶数量。
 
 3. **桶数量计算与选取**：
 
-- `_M_bkt_for_elements(__n)` 根据元素数量和负载因子计算所需桶数。
-- `_M_next_bkt(__n)` 返回不小于 n 的下一个质数，保证桶数量为质数，有助于哈希分布均匀。
+- `_M_bkt_for_elements(__n)` 计算所需桶数。
+- `_M_next_bkt(__n)` 返回不小于 n 的下一个质数。
 
 4. **扩容与节点迁移**：
 
-如果判断需要扩容，则调用 `_Hashtable::_M_rehash(size_type __bkt_count, const __rehash_state& __state)` 进行扩容。其核心流程如下：
+- 若需扩容，调用 `_Hashtable::_M_rehash(size_type __bkt_count, const __rehash_state& __state)`。
 
 ```cpp
 void _Hashtable::_M_rehash(size_type __bkt_count, const __rehash_state& __state) {
   try {
     _M_rehash_aux(__bkt_count, __unique_keys());
   } catch (...) {
-    // 如果分配桶失败，恢复 hash policy 的旧状态并抛出异常
     _M_rehash_policy._M_reset(__state);
     throw;
   }
 }
 ```
 
-1. **异常安全处理**：
+扩容时，先保存当前策略状态。分配新桶失败时，恢复旧状态并抛出异常，保证哈希表不被破坏。
 
-   - 扩容时，先保存当前 rehash policy 的状态。
-   - 如果分配新桶失败（如内存不足），会恢复旧状态并重新抛出异常，保证哈希表状态不被破坏。
-
-2. **节点迁移与链表重建**：
-   - 具体迁移逻辑在 `_M_rehash_aux()` 中实现：
+节点迁移逻辑在 `_M_rehash_aux()`：
 
 ```cpp
-void _Hashtable::_M_rehash_aux(size_type __bkt_count, true_type) {
-  // 1. 分配新的桶数组
-  __bucket_type* __new_buckets = _M_allocate_buckets(__bkt_count);
-  // 获取链表头节点
-  __node_type* __p = _M_begin();
-  _M_before_begin._M_nxt = nullptr;
-  std::size_t __bbegin_bkt = 0;
-  // 2. 遍历所有节点
-  while (__p) {
-    // 记录后继节点
-    __node_type* __next = __p->_M_next();
-    // 使用range_hash计算新桶索引
-    std::size_t __bkt = __hash_code_base::_M_bucket_index(__p, __bkt_count);
-    if (!__new_buckets[__bkt]) {
-      // 桶为空，将节点插入链表头
+// Rehash when there is no equivalent elements.
+template<typename _Key, typename _Value,
+    typename _Alloc, typename _ExtractKey, typename _Equal,
+    typename _H1, typename _H2, typename _Hash, typename _RehashPolicy,
+    typename _Traits>
+  void
+  _Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+        _H1, _H2, _Hash, _RehashPolicy, _Traits>::
+  _M_rehash_aux(size_type __bkt_count, true_type)
+  {
+    // 1. 分配新的桶数组
+    __bucket_type* __new_buckets = _M_allocate_buckets(__bkt_count);
+    // 获取旧链表头节点
+    __node_type* __p = _M_begin();
+    _M_before_begin._M_nxt = nullptr;
+    std::size_t __bbegin_bkt = 0;
+    // 2. 遍历所有节点，重新计算桶索引并插入新桶链表头
+    while (__p)
+{
+  // 保存节点后继节点
+  __node_type* __next = __p->_M_next();
+  // 用扩容后的桶数量重新计算桶索引
+  std::size_t __bkt
+    = __hash_code_base::_M_bucket_index(__p, __bkt_count);
+  // 把旧链表中的节点摘下来插入到新链表中，逻辑和_M_insert_bucket_begin相同
+  if (!__new_buckets[__bkt])
+    {
       __p->_M_nxt = _M_before_begin._M_nxt;
       _M_before_begin._M_nxt = __p;
       __new_buckets[__bkt] = &_M_before_begin;
       if (__p->_M_nxt)
-        __new_buckets[__bbegin_bkt] = __p;
+  __new_buckets[__bbegin_bkt] = __p;
       __bbegin_bkt = __bkt;
-    } else {
-      // 桶不为空，将节点插入桶链表头
+    }
+  else
+    {
       __p->_M_nxt = __new_buckets[__bkt]->_M_nxt;
       __new_buckets[__bkt]->_M_nxt = __p;
     }
-    __p = __next;
-  }
-
-  _M_deallocate_buckets();
-  _M_bucket_count = __bkt_count;
-  _M_buckets = __new_buckets;
+  __p = __next;
 }
+
+    // 3. 释放旧桶数组，更新桶数量和桶指针
+    _M_deallocate_buckets();
+    _M_bucket_count = __bkt_count;
+    _M_buckets = __new_buckets;
+  }
 ```
 
-迁移过程分为以下几步：
+迁移步骤：
 
-- 分配新的桶数组。
-- 遍历所有节点，重新计算每个节点的桶索引，将节点插入新桶对应的链表头。
-- 维护链表头指针 `_M_before_begin`，保证所有桶的链表结构正确。
+- 分配新桶数组。
+- 遍历所有节点，重新计算桶索引，插入新桶链表头。
+- 维护链表头指针 `_M_before_begin`。
 - 释放旧桶数组，更新桶数量和桶指针。
 
-这种迁移方式保证了扩容后哈希表的结构和查找效率不会受到影响。
+这种方式保证扩容后哈希表结构和查找效率不变。
 
 5. **扩容阈值与状态管理**：
+   - `_M_state()` 和 `_M_reset()` 用于保存和恢复策略内部状态。
 
-- `_M_state()` 和 `_M_reset()` 用于保存和恢复 rehash 策略的内部状态（如下次扩容的阈值），保证扩容逻辑的正确性。
+优点：
 
-这种设计的优点：
-
-- 桶数量为质数，减少哈希冲突。
+- 桶数量为质数，减少冲突。
 - 动态调整负载因子和桶数量，保证性能和空间利用率。
-- 插入时自动判断是否需要扩容，无需用户手动干预。
-
-## 附录
-
-1. 哈希和数组的对比
-
-你的问题很有代表性。可以这样解释：
-
-如果直接用数组存储 key-value 对，通常有两种方式：
-
-1. 用 key 作为数组下标（如 C 数组、std::vector），只适用于 key 是连续整数且范围不大（如 0~1000），否则会浪费大量空间，无法支持任意类型的 key。
-2. 用数组存储所有元素，每次查找都遍历整个数组，查找/插入/删除的时间复杂度是 O(n)，效率低下。
-
-哈希表（unordered_map）的优势在于：
-
-- 支持任意类型的 key（只要能哈希和比较相等）
-- 查找、插入、删除的平均时间复杂度是 O(1)，远快于数组的 O(n)
-- 空间利用率高，不需要为每个可能的 key 都分配空间
-
-总结：  
-哈希表相比直接用数组，能高效支持大范围、任意类型的 key，并且查找/插入/删除都非常快，是实现“键值对映射”最常用的数据结构之一。
-
-2. 理解了，也就是哈希表的查询其实是 O(1)复杂度？算出哈希，然后就能定位到是哪一个桶了？不过桶里面可能不止一个元素，还是 O(1)么？况且最坏的情况，size 为 n 的哈希，只有一个桶，里面 n 个键值对，这种情况是 O(n)吧？一般所说的常数复杂度是指 O(n)还是 O(1)？
-
-你的理解非常准确！
-
-- 哈希表的查找、插入、删除操作，平均情况下是 O(1) 复杂度。因为通过哈希函数可以直接定位到桶，然后在桶内查找元素。
-- 但桶内可能有多个元素（哈希冲突），需要在桶内遍历，桶内元素越多，查找越慢。
-- 最坏情况下，所有元素都被哈希到同一个桶（极端哈希冲突），查找就退化为 O(n)。
-
-所以：
-
-- 一般所说的“常数复杂度”是指**平均情况下**的 O(1)，即哈希函数分布均匀、负载因子合理时的表现。
-- 最坏情况下确实是 O(n)，但实际应用中只要哈希函数设计得好，这种极端情况很少见。
-
-总结：  
-哈希表的高效性依赖于哈希函数和负载因子的合理设计，平均复杂度 O(1)，最坏复杂度 O(n)。常说的“常数复杂度”指的是平均情况。
-
-分配器也要仔细看一下。
+- 插入时自动判断是否扩容，无需用户干预。

@@ -7,9 +7,7 @@ toc = true
 series = ["STL源代码笔记"]
 +++
 
-# `std::unordered_map`源代码笔记 1
-
-## 1. 概括
+# 1. 概括
 
 cppreference 上是这么说的：
 
@@ -21,7 +19,7 @@ cppreference 上是这么说的：
 
 所以`std::unordered_map`本质上就是一个基于哈希桶数组实现的哈希表。
 
-### 1.1 `std::unordered_map`和`__umap_hashtable`的定义
+## 1.1 `std::unordered_map`和`__umap_hashtable`的定义
 
 先观察一下`std::unordered_map`的定义：
 
@@ -70,7 +68,7 @@ template<typename _Key,
 							__detail::_Prime_rehash_policy, _Tr>;
 ```
 
-### 1.2 `_Hashtable`的定义
+## 1.2 `_Hashtable`的定义
 
 继续看`_Hashtable`的类型，`_Hashtable`的类型定义在`/usr/include/c++/10/bits/hashtable.h`里面。
 
@@ -115,7 +113,7 @@ __alloc_rebind<_Alloc,
 
 `_Hashtable`的定义乍一看很复杂，但可以分为 3 类来解读：模板参数、继承、数据成员。
 
-#### 1.2.1 模板参数
+### 1.2.1 模板参数
 
 其中`_Hashtable`模板参数的含义分别是：
 
@@ -138,7 +136,7 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 
 或者还一种说法：STL 通过 typedef/using 机制，将底层复杂的 `_Hashtable` 封装为 `__umap_hashtable`，并由`std::unordered_map` 持有，从而只暴露用户关心的参数，隐藏实现细节，简化了接口。
 
-#### 1.2.2 继承
+### 1.2.2 继承
 
 `unordered_map` 封装的 `_Hashtable` 继承结构非常复杂，主要是为了实现高效、灵活且可扩展的哈希表。
 
@@ -165,7 +163,7 @@ STL 正是通过这种方式，把底层`_Hashtable`复杂的模板参数都封�
 
 这种多重继承的设计，将哈希表的各个功能模块化，便于代码复用和维护。每个基类只关注自己的职责，减少了耦合，提高了可读性和可扩展性。对于不同类型的哈希容器（如 map、set），只需组合不同的基类即可实现定制化行为。这也是 STL 容器内部常用的“策略模式”与“分层继承”思想的体现。
 
-#### 1.2.3 数据成员
+### 1.2.3 数据成员
 
 主要的数据成员为：
 
@@ -188,11 +186,11 @@ private:
 }
 ```
 
-## 2. 数据结构
+# 2. 数据结构
 
 要理解 `std::unordered_map` 的实现，首先需要了解其底层数据结构。`std::unordered_map` 是基于哈希表实现的，而哈希表的核心数据结构是桶（bucket）数组，桶数组中存储的链表的节点，每个节点存储一个实际的键值对。
 
-### 2.1 节点
+## 2.1 节点
 
 哈希表不可避免地会遇到哈希冲突：不同的 key 经过哈希函数后，可能会被分配到同一个桶。为了解决冲突，`std::unordered_map`（底层 `_Hashtable`）采用**链表法**，即每个桶存储一个链表的头指针，链表中的每个节点存储一个实际的键值对，并通过 next 指针串联。
 
@@ -208,7 +206,7 @@ private:
 
 这种继承和指针抽象，使得哈希表的节点管理既高效又灵活。
 
-#### 2.1.1 `__node_base`
+### 2.1.1 `__node_base`
 
 `__node_base` 是所有哈希表节点的基类，主要用于实现链表结构，就是个简单的链表节点，其定义如下：
 
@@ -234,7 +232,7 @@ template<typename _NodeAlloc>
 
 这个基类只包含一个指向下一个节点的指针 `_M_nxt`，用于将同一个桶内的节点串成链表。所有实际存储数据的节点类型最终都会继承自这个基类。这样，哈希表可以用基类指针统一管理所有节点，实现链表操作的多态性和灵活性。
 
-#### 2.1.2 `_Hash_node_value_base`
+### 2.1.2 `_Hash_node_value_base`
 
 `_Hash_node_value_base`继承自 `_Hash_node_base`，即`__node_base`，在`__node_base`的基础上多了一个存储键值对的成员，但它并不是实际的节点类型`__node_type`，而是中间的过渡类型。里面的`_Value`其实就是`std::unordered_map`中`Key`和`_Tp`构成的`pair`，类型为`std::pair<const _Key, _Tp>`，在前面[`std::unordered_map`和`__umap_hashtable`的定义](#stdunordered_map和__umap_hashtable的定义)中可以看到，它是`std::unordered_map`实际使用的`_Hashtable`实例的别名。
 
@@ -263,7 +261,7 @@ template<typename _Value>
 	};
 ```
 
-#### 2.1.3 `__node_type`
+### 2.1.3 `__node_type`
 
 `__node_type` 是哈希表链表节点的实际类型，其类型为 `_Hash_node`的特化版本，特化版本继承自 `_Hash_node_value_base`，其定义如下：
 
@@ -348,7 +346,7 @@ using __node_type = __detail::_Hash_node<_Value, __hash_cached::value>;
 - 通过继承体系和模板特化，STL 实现了节点结构的灵活扩展和高效访问。
 - `_Hash_node_base`（`__node_base`）派生`_Hash_node_value_base`派生`_Hash_node`（`__node_type`）。
 
-##### 如何决定`_Hash_node`是否缓存哈希值？
+#### 如何决定`_Hash_node`是否缓存哈希值？
 
 这一过程完全由类型萃取（traits）和模板参数自动推导，无需用户干预。其核心逻辑如下：
 
@@ -419,7 +417,7 @@ using __node_type = __detail::_Hash_node<_Value, __hash_cached::value>;
 
 - 这套设计让类型信息和行为（如是否缓存哈希值）在模板参数层面自动推导，用户无需关心，代码更灵活高效。
 
-#### 2.1.4 `_Scoped_node`
+### 2.1.4 `_Scoped_node`
 
 然而，在实际操作过程中，比如`std::unordered_map`的`insert()`（对应`_Hashtable()`的`_M_insert()`或者`_M_emplace()`），并不会直接对`__node_type`进行操作，而是使用一个名为 `_Scoped_node` 的 RAII 类来管理节点的生命周期。它定义在`_Hashtable`内部，其定义如下：
 
@@ -451,13 +449,13 @@ __node_type* _M_node;
 
 `_Scoped_node`的设计是典型的 RAII，有两个数据成员，两种构造方式。
 
-##### 2.1.4.1 数据成员
+#### 2.1.4.1 数据成员
 
 - `__hashtable_alloc* _M_h`：指向分配器，用于分配和释放节点。因为`_Hashtable`的资源管理全部使用 Allocator，所以这个指针是必须的。
   - `_Scoped_node`在`_Hashtable`内部使用，而`_Hashtable`继承了`_Hashtable_alloc`，因此这也是为什么在构造`_Scoped_node`的时候传入`_Hashtable`的`this`指针作为`__hashtable_alloc`的原因。
 - `__node_type* _M_node`：指向的节点。
 
-##### 2.1.4.2 构造函数
+#### 2.1.4.2 构造函数
 
 **1. 直接接管已有节点**
 
@@ -485,14 +483,14 @@ _Scoped_node(__hashtable_alloc* __h, _Args&&... __args)
 { }
 ```
 
-##### 2.1.4.3 其它主要函数
+#### 2.1.4.3 其它主要函数
 
 1. `_Scoped_node`的析构函数也是通过 allocator 释放节点的。
 2. `_Scoped_node`禁止复制操作，这样设计是为了防止同一个节点被多个`_Scoped_node`管理，避免重复释放或悬垂指针，确保资源的唯一所有权。这是典型的 RAII 独占语义。
    1. todo，`__node_type`是可以被复制的么？`__node_base`持有一个指针，是 trivial 的，`_Hash_node_value_base`持有的`typedef _Value value_type;`是 trivial 的么？
 3. 虽然`_Scoped_node`没有显示定义移动构造函数和移动赋值运算符，但由于其成员都是指针类型，编译器会自动生成默认的移动构造和移动赋值操作。这样可以安全地转移节点所有权。
 
-### 2.2 分配器
+## 2.2 分配器
 
 前面讲了哈希表中节点的定义、继承关系、数据成员，以及管理其生命周期的 `_Scoped_node` RAII 类。`Scoped_node`负责管理`__node_type`的生命周期，在其构造函数中，使用分配器完成内存分配和`__node_type`的构造。
 
