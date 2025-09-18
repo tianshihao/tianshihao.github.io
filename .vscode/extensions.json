@@ -1,15 +1,16 @@
 {
   "recommendations": [
-    "albert.tabout",
     "christian-kohler.path-intellisense",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
     "github.codespaces",
     "github.copilot-chat",
     "github.copilot",
+    "hediet.vscode-drawio",
     "miguelsolorio.fluent-icons",
     "pkief.material-icon-theme",
     "sdras.night-owl",
-    "vscodevim.vim"
+    "vscodevim.vim",
+    "yzhang.markdown-all-in-one"
   ]
 }
