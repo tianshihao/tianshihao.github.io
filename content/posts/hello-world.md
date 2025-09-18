@@ -2,7 +2,7 @@
 date = '2025-08-17T23:50:01+08:00'
 draft = false
 title = 'Hello World'
-tags = ['example', 'hello']
+tags = ['Hello World']
 author = 'tianshihao'
 +++
 
