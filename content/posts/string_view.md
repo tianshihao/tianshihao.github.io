@@ -27,13 +27,13 @@ series = [’C++ Tip of the Week‘]
 
 ## 使用场景适合
 
-- 接受只读字符串参数时，推荐优先使用string_view。
-- 如果函数不需要修改数据或长期存储数据：string_view用于临时引用是安全的。
+- 接受只读字符串参数时，推荐优先使用`string_view`。
+- 如果函数不需要修改数据或长期存储数据：`string_view`用于临时引用是安全的。
 
 ## 不适合的场景
 
-- 基于string_view保存数据：因为string_view不拥有数据，必须确保底层数据在string_view生命周期内有效。
-  - 例如：结构体中的成员变量不适合作为string_view，此时更合适使用std::string。
+- 基于`string_view`保存数据：因为`string_view`不拥有数据，必须确保底层数据在`string_view`生命周期内有效。
+  - 例如：结构体中的成员变量不适合作为`string_view`，此时更合适使用`std::string`。
 - 处理需要NUL终止字符串的场景，例如需要传递给C风格API时（不能直接调用printf("%s\n", sv.data());）。
 
 # 3. API转换建议
@@ -78,19 +78,21 @@ funcPtr = &AnotherFunctionWithStringView; // 🚫 编译错误
 对仅执行单次操作且不需要存储数据的场景，string_view能显著提升效率。
 在现有代码中引入string_view时，从底层工具代码开始逐步替换，而非盲目修改所有代码。
 确保不会错误地引用生命周期短于string_view本身的数据。
-6. 核心语法示例
 
-接受string_view参数的例子
+# 6. 核心语法示例
+
+## 6.1 接受string_view参数的例子
 void ProcessData(std::string_view sv) {
     absl::PrintF("Processing: %s\n", sv); // 正确
     std::string s = std::string(sv); // 转为std::string以存储
 }
-不要将string_view用于存储
+
+## 6.2 不要将string_view用于存储
 struct UserProfile {
     absl::string_view username;  // 不推荐，仅供演示问题
     int score;
 };
-与隐式转换的便捷性
+## 6.3 与隐式转换的便捷性
 void PrintString(std::string_view sv) {
     absl::PrintF("Log: %s\n", sv);
 }
