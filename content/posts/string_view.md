@@ -1,7 +1,7 @@
 +++ 
 date = '2025-11-30T15:57:00+08:00'
 draft = false
-title = 'string_view'
+title = 'TotW #1: string_view'
 tags = ['C++']
 toc = true
 series = [’C++ Tip of the Week‘]
