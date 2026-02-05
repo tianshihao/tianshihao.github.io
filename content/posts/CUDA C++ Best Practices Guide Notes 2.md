@@ -1,6 +1,6 @@
 +++
 date = '2025-03-04T16:30:00+08:00'
-draft = false
+draft = true
 title = 'CUDA C++ Best Practices Guide Notes 2'
 tags = ['CUDA']
 toc = true
@@ -516,4 +516,5 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
