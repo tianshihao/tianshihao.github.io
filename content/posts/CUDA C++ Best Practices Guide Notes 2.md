@@ -11,19 +11,26 @@ series = ["CUDA C++ Best Practices Guide Notes"]
 
 > [原文地址：https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/)
 
-关键点：
-
-1. L2 缓存可以通过设置访问策略窗口和调整`hitRatio`参数来优化持久化数据访问，提高 CUDA 程序性能。
-
 ## 9. **\*内存优化**
 
 内存优化是 CUDA 程序性能优化中的最关键部分。目标是通过最大化内存带宽以最大化地使用硬件。为了最大化带宽，应尽可能使用更多的快速内存，并减少对慢速访问内存的使用。
 
 ### 9.1. Host 和 Device 之间的数据传输
 
+1. 带宽差异的背景
+   - GPU 内部显存带宽：GPU 芯片与其显存（Device Memory，即 VRAM）之间的数据传输速度非常快，例如 Tesla V100 可达 898 GB/s。
+   - 主机与设备之间的带宽：CPU 主机内存（Host Memory）和 GPU 显存之间通过 PCIe 总线连接，带宽相对较低，例如 PCIe x16 Gen3 只有 16 GB/s。
+   - 可以把 GPU 内部显存想象成一个高速公路，而主机与 GPU 之间的 PCIe 总线则是一条窄路。数据在 GPU 内部流动很快，但一旦需要在 CPU 和 GPU 之间搬运数据，就会成为性能瓶颈。
+2. 核心建议：最小化数据传输
+   - 即使某些计算在 GPU 上运行并不比在 CPU 上快（甚至可能更慢），也应该尽量让它们在 GPU 上执行，以避免频繁的数据传输开销。
+   - 因为数据传输的时间成本可能远大于计算本身的时间成本。
+3. 中间数据应留在设备上
+   - 中间结果（临时变量、中间计算数据）应该直接在 GPU 显存中创建、使用和销毁，不要传回主机内存。
+   - 只有最终需要的结果才需要传回主机。
+
 Device Memory 和 GPU 之间的最大理论带宽（例如 NVIDIA Tesla V100 为 898 GB/s）比 Host Memory 和 Device Memory 之间的最大理论带宽（例如 PCIe x16 Gen3 为 16 GB/s）要高得多。因此，为了最好的性能，**应该尽可能减少 Host 和 Device 之间的数据传输，即使这意味着在 GPU 上运行的 Kernel 比在 Host CPU 上运行没有任何加速（为了避免数据传输带来的损失）**。
 
-中间数据结构应该在 Device Memory 中创建，由 Device 操作，并且在没有被 Host 映射或者没有被复制到 Host Memory 的情况下被销毁。
+中间结果（临时变量、中间数据结构）结应该直接在GPU显存中创建，由 Device 操作，并且在没有被 Host 映射或者没有被复制到 Host Memory 的情况下被销毁。
 
 此外，由此每次传输的开销，将许多小批量的传输合并为一个大批量的传输，比单独进行每次传输要好得多，即使这样做需要将非连续内存区域打包到连续内存的缓冲区中然后再传输后解包。
 
@@ -509,3 +516,4 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
