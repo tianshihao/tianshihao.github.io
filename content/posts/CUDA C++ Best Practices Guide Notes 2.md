@@ -11,28 +11,40 @@ series = ["CUDA C++ Best Practices Guide Notes"]
 
 > [原文地址：https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/)
 
-关键点：
-
-1. L2 缓存可以通过设置访问策略窗口和调整`hitRatio`参数来优化持久化数据访问，提高 CUDA 程序性能。
-
-## 9. **\*内存优化**
+## 10. **\*内存优化**
 
 内存优化是 CUDA 程序性能优化中的最关键部分。目标是通过最大化内存带宽以最大化地使用硬件。为了最大化带宽，应尽可能使用更多的快速内存，并减少对慢速访问内存的使用。
 
-### 9.1. Host 和 Device 之间的数据传输
+### 10.1. Host 和 Device 之间的数据传输
 
-Device Memory 和 GPU 之间的最大理论带宽（例如 NVIDIA Tesla V100 为 898 GB/s）比 Host Memory 和 Device Memory 之间的最大理论带宽（例如 PCIe x16 Gen3 为 16 GB/s）要高得多。因此，为了最好的性能，**应该尽可能减少 Host 和 Device 之间的数据传输，即使这意味着在 GPU 上运行的 Kernel 比在 Host CPU 上运行没有任何加速（为了避免数据传输带来的损失）**。
+1. 带宽差异的背景
+   - GPU 内部显存带宽：GPU 芯片与其显存（Device Memory，即 VRAM）之间的数据传输速度非常快，例如 Tesla V100 可达 898 GB/s。
+   - 主机与设备之间的带宽：CPU 主机内存（Host Memory）和 GPU 显存之间通过 PCIe 总线连接，带宽相对较低，例如 PCIe x16 Gen3 只有 16 GB/s。
+   - 可以把 GPU 内部显存想象成一个高速公路，而主机与 GPU 之间的 PCIe 总线则是一条窄路。数据在 GPU 内部流动很快，但一旦需要在 CPU 和 GPU 之间搬运数据，就会成为性能瓶颈。
+2. 核心建议：最小化数据传输
+   - 即使某些计算在 GPU 上运行并不比在 CPU 上快（甚至可能更慢），也应该尽量让它们在 GPU 上执行，以避免频繁的数据传输开销。
+   - 因为数据传输的时间成本可能远大于计算本身的时间成本。
+3. 中间数据应留在设备上
+   - 中间结果（临时变量、中间计算数据）应该直接在 GPU 显存中创建、使用和销毁，不要传回主机内存。
+   - 只有最终需要的结果才需要传回主机。
+4. 批量传输优于多次小传输
+   - 每次数据传输都有固定的启动开销（overhead），比如初始化传输、发送指令等。
+   - 多次小传输会累积这些开销，效率很低。
+   - 应该将多个小数据打包成一个大块一次性传输，即使需要额外的打包/解包操作。
+5. 使用页锁定内存（Pinned Memory）提升带宽
 
-中间数据结构应该在 Device Memory 中创建，由 Device 操作，并且在没有被 Host 映射或者没有被复制到 Host Memory 的情况下被销毁。
+#### 10.1.1 页锁定内存
 
-此外，由此每次传输的开销，将许多小批量的传输合并为一个大批量的传输，比单独进行每次传输要好得多，即使这样做需要将非连续内存区域打包到连续内存的缓冲区中然后再传输后解包。
+为了消除数据传输的开销，CUDA 提供了 Pinned Memory（页锁定内存）机制。通过将一部分主机内存固定在物理 RAM 中，防止操作系统将其作为虚拟内存换出到磁盘，从而实现 Host 和 Device 之间的高带宽数据传输。这相当于一种用户可控的内存锁定机制。
 
-综上所述，出现了 Pinned Memory，为了消除传输的开销，直接把一部分内存固定住，让它不会被交换到磁盘，借此可以实现 Host 和 Device 之间的高带宽数据传输。相当于用户控制的磁盘缓存。
+Page-locked（锁页）或 Pinned（固定）Memory 可以实现 Host 和 Device 之间的最大传输带宽。Pinned Memory 是一种特殊的 Host Memory，其物理地址被锁定，不会被操作系统交换到磁盘。Pinned Memory 物理上位于主机（Host）的 RAM 中，具有以下两个核心优势：
 
-Page-locked（锁页）或者 Pinned（固定）Memory 可以取得 Host 和 Device 之间的最大带宽。Pinned Memory 是一种特殊的 Host Memory，它的物理地址被锁定，不会被操作系统交换的磁盘。Pinned Memory 位于 Host，其有两个优势：
+1. 更高的带宽：Pinned Memory 可以通过 DMA（Direct Memory Access，直接内存访问） 直接与 Device Memory 进行数据传输，省去了中间拷贝步骤，减少了内存复制开销。而普通内存在传输前需要先拷贝到临时的页锁定缓冲区。
+  1. 说白了，就是Pinned Memory的话，DMA直接搬运数据，带宽高。
+3. 更低的延迟：由于 Pinned Memory 的物理地址固定，GPU 的 DMA 控制器可以直接访问该内存区域，无需等待额外的拷贝操作，因此数据传输的延迟更低。
+  1. 也是DMA，也是直接搬运，如果普通CPU到GPU，系统会先把这段内存搬到一个临时的Pinned Buffer，再通过DMA搬运到GPU，所以多花时间。直接使用Pinned Memory省略的是这部分的耗时。
 
-1. **更高的带宽**：Pinned Memory 可以通过 DMA（直接内存访问）直接与 Device Memory 进行数据传输，减少了内存复制开销。
-2. **更低的延迟**：Pinned Memory 的物理地址固定，数据传输的延迟更低。
+总结就是通过DMA复制Pinned memory实现更高带宽和更低延迟的复制。
 
 Pinned Memory 是通过 Runtime API 中的`cudaHostAlloc()`函数分配的。CUDA 示例程序[bandwidthTest](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/1_Utilities/bandwidthTest)展示了如何使用这些函数以及如何测量内存传输性能。
 
@@ -40,9 +52,20 @@ Pinned Memory 是通过 Runtime API 中的`cudaHostAlloc()`函数分配的。CUD
 
 Pinned Memory 不应被过度使用。过度使用可能会降低整体系统性能，因为 Pinned Memory 是一种稀缺资源，但很难提前知道多少才算过多。此外，与大多数常规系统内存分配相比，固定系统内存是一项开销较大的操作，因此与所有优化一样，应测试应用程序及其运行的系统以确定最佳性能参数。
 
-#### 9.1.2. 异步传输与计算的重叠
+另外，一般情况下Pinned Memory有主机和设备两个地址，主机就是
 
-使用`cudaMemcpyAsync()`可以异步传输数据，从而允许数据传输与计算重叠。这里有一个例子[Asynchronous and Overlapping Transfers with Computation](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#asynchronous-transfers-and-overlapping-transfers-with-computation)：
+#### 10.1.2. 异步传输与计算的重叠
+
+一些背景知识，GPU 具备同时进行数据拷贝和计算的硬件能力：
+
+- Copy Engine：负责 Host ↔ Device 数据传输
+- SMs（流式多处理器）：负责执行 kernel 计算
+
+两者是独立的硬件单元，可以并行工作。
+
+使用`cudaMemcpyAsync()`可以异步传输数据，控制权会立即返回主机线程，从而允许数据传输与CPU计算重叠。异步的复制需要pinned meomory（否则会回退成隐式的同步拷贝，CPU 会阻塞一段时间（拷贝到临时缓冲区）），以及一个额外的参数stream id，stream就是设备上按顺序执行的一系列操作序列。不同流中的操作可以**交错执行**，在某些情况下甚至可以重叠执行。这个特性可以用来隐藏数据传输延迟、提高GPU利用率。
+
+这里有一个例子[Asynchronous and Overlapping Transfers with Computation](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#asynchronous-transfers-and-overlapping-transfers-with-computation)：
 
 ##### 计算和数据传输的重叠
 
@@ -52,31 +75,37 @@ Kernel<<<Grid, Block>>>(a_d);
 cpuFunction();
 ```
 
-例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。所以 Kernel 也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，它与数据复制和 Kernel 的执行重叠。
+例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，二者使用的stream相同，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。因为 Kernel 的启动也是异步的，因此Kernel也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，这里，CPU的计算与GPU的复制、计算重叠了。
 
 这个例子中，数据传输和 Kernel 执行是按顺序执行的。在能够并发复制和计算的设备上，还可以将设备的 Kernel 执行与 Host 和 Device 之间的数据传输重叠。设备是否具有此功能由`cudaDeviceProp`结构的`asyncEngineCount`字段指示（或列在 DeviceQuery CUDA Sample 的输出中）。这个功能要求是 Pinned Memory 并且数据传输和 Kernel 需要使用不同的、非默认的 Stream。（之所以需要非默认的 Stream，是因为 Default Stream 是独占的，只有在先前所有 Stream 中的调用完成后，Default Stream 中的操作才能开始，第 8 章提到过。）
 
 > 就是非默认的 Stream 之间可以并行。这个在实践中是基础，这个文档里面说得有点绕，不过也很全面。
 
-##### 并发复制和执行
+##### 并发复制和计算
 
 ```cpp
 cudaStreamCreate(&Stream1);
 cudaStreamCreate(&Stream2);
 cudaMemcpyAsync(a_d, a_h, size, cudaMemcpyHostToDevice, Stream1);
-Kernel<<<Grid, Block, 0, Stream2>>>(otherData_d);a
+Kernel<<<Grid, Block, 0, Stream2>>>(otherData_d);
 ```
 
-##### 顺序复制和执行
+复制和计算使用了不同的stream，是并发的。Copy engine和SMs的存在提供了GPU计算和复制并行的可能。
+
+##### 顺序复制和计算
 
 ```cpp
 cudaMemcpy(a_d, a_h, N*sizeof(float), dir);
 Kernel<<<N/nThreads, nThreads>>>(a_d);
 ```
 
-上面两者的结果是相同的。
+一个大数组，使用阻塞的复制，复制和计算串行。那么如何优化呢？把数据分块，让复制和计算重叠。
 
-##### 分阶段并发复制和执行
+即使用异步复制。
+
+##### 分块并发复制和计算
+
+什么意思呢？因为CUDA
 
 ```cpp
 size = N * sizeof(float) / nStreams;
@@ -87,16 +116,20 @@ for (i = 0; i < nStreams; i++) {
 }
 ```
 
-上述代码展示了如何将传输和内核执行分解为 nStreams 个阶段。其中，假设 $N$ 能被 $nThreads \times nStreams$ 整除，即把要处理的$N$个数据，平均分给$nStreams$个 Stream，每个 Stream 要处理的数据数量为：
+为什么可以通过分块加速呢？原因是GPU有独立的数据拷贝引擎（Copy Engine），因此数据的拷贝和计算（SM负责核函数的执行），在硬件层面上可以同时进行，互不阻塞。
+
+再假设数据和计算任务可以分块处理，即数据之间互不影响，那么就可以采用多stream并发，分块传输、分块计算，这样每一块的计算与下一块的数据传输自然可以实现高度重叠。
+
+上述代码展示了如何将传输和执行核函数分解为 $nStreams$ 个阶段。其中，假设 $N$ 能被 $nThreads \times nStreams$ 整除，即把要处理的$N$个数据，平均分给$nStreams$个 Stream，每个 Stream 要处理的数据数量为：
 
 $$
 Elements \ processed \ by \ every \ Stream = \frac{N}{nStreams}
 $$
 
-而每个 Stream 中的数据又被划分成若干 block，每个 block 包含的线程数为$nThreads$，每个线程处理一个数据，block 的数量乘以线程的数量即每个 Stream 要处理的数据数量：
+而每个 Stream 中的数据又被划分成若干 block，每个 block 包含的线程数为$n Threads$，每个线程处理一个数据，block 的数量乘以线程的数量即每个 Stream 要处理的数据数量：
 
 $$
-Block \ number \times nThreads = \frac{N}{nStreams}
+Elements \ processed \ by \ every \ Stream = \frac{N}{nStreams} = Block \ number \times nThreads
 $$
 
 由此 block 的数量应该为：
@@ -118,9 +151,20 @@ $$
 
 另外，有“单个复制引擎（copy engine）” 的 GPU 可以执行一次异步数据传输并执行 kernel，而具有两个复制引擎的 GPU 可以同时执行一次从 Host 到 Device 的异步数据传输、一次从 Device 到 Host 的异步数据传输以及执行 kernel。GPU 上的复制引擎数量由`cudaDeviceProp`结构中的`asyncEngineCount`字段给出，也可以在`DeviceQuery` CUDA 示例的输出中查看。另外，在 Default Stream 上的 Blocking transfer （`cudaMemcpy()`）是不能与 computation overlap 的，还记得么？Default Stream 是独占的。
 
-#### 9.1.3. 零拷贝
+#### 10.1.3. 零拷贝
 
 零拷贝允许 GPU 线程直接访问 Host 内存。为此，它需要映射的 Pinned Memory。如果 GPU 是集成的（即 CUDA 设备属性中`integrated`为 1），则映射的 Pinned Memory 始终会带来性能提升，因为集成 GPU 和 CPU 内存在物理上是相同的，从而避免了多余的复制。在独立的 GPU 上，映射的 Pinned Memory 应仅被读取或者写入一次，并且读取和写入该内存的全局加载和存储操作应该是合并的。零拷贝可以替代 Stream 的使用，因为 Kernel 发起的数据传输会自动与 Kernel 的执行重叠，而无需设置和确定最优 Stream 的开销。
+
+所谓零拷贝就是可以让GPU上的线程直接访问主机内存。怎么做到呢？就是在主机内存上分配pinned memory，并且映射到gpu。映射的前提是主机内存锁定，不然换页之后白映射了。这样，GPU就可能直接访问主机内存上的数据了。
+
+- 对于集成式GPU，因为CPU和GPU使用的是同一块物理内存，所以这么做能够节省多余的内存复制。这就是真正的零拷贝！
+- 对于独立式GPU，GPU和CPU使用的是两块物理内存，映射的pinned memory只是让gpu可以远程“访问”主机内存，但是速度受到PCIe/NVLINK上限，通过比拷贝到显存再计算要慢，除非是那种只读一次、写一次，没有办法提前搬运的情况。
+  - 这个和普通的pinned还不一样，普通的pinned，GPU通过DMA直接实现对主机内存更高带宽、更低延迟的数据“拷贝”，仅仅是拷贝。
+  - 但是map之后，这段主机内存还被映射到了GPU的虚拟空间，相当于直接访问了，不复制，不搬运数据，走的是PCIe总线。
+  - 这么看来，如果独立式GPU的情况，在主机内存有一大块数据，但是只需要修改其中的一小部分的话，mapped pinned memory（零拷贝）更合适，不用全部复制。如果还是需要大规模处理，还是用普通pinned然后复制好。
+  - 对于集成式GPU，比如某一个feature，每次在CPU写入，然后模型只读取一次，显然适合pinned memory。如果写写一次，然后多次读，更适合h2d，拷贝到device里面，这样每次读最快。
+
+零拷贝可以替代stream，因为kernel直接访问主机的内存了，访问和计算是同时发生的，没必要分配stream安排复制再计算了，直接就原地搞定了。
 
 ##### 零拷贝的使用
 
@@ -144,26 +188,62 @@ Kernel<<<GridSize, BlockSize>>>(a_map);
 
 > 映射的固定 Host 内存允许你在避免使用 CUDA 流的情况下，将 CPU-GPU 内存传输与计算重叠。但由于对此类内存区域的任何重复访问都会导致重复的 CPU-GPU 传输，因此可以考虑在 Device 内存中创建第二个区域，手动缓存之前读取的 Host 内存数据。
 
-#### 9.1.4. 统一虚拟地址
+面试这么说：
 
-计算能力 2.0 及更高版本的设备在 64 位 Linux 和 Windows 上支持一种称为统一虚拟地址空间（Unified Virtual Addressing, UVA）的特殊寻址模式。在 UVA 下，Host Memory 和所有已安装支持设备的内存共享一个单一的虚拟地址空间。
+> 场景：在集成式GPU上，GPU和CPU共享系统内存，没有独立显存。
+> 原理：这时候零拷贝（使用mapped pinned memory）可以让GPU kernel直接访问主机内存，实现真正的“原地访问”，没有任何实际的数据传输。
+> 横向对比：如果额外执行一次主机到设备的memcpy,其实还是在同一块物理内存上多走了一次冗余拷贝，效率反而低了。
+> 总结：因此，在集成式GPU上，推荐使用零拷贝实现带宽极限的数据访问。
+
+就这样了，不然感觉越说越不明白，简单一点。
+
+#### 10.1.4. 统一虚拟地址
+
+计算能力 2.0 及更高版本的设备在 64 位 Linux 和 Windows 上支持一种称为统一虚拟地址空间（Unified Virtual Addressing, UVA）的特殊寻址模式。在 UVA 下，Host Memory 和所有已安装支持设备的内存共享一个单一的虚拟地址空间。主机内存和设备内存在同一个地址空间里面。
 
 在 UVA 之前，应用程序必须跟踪哪些指针指向 Device Memory（以及哪个设备），哪些指针指向 Host Memory，这需要为每个指针单独存储元数据（或在程序中硬编码信息）。而在 UVA 下，通过使用`cudaPointerGetAttributes()`检查指针的值，可以简单地确定指针指向的物理内存空间。
 
+> UVA之前，就是程序员手动记录，之后通过`cudaPointerGetAttributs()`查询就行
+
 在 UVA 下，使用`cudaHostAlloc()`分配的固定 Host Memory 将具有相同的 Host 和 Device 指针，因此无需为此类分配调用`cudaHostGetDevicePointer()`。然而，通过`cudaHostRegister()`事后固定的 Host Memory 分配将继续具有与 Host 指针不同的 Device 指针，因此在这种情况下仍然需要调用`cudaHostGetDevicePointer()`。
+
+> *这文档有点旧了，我使用3080验证，发现cudaHostAlloc、cudaHostRegister 还是 mapped pinned，主机地址和设备地址完全相同，kernel随便直接访问，零拷贝，行为一致
 
 UVA 还是在支持的配置中启用点对点（Peer-to-Peer, P2P）数据传输的必要前提条件，P2P 允许数据直接通过 PCIe 总线或 NVLink 在支持的 GPU 之间传输，而无需经过 Host Memory。
 
-有关 UVA 和 P2P 的进一步解释和软件要求，请参阅《CUDA C++ 编程指南》。
-
-### 9.2. Device 内存空间
+### 10.2. Device 内存空间
 
 ![图2：CUDA上的内存空间](/memory-spaces-on-cuda-device.png)
 **图 2：CUDA 上的内存空间**
 
-CUDA 设备使用多个内存空间，这些内存空间具有不同的特性，反映了它们在 CUDA 应用程序中的不同用途。
+这样描述这张图片：
 
-在这些不同的存储空间中，global Memory 是最丰富的；有关每个计算能力级别的每个存储空间中可用的内存量，请参阅《CUDA C++编程指南》的功能和技术规格。global、local 和 texture 内存的访问延迟最大，其次是 constant Memory、shared Memory 和 regiter file。
+GPU有多层次、分用途的多种内存类型，有大容量低速的DRAM，有小容量高速的寄存器和块内共享内存，结合constant和texture达成高效并行。
+
+Device（设备）部分分为片外显存（DRAM）和GPU（其中SM），它们共同组成了GPU的完整内存体系。
+
+****DRAM****
+
+- DRAM是GPU的物理显存（比如24GB GDDR6X），存放绝大部分大块数据，所有的GPU计算核心都可以共享访问。
+- DRAM里面按照访问特性和用途区分为：
+  - Global Memory：最大空间，读写都可以，GPU中的所有线程以及host都可以访问，和host之间可以相互拷贝数据。
+  - Local Memory：每个线程私有的内存，实际上放在显存里（），比如溢出寄存器的时候，就会用到local memory。
+  - Constant Memory：只读空间，所有线程都可以访问，适合存参数和常量。共享一份，全局可见。
+  - Texture Memory：专为纹理采样优化的只读空间，有硬件换存、插值、电源优化。适合图片、体渲染等场景。
+
+****GPU（Multiprocessor，SM）****
+
+- GPU由大量的SM组成，是实际跑kernel指令的地方
+- 每个SM划分为
+  - Registers，每个线程独占，速度最快。
+  - Shared Memory，同一个block内线程共享的快速片上内存，做线程间通信、换存。
+- 此外，每个SM有：
+  - Constant and Texture Caches，针对Constant/Texture Memory加速访问做的专用硬件换存，缓解多SM并发只读时的带宽瓶颈
+  
+
+CUDA 设备使用多个内存空间（指GPU的几种不同的内存，和前面的地址空间不一样），这些内存空间具有不同的特性，反映了它们在 CUDA 应用程序中的不同用途。
+
+在这些不同的存储空间中，Global Memory 是最丰富的。global、local 和 texture 内存的访问延迟最大，其次是 constant Memory、shared Memory 和 regiter file。
 
 | Memory   | Location on/off chip | Cached  | Access | Scope                | Lifetime        |
 | -------- | -------------------- | ------- | ------ | -------------------- | --------------- |
@@ -179,41 +259,52 @@ CUDA 设备使用多个内存空间，这些内存空间具有不同的特性，
 
 在纹理访问的情况下，如果纹理引用绑定到全局内存中的线性数组，则设备代码可以写入底层数组。绑定到 CUDA 阵列的纹理引用可以通过将曲面绑定到相同的底层 CUDA 阵列存储来通过曲面写入操作写入）。应避免在同一内核启动中写入纹理的底层全局内存数组时读取纹理，因为纹理缓存是只读的，在修改相关全局内存时不会失效。
 
-#### 9.2.1. 对全局内存的合并访问
+#### 10.2.1. 对全局内存的合并访问
 
-在为支持 CUDA 的 GPU 架构编程时，一个非常重要的性能考虑因素是全局内存访问的合并（Coalescing）。设备会将一个 Warp 中线程的全局内存加载和存储操作合并为尽可能少的事务。
+合并（coalescing）全局内存访问是非常重要的性能考虑因素。一个warp（线程束，含有32个线程）中的线程对全局内存的读取和写入，会被设备自动合并为尽可能少的事务。
 
 > 确保全局内存访问尽可能合并。
 
-对于计算能力大于等于 6.0 的设备，一句话概括：“一个 Warp 中线程（一般为 32 个）的并发访问将合并成一系列的事务，一个事务访问 32 个字节，事务的数量足以服务该 Warp 中的所有线程。”
+对于计算能力（Compute Capability）大于等于 6.0 的设备（3080是8.6），一句话概括：
 
-对于某些设备计算能力 5.2 的能力的设备，可以选择启用全局内存访问的 L1 缓存。如果在这些设备上启用了 L1 缓存，所需的事务数量等于所于的 128 字节对齐段的数量。对于计算能力大于等于 6.0 的设备，L1 缓存是默认启用的。然而，无论全局加载是否缓存在 L1 中，数据访问单元但是 32 字节。
+> Warp（线程束，含有32个线程） 中每个线程的全局内存的并发访问，会被GPU合并成若干个32字节的事务（transaction），事务的总数正好能够覆盖线程束里所有线程要用到的数据。
+
+这确保了全局内存访问带宽的最大利用率。同一个线程束中的访问越集中、越对齐，事务的数量越少、效率越高。
+
+当然，前提是访问的数据在同一个相邻的32字节对齐区间内，这样才能被合并到同一个事务里面。
+
+说白了，核酸混检。
+
+对于某些设备计算能力 5.2 的能力的设备，可以选择启用全局内存访问的 L1 缓存。如果在这些设备上启用了 L1 缓存，所需的事务数量等于所于的 128 字节对齐段的数量。对于计算能力大于等于 6.0 的设备，L1 缓存是默认启用的。但无论全局加载是否有L1换存，数据访问的最小单元都是32字节。
 
 在配备了 GDDR 内存的设备上，当 ECC（纠错码）启用时，以合并方式访问内存变得更加重要。分散的访问会增加 ECC 内存传输的开销，尤其在向全局内存写入数据时。
 
-##### 9.2.1.1. 最简单的访问模式
+##### 10.2.1.1. 简单的访问模式
 
-在计算能力大于等于 6.0 的设备上最简单的合并可以这样实现：一个 Warp 中的第 k 个线程访问 以 32 字节对齐的数组中的第 k 个字。不需要 Warp 中的所有线程都访问。（就是以 Warp 为单位访问，集体行动）
+在计算能力大于等于 6.0 的设备上最简单的合并可以这样实现：一个 Warp 中的第 k 个线程访问 以 32 字节对齐的数组中的第 k 个字。不需要 Warp 中的所有线程都单独访问（这样会有32次访存，实际以 Warp 为单位，合并访问，可以节约）。
 
-例如，如果一个 Warp 中的线程访问相邻的 4 字节的字（例如相邻的 `float` 值，4 字节），那么就需要 4 次 32 字节对齐的、合并的事务。因为一个 Warp 中共 32 个线程，所以对于整个 Warp 而言，实际要访问一段 128 字节的内存，图 3 展示了这种访问模式。
+例如，如果一个 Warp 中的线程访问相邻的 4 字节（k是4）的字（例如相邻的 `float` 值，4 字节），那么就需要 4 次 32 字节对齐的、合并的事务。因为一个 Warp 中共 32 个线程，所以对于整个 Warp 而言，实际要访问一段 128 字节的内存，而一次事务访问32字节，因此需要4次事务，图 3 展示了这种访问模式。
 
 ![图3：合并访问](/coalesced-access.png)
 **图 3：合并访问**
+图中0、384单位是字节
+
+同样，如果k是8，即线程束中的线程需要8字节，那么总共需要访问256字节内容，一次事务32字节，所以需要256/32=8次。一个线程束中32个线程，一次事务访问数据最小单元是32字节，便于计算的巧合。
 
 如果从 4 个 32 字节段中的任何一个段中只请求了部分字（例如，如果多个线程访问了同一个字，或者某些线程没有参与访问），仍然会获取整个段。此外，如果 Warp 中的线程的访问在 4 个段内或跨段进行了重新排列，对于计算能力 6.0 或更高的设备，仍然只会执行 4 个 32 字节事务。
 
-##### 9.2.1.2 顺序但是非对齐的访问模式
+##### 10.2.1.2 顺序但是非对齐的访问模式
 
 如果 Warp 中的线程顺序访问内存，但内存地址没有和 32 字节段对齐，则会请求 5 个 32 字节段。
 
 ![图4：非对齐的顺序地址，跨越5个32字节段](/misaligned-sequential-addresses.png)
 **图 4：非对齐的顺序地址，跨越 5 个 32 字节段**
 
-最右边的箭头表示访问的地址未对齐 32 字节。
+箭头整体偏移了，可以看到最左边和最右边的箭头表示访问的地址没有32字节对齐
 
 通过 CUDA Runtime API（例如`cudaMalloc()`）分配的内存保证至少对齐到 256 字节。因此，选择合理的线程块大小（例如 Warp 大小的倍数，即当前 GPU 上的 32），有助于确保 Warp 的内存访问正确对齐。（例如，考虑如果线程块大小不是 Warp 大小的倍数，第二个、第三个及后续线程块访问的内存地址会发生什么情况。）
 
-##### 9.2.1.3. 未对齐访问的影响
+##### 10.2.1.3. 未对齐访问的影响
 
 使用一个简单的复制 Kernel 为例：
 
@@ -236,7 +327,9 @@ __global__ void offsetCopy(float *odata, float* idata, int offset)
 
 即未对齐访问会增加内存事务的数量，代之带宽浪费和性能下降。
 
-##### 9.2.1.4. 跨步访问
+说实话，我自己做了个实验，这个现象并没有复现。
+
+##### 10.2.1.4. 跨步访问
 
 在上面的例子中，顺序但是未对齐的访问情况下，使用缓存有助于提高性能。然而，对于非单位步长访问，情况可能不同，而这种情况在处理多维数据或者矩阵时很常见。下面是展示非单位步长数据复制的代码，该 Kernel 函数以步长`stride`为单位将数据从`idata`复制到`odata`。
 
@@ -262,55 +355,73 @@ __global__ void strideCopy(float *odata, float* idata, int stride)
 
 如图 7 中所示，应尽可能避免非单位步长的全局内存访问。实现这一点的一种方法是利用共享内存，这将在下一节中讨论。
 
-#### 9.2.2. L2 缓存
+> 人话，比如还是一个线程束里面的线程访问4字节的数据。如果是相邻的，那么4次事务就足够了。但如果步长为2，那么就需要8次事务，因为每次事务里面只有一半的数据会被使用，效率就是50%。如果步长是32，则32个字节里面只有一个4字节的元素会被用到，效率是1/32。
 
-CUDA 11.0 之后设备可以影响 L2 缓存。因为 L2 是 On-Chip 的，所以它能提供更高的带宽和更低的延迟来访问全局内存。
+#### 10.2.2. L2 缓存
 
-##### 9.2.2.1. L2 缓存访问窗口
+CUDA 11.0 之后设备可以操作 L2 缓存。因为 L2 是 On-Chip 的，所以它能提供更高的带宽和更低的延迟来访问全局内存。
 
-当一个 CUDA Kernel 不断访问全局内存的同一个区域时，这些数据可以被认为是持久的（Persisting）。而如果数据只被访问了一次，那么这些数据就是流式的（Streaming）。L2 缓存的一部分区域可以被预留出来（Set-aside）用于对全局内存中的数据进行持久访问。如果这部分被留出来的区域没有被使用，其它的访问仍然能够正常的使用它。
+##### 10.2.2.1. L2 缓存访问窗口
 
-> 类似 L2 中的 Pinned Memory！
+当一个 CUDA Kernel 不断访问全局内存的同一个区域时，这些数据可以被认为是持久的（Persisting）。而如果数据只被访问了一次，那么这些数据就是流式的（Streaming）。L2 缓存的一部分区域可以被预留出来（Set-aside）用于对全局内存中的数据进行持久访问。如果这部分被留出来的区域没有被使用，其它的访问仍然能够正常的使用它。即相比于普通数据，L2 set aside缓存优先缓存被用户指定的数据。
 
-用于持久访问的 L2 缓存预留大小可以在限制范围内进行调整：
+所以可以让用户告诉CUDA runtime哪些数据需要被频繁访问，帮我尽量把这些数据留在L2预留缓存里面，从而提高效率。
+
+> 比如现在我有100MB数据，我知道其中10MB会被高频访问，所以如果它们能被优化缓存在L2缓存，肯定会带来性能提升。假设L2缓存大小20MB，用户可指定预留部分10MB，那么我告诉CUDA runtime，把我10MB的热点数据优先缓存到L2的预留空间，那么运行一段时间之后，热点数据会全部被缓存到L2的预留部分，那么访问这些热点数据的时候，效率就会提高很多。
+
+
+> 在数据持久保留方面类似 L2 中的 Pinned Memory！
+> 但又不太一样。L2 set aside缓存是“优先保留热点数据的空间”，没被用满可自动被其它流式数据访问，属于自动管理。pinned memory是主机RAM被物理锁定，完全专用，用户手动管理。
+
+针对持久型访问，L2缓存的预留大小可以在一定范围内调整：
 
 ```cpp
 cudaGetDeviceProperties(&prop, Device_id);
+// 取最大值
 cudaDeviceSetLimit(cudaLimitPersistingL2CacheSize, prop.persistingL2CacheMaxSize); /* Set aside max possible size of L2 cache for persisting accesses */
 ```
 
-用户数据到 L2 预留部分的映射可以使用 CUDA Stream 或 CUDA graph Kernel 节点上的访问策略窗口进行控制。下面的示例显示了如何在 CUDA 流上使用访问策略窗口。
+用户数据如何映射到预留缓存区域，可以通过CUDA流（CUDA stream）或CUDA图kernel节点的**访问策略窗口**（access policy window）来控制。下面的例子展示了在CUDA流上如何使用访问策略窗口：
 
 ```cpp
-// Stream level attributes data structure
 cudaStreamAttrValue Stream_attribute;
-// Global Memory data pointer
 Stream_attribute.accessPolicyWindow.base_ptr = reinterpret_cast<void*>(ptr);
-// Number of bytes for persisting accesses.
-// (Must be less than cudaDeviceProp::accessPolicyMaxWindowSize)
-Stream_attribute.accessPolicyWindow.num_bytes = num_bytes;
+Stream_attribute.accessPolicyWindow.num_bytes = num_bytes; // 窗口有最大值，不能超过
 
-// Hint for L2 cache hit ratio for persisting accesses in the num_bytes region
 Stream_attribute.accessPolicyWindow.hitRatio = 1.0;
-// Type of access property on cache hit
 Stream_attribute.accessPolicyWindow.hitProp = cudaAccessPropertyPersisting;
-// Type of access property on cache miss.
 Stream_attribute.accessPolicyWindow.missProp = cudaAccessPropertyStreaming;
 
-// Set the attributes to a CUDA Stream of type cudaStream_t
 cudaStreamSetAttribute(Stream, cudaStreamAttributeAccessPolicyWindow,
                         &Stream_attribute);
 ```
 
-访问策略窗口需要`hitRaio`和`num_bytes`的值。根据`num_bytes`参数的值和 L2 缓存的大小，可能需要调整`hitRaio`的值，以避免 L2 缓存的抖动。
+上面是最基础的设置。**意思是说，从`ptr`开始的数据，其中`num_bytes`字节的数据希望在L2上持久化**。访问策略窗口需要`hitRaio`和`num_bytes`的值。根据num_bytes参数值和L2缓存的实际大小，需要调整hitRatio参数，以避免L2缓存行的thrashing（反复冲刷、**抖动**）。
+
+> 意思是，热点数据比如说10MB，往往大于L2的预留缓存大小，比如3080的3MB。如果仍然设置hitRatio是1，即希望窗口中的10MB数据全部都在L2预留缓存部分持久化，这会导致L2预留部分频繁被新来的热点数据驱逐，抖动严重，效率反而下降。因此需要调整hitRatio。
+> 这时可以将hitRatio设置为一个小于1的值，比方说0.25，就是告诉CUDA runtime，我知道只有2.5MB（10MB*0.25）的数据真有机会驻留L2预留部分，剩下的就当普通缓存流式处理就好了。
+> 这样L2预留区域就只为最热的子集服务，明显减少缓存冲刷、提升即使命中率和整体性能。
+> 当然，这种情况下最佳的hitRatio需要微调。
+
+以3080为例，L2缓存物理大小为5MB，L2持久化最大预留大小为3MB，access policy window size是127MB。为什么access policy window这么大？原因是
+
+- CUDA在stream/graph访问策略时，需要允许用户为某段“可能很大”的数据定义access window，以支持大区间/多kernel场景。
+- 声明窗口可以很大（比如127MB），但实际能驻留于L2缓存的空间受物理大小和预留上限约束（比如只有3MB），所以大窗口内只有部分“热点”数据能够高效缓存，剩余还是被换出。这方便用户做更加复杂的局部性/滑动窗口/分批访问实验（比如持久化数据窗口可以覆盖1MB、10MB、50MB、100MB，观察这些情况下的性能变化）。
+- 方便调节hitRatio。如果hitRatio调得很小，num_bytes自然变大，所以不能限制得太小。
 
 > 项目中倒是没用到这个。
 
-##### 9.2.2.2. 微调访问窗口的命中率
+所以需要微调`hitRatio`。
 
-`hitRatio`参数可以用来指定接收`hitProp`属性的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域[ptr..ptr_num_bytes)中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
+##### 10.2.2.2. 微调访问窗口的命中率
 
-假设我们使用 GPU 全局内存中大小为 1024 MB 的区域。首先，我们使用`cudaDeviceSetLimit()`把 L2 缓存中的 30 MB 预留给持久化访问。然后，如下图所示，我们指定对于内存区域前`freqSize * sizeof(int)`字节的访问是持久化的。因此，这些数据将使用 L2 缓存的预留部分。在我们的实验当中，我们将 1024 MB 全局内存中持久化数据区域的大小从 10 MB 调整到 60 MB，以模拟数据适合或超出可用 L2 预留部分（本例中固定为 30 MB）的各种场景。注意，NVIDIA Tesla A100 GPU 的 L2 缓存总容量是 40 MB。对剩余内存区域剩余数据（即流式数据）的访问仍将被视为正常或流式访问，因此，将使用剩余的 10 MB 非预留部分。
+`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域 $[ptr \ldots ptr + num\_bytes)$中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
+
+> 为什么不直接减小`num_bytes`？当然可以！只是在实际大多数场景下，热点数据经常会分布在更大的区间。程序员无法定位，究竟哪些地址才是100%最热的。有时热点本身就会在一个更大的区间内滑动。
+
+官方文档以NVIDA Tesla V100为例，L2大小40MB，L2预留最大30MB。
+
+现在假设我们在全局内存中有1024MB的数据。首先，我们使用`cudaDeviceSetLimit()`把 L2 缓存中的 30 MB 预留给持久化访问（先最大化预留）。然后，如下图所示，我们指定对于内存区域前`freqSize * sizeof(int)`字节的访问是持久化的。因此，这些数据将使用 L2 缓存的预留部分。在我们的实验当中，我们将 1024 MB 全局内存中希望被持久化的数据区域的大小从 10 MB 调整到 60 MB，以模拟数据适合或超出可用 L2 预留部分（本例中固定为 30 MB）的各种场景。注意，NVIDIA Tesla A100 GPU 的 L2 缓存总容量是 40 MB。对剩余内存区域剩余数据（即流式数据）的访问仍将被视为正常或流式访问，因此，将使用剩余的 10 MB 非预留部分。
 
 ![图8：在滑动窗口试验中将持久化数据访问映射到L2的预留部分](/sliding-window-l2.png)
 **图 8：在滑动窗口试验中将持久化数据访问映射到 L2 的预留部分**
@@ -366,11 +477,15 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 
 > 总结：通过调整`hitRatio`的值，可以优化持久化数据访问的性能，避免 L2 缓存的抖动。
 
-#### 9.2.3. 共享内存（Shared Memory）
+#### 10.2.3. 共享内存（Shared Memory）
 
 由于共享内存是 On-Chip 的，因此相比于全局内存，共享内存有更高的带宽和更低的延迟，前提是线程之间没有 Bank Conflict。
 
-##### 9.2.3.1. 共享内存和 Meomry Banks
+Shared memory 是由程序员显式管理、每个 SM 独享的超高速片上存储，而 L2 cache 是全 GPU 共享、由硬件自动管理的大容量片上缓存。Shared memory比L2 cache快，且shared memory是SM独有的。每个SM还有L1缓存，和Shared memory一样，区别是系统自动管理，shared memory用户管理。Shared memory就是用户手动管理的L1缓存，所以肯定比L2快。
+
+还是以3080为例，3080共有68个SM，每个SM有自己的L1和shared memory，大小都是100KB，68个SM的L1和shared memory大小总共为6MB，所有SM共享一个L2，大小为5MB，L2的最大预留是3MB，Global Memory 9.75GB。
+
+##### 10.2.3.1. 共享内存和 Meomry Banks
 
 为了实现高带宽的并发访问，共享内存被划分成了多个大小相同的 Memory Bank，这些 Bank 可以被同时访问。因此，任何跨越 n 个不同 Bank 的 n 个地址的内存加载或者存储操作都可以同时进行，从而使得有效带宽是单个 Bank 的 n 倍。
 
@@ -380,13 +495,21 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 
 在计算能力大于等于 5.x 的设备上，每一个 Bank 在每个时钟周期的带宽为 32 bit，连续的 32 bit 字被分配到连续的 Bank 中。Warp 中有 32 个线程，bank 的数量也是 32 个，因此，Warp 中的任何线程之间都可能发生 Bank 冲突。
 
-##### 9.2.3.2. 矩阵乘法（$C=AB$）中的共享内存
+> 共享内存被分为32个memory bank和线程束里面有32个线程，正好可以一一对应上。所以利用这个硬件特性，可以让线程束内的每一个线程，在同一个周期内，访问独立地址，能够极大提高访存效率。前提是不发生bank conflict。
+> 至于时钟周期就是，每个bank每个时钟周期最多可以并行传输32bit（4字节），如果没有memory conflict的话，一个时钟周期内，一个warp里面的线程可以最多可以完成32笔访存。
+> 所以什么是memory conflict呢？假设shared memory是一个int的数组`shmem[32]`，每个`shmem[i]`占4字节，每个`shmem[i]`会映射到第`i`个bank。如果线程束里面每个线程分别访问`shmem[threadIdx.x]`，那么每个线程会落到不同的bank，不会冲突，带宽最大。如果变成线程访问`shmem[threadIdx.x % 4]`，就会产生bank conflict，此时每8个线程访问同一个bank，bank内部串行，并行度下降，效率降低。
 
-共享内存使得 Block 中的线程可以合作。当 Block 中的多个线程使用来自全局内存中的相同数据时，共享内存可以用于从全局内存中仅访问一次数据。共享内存还可以通过以合并模式从全局内存加载和存储数据，然后在共享内存中重新排序，来避免非合并的内存访问。除了 Bank 冲突外，Warp 中的线程在共享内存从的非顺序或未对齐访问不会带来性能上的损失。
+##### 10.2.3.2. 矩阵乘法（$C=AB$）中的共享内存
 
-下面通过矩阵乘法$C=AB$来展示共享内存的使用，其中$A$的维度是$M \times w$，$B$的维度是$w \times N$，$C$的维度是$M \times N$。其中，$w$的值是 32，$M$和$N$都是 32 的倍数，因为每个 Warp 中有 32 个线程，这样可以保证例子中的 Kernel 足够简单。
+共享内存使得 Block 中的线程可以共享数据。当 Block 中的多个线程使用来自全局内存中的相同数据时，共享内存可以用于从全局内存中仅访问一次数据。共享内存还可以通过以合并访问的模式从全局内存加载和存储数据，然后在共享内存中重新排序，来避免非合并的内存访问。除了 Bank 冲突外，Warp 中的线程在共享内存从的非顺序或未对齐访问不会带来性能上的损失。
 
-这个问题中，可以将矩阵分解为$w \times w$的 Block。这样从$w\times w$的 Block 的角度来看，这个这个问题就会被简化为一个列矩阵$A$和一个行矩阵$B$的乘法（$M$和$N$是$w$的倍数），而$C$是它们的外积。如图 11 所示。而完成整个计算任务，则需要$(N/w) \times (M/w)$个 Block，即 Grid 的大小是$(N/w) \times (M/w)$。（矩阵的分解需要一点点线代知识）
+> 1. 可以把共享内存相当于SM里面用户管理的缓存。
+> 2. 每个block只能分配得到一个SM，block里面的所有线程都可以使用SM的共享内存。
+> 3. 在计算能力9.0以上以及新架构上，引入了cluster，就是把几个block组成一个cluster，每个cluster被分配到同一个GPC（Graphics Processing Cluster）。在cluster内部，不同block线程的通过专门接口访问cluster的分布式共享内存，即访问所有block的共享内存。
+
+下面通过矩阵乘法$C=AB$来展示共享内存的使用，其中$A$的维度是$M \times w$（行$\times$列），$B$的维度是$w \times N$，$C$的维度是$M \times N$。其中，$w$的值是 32，$M$和$N$都是 32 的倍数，因为每个 Warp 中有 32 个线程，这样可以保证例子中的 Kernel 足够简单。
+
+这种问题的自然分解方式是采用$w \times w$的线程块和tile（分块）尺寸。这样从$w\times w$的 Block 的角度来看，这个这个问题就会被简化为一个列矩阵$A$和一个行矩阵$B$的乘法（$M$和$N$是$w$的倍数），而$C$是它们的外积。如图 11 所示。而完成整个计算任务，则需要$(N/w) \times (M/w)$个 Block，即 Grid 的大小是$(N/w) \times (M/w)$，其中每一个block计算矩阵$C$中的不同分块tile。（列矩阵$A$相当于有$M/w$个元素，行矩阵$B$相当于有$N/w$个元素，分别两两计算，需要$(N/w) \times (M/w)$次，所以需要这么多个block，因此grid的大小也是这个。
 
 ![图11：块列矩阵$A$乘以块行矩阵$B$，结果是矩阵$C$](/matrix-multiplication-block-column-by-block-row.png)
 **图 11：块列矩阵$A$乘以块行矩阵$B$，结果是矩阵$C$**
@@ -411,9 +534,9 @@ __global__ void simpleMultiply(float* a, float* b, float* c, int N) {
 
 > 上面示例的代码有点问题，应该是`sum += a[row * A_Cols + i] * b[i * B_Cols + col];`。只不过在这个例子里面 A 的列数恰好就是`TILE_DIM`，所以没有问题。
 >
-> “子矩阵”原文是“tile”，直译是“瓦片”。矩阵就好比房顶，被一片片瓦片覆盖，相当于矩阵被分割成了很多小块，每一块就是一个“tile”。我忘了线性代数里面有没有这个概念了，就先叫子矩阵吧。
+> “子矩阵”原文是“tile”，直译是“瓦片”。矩阵就好比房顶，被一片片瓦片覆盖，相当于矩阵被分割成了很多小块，每一块就是一个“tile”。我忘了线性代数里面有没有这个概念了，就先叫分块或者子矩阵吧。
 
-这个 Kernel 在 NVIDIA Tesla V100 上的有效带宽是 119.9 GB/s。为了分析性能，我们必须知道在`for`循环里面 Warp 如何访问全局内存。每一个 Warp 各自计算$C$中子矩阵的一行，而这需要访问$A$子矩阵的一行和$B$的整个子矩阵。图 12 展示了需要访问的数据。
+这个 Kernel 在 NVIDIA Tesla V100 上的有效带宽是 119.9 GB/s。为了分析性能，我们必须知道在`for`循环里面 Warp 如何访问全局内存。每一个 Warp 各自计算$C$中子矩阵的一行，而这需要访问$A$子矩阵的一行和$B$的整个子矩阵。$C$中子矩阵一行中的不同列的元素是由$A$中的一行分别与$B$的不同列相乘得到的。数据是行优先存储的，所以访问$B$中不同列的元素时，需要访问该列所跨越的所有行才可以，而每次访问$B$中行的命中率实际只有$\frac{1}{TILE_DIM}$，效率很低。上图 12 展示了需要访问的数据。
 
 ![图12：计算子矩阵的一行。使用$A$的一行和$B$的整个子矩阵计算$C$中子矩阵的一行](/computing-row-of-tile.png)
 **图 12：计算子矩阵的一行。使用$A$的一行和$B$的整个子矩阵计算$C$中子矩阵的一行**
@@ -422,7 +545,10 @@ __global__ void simpleMultiply(float* a, float* b, float* c, int N) {
 
 然而，对于每次迭代$i$，Warp 中的线程会从全局内存中读取矩阵$A$的同样的值，这是因为索引`row * TILE_DIM + i`对于 Warp 中的所有线程来说是相同的（`i`从 0 取到 31，而事务一次访问 32 字节，所以对于矩阵$A$来说，无论`i`取什么值，访问的内存都是一样的。且本例为了简单，矩阵$A$、$B$的维度都是 32 的倍数，所以可以假定所有数据都是 32 字节对齐的[^3]）。尽管这种访问在计算能力 2.0 或者更高的设备上仅需要一次事务，但事务中存在带宽浪费，因为在 32 字节缓存行中的 8 个字中，仅使用了 1 个 4 字节字（对于每次迭代$i$，只计算一次，也就是只使用读取到的$A$的第`row`行数据中的第`i`个）。
 
-为了避免这种浪费，我们可以在循环后续的迭代中重复使用这一 32 字节缓存行，并最终使用其中的全部数据。然而，一般情况下，当许多 Warp 在同一 Multiprocessor 上同时执行时，缓存行可能会在循环的第$i$和$i+1$之间被换出缓存。因此在第$i+1$次迭代中，Warp 中的线程就会因为缓存未命中而不得不重新访问全局内存，结果还是浪费了带宽。
+为了避免这种浪费，我们可以在循环后续的迭代中重复使用这一 32 字节缓存行，并最终使用其中的全部数据。然而，一般情况下，当许多 Warp 在同一 Multiprocessor/SM 上同时执行时，缓存行可能会在循环的第$i$和$i+1$之间被换出缓存。因此在第$i+1$次迭代中，Warp 中的线程就会因为缓存未命中而不得不重新访问全局内存，结果还是浪费了带宽。
+- 即由于合并访问的存在，对于$A$的访问每次都是一样的数据，所以warp中的其它线程可能会从缓存中直接读取到需要的$A$中的值。但因为SM上同时有需要warp在执行，这个被缓存下来的行，可能会被换出，所以可能还是需要多次访存，带来了带宽浪费。
+
+因此，在一个warp中总共存在两个浪费，一个是对$A$一行数据多次读取带来的带宽浪费，一个是对$B$中数据多次读取且命中率低带来的带宽浪费。
 
 解决的办法就是共享内存。手动把数据读取到片上的[Shared Memory](#92-device-内存空间)进行管理。
 
@@ -487,7 +613,71 @@ __global__ void sharedABMultiply(float* a, float* b, float* c, int N) {
 | Coalesced using shared memory to store a tile of A              | 144.4 GB/s        | 77.4 GB/s            |
 | Using shared memory to eliminate redundant reads of a tile of B | 195.5 GB/s        |                      |
 
-##### 9.2.3.3. 矩阵乘法（$C=AA^T$）中的共享内存
+
+###### 通用的解法
+
+上面的矩阵乘法优化只适用于$A$、$B$的行和列分别可以被`blockDim.x`或者`blockDim.y`整除的情况，如果任意条件不满足，计算就会出错。原因是如果一开始根据计算出来的row和col过滤掉不需要最终参与计算的线程，共享内存的填充是不充分的。所以最佳实践不是early return，而是让每一个线程都向共享内存中写入数据，符合条件从矩阵中读取，不符合条件将共享内存设置为0，在最后向结果矩阵中写值时，才判断row和col。
+
+其次，如果$A$的列或者$B$的行如果不是`TILE_SIZE`的倍数，计算也会出错。举个例子，矩阵$A$的大小是$32 \times 33$，矩阵$B$的大小是$33\times32$，结果矩阵$C$的大小是$32 \times 32$，`TILE_SIZE`是32，那么根据`TILE_SIZE`计算出来的`gridDim`将是1，即只有一个block，而block中的共享内存大小也是$32\times 32$。那么问题就来了，共享内存的大小比实际计算需要用到的元素少，计算$C$中每一个元素时，都需要$A$中一行33个元素和$B$中一列的33个元素，但是共享内存中只要32个。解决方法也很简单，tile循环。可以画一张图，一个长长的行矩阵和一个长长的列矩阵相乘，就是这种情况。
+
+结合上面两点，给出通用矩阵乘法：
+
+```cpp
+template <typename T>
+__global__ void shared_ab_matrix_multipy_kernel(
+    cuda_lab::MatrixDevice<T> const* const a,
+    cuda_lab::MatrixDevice<T> const* const b,
+    cuda_lab::MatrixDevice<T>* const c) {
+  auto const row{blockIdx.y * blockDim.y + threadIdx.y};
+  auto const col{blockIdx.x * blockDim.x + threadIdx.x};
+
+  __shared__ T tile_a[kBlockSize][kBlockSize], tile_b[kBlockSize][kBlockSize];
+
+  // 计算所需的tile数
+  std::size_t const K{a->cols};
+  std::size_t const num_tiles{(K + kBlockSize - 1) / kBlockSize};
+
+  T sum{0};
+
+  // tile循环，有点类似滑动窗口
+  for (std::size_t tile{0}; tile < num_tiles; ++tile) {
+    std::size_t const k_col{tile * kBlockSize + threadIdx.x};
+    if (row < a->rows && k_col < K) {
+      tile_a[threadIdx.y][threadIdx.x] = a->get(row, k_col);
+    } else {
+      tile_a[threadIdx.y][threadIdx.x] = 0;
+    }
+
+    std::size_t const k_row{tile * kBlockSize + threadIdx.y};
+    if (k_row < K && col < b->cols) {
+      tile_b[threadIdx.y][threadIdx.x] = b->get(k_row, col);
+    } else {
+      tile_b[threadIdx.y][threadIdx.x] = 0;
+    }
+
+    // 因为需要block中所有线程都到达这里才能继续，所以不能early return，否则会死锁
+    // 那些一开始就return的线程不会到达这里，所以剩余线程会无限等待，死锁
+    __syncthreads();
+
+    if (row < c->rows && col < c->cols) {
+      std::size_t const k_in_tile{
+          (tile + 1) * kBlockSize <= K ? kBlockSize : K - tile * kBlockSize};
+      for (std::size_t i{0}; i < k_in_tile; ++i) {
+        sum += tile_a[threadIdx.y][i] * tile_b[i][threadIdx.x];
+      }
+    }
+    __syncthreads();
+  }
+
+  // 最后写入
+  if (row < c->rows && col < c->cols) {
+    c->set(row, col, sum);
+  }
+}
+```
+
+
+##### 10.2.3.3. 矩阵乘法（$C=AA^T$）中的共享内存
 
 另一个可以是说明全局内存的跨步访问和共享内存的 Bank 冲突的例子是用$A$的转置替换$B$得到的矩阵乘法$C=AA^T$。
 
@@ -509,3 +699,21 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
