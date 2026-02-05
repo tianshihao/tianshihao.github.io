@@ -1,6 +1,6 @@
 +++
 date = '2025-03-04T16:30:00+08:00'
-draft = true
+draft = false
 title = 'CUDA C++ Best Practices Guide Notes 2'
 tags = ['CUDA']
 toc = true
@@ -11,11 +11,11 @@ series = ["CUDA C++ Best Practices Guide Notes"]
 
 > [原文地址：https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/)
 
-## 9. **\*内存优化**
+## 10. **\*内存优化**
 
 内存优化是 CUDA 程序性能优化中的最关键部分。目标是通过最大化内存带宽以最大化地使用硬件。为了最大化带宽，应尽可能使用更多的快速内存，并减少对慢速访问内存的使用。
 
-### 9.1. Host 和 Device 之间的数据传输
+### 10.1. Host 和 Device 之间的数据传输
 
 1. 带宽差异的背景
    - GPU 内部显存带宽：GPU 芯片与其显存（Device Memory，即 VRAM）之间的数据传输速度非常快，例如 Tesla V100 可达 898 GB/s。
@@ -27,19 +27,20 @@ series = ["CUDA C++ Best Practices Guide Notes"]
 3. 中间数据应留在设备上
    - 中间结果（临时变量、中间计算数据）应该直接在 GPU 显存中创建、使用和销毁，不要传回主机内存。
    - 只有最终需要的结果才需要传回主机。
+4. 批量传输优于多次小传输
+   - 每次数据传输都有固定的启动开销（overhead），比如初始化传输、发送指令等。
+   - 多次小传输会累积这些开销，效率很低。
+   - 应该将多个小数据打包成一个大块一次性传输，即使需要额外的打包/解包操作。
+5. 使用页锁定内存（Pinned Memory）提升带宽
 
-Device Memory 和 GPU 之间的最大理论带宽（例如 NVIDIA Tesla V100 为 898 GB/s）比 Host Memory 和 Device Memory 之间的最大理论带宽（例如 PCIe x16 Gen3 为 16 GB/s）要高得多。因此，为了最好的性能，**应该尽可能减少 Host 和 Device 之间的数据传输，即使这意味着在 GPU 上运行的 Kernel 比在 Host CPU 上运行没有任何加速（为了避免数据传输带来的损失）**。
+#### 10.1.1 页锁定内存
 
-中间结果（临时变量、中间数据结构）结应该直接在GPU显存中创建，由 Device 操作，并且在没有被 Host 映射或者没有被复制到 Host Memory 的情况下被销毁。
+为了消除数据传输的开销，CUDA 提供了 Pinned Memory（页锁定内存）机制。通过将一部分主机内存固定在物理 RAM 中，防止操作系统将其作为虚拟内存换出到磁盘，从而实现 Host 和 Device 之间的高带宽数据传输。这相当于一种用户可控的内存锁定机制。
 
-此外，由此每次传输的开销，将许多小批量的传输合并为一个大批量的传输，比单独进行每次传输要好得多，即使这样做需要将非连续内存区域打包到连续内存的缓冲区中然后再传输后解包。
+Page-locked（锁页）或 Pinned（固定）Memory 可以实现 Host 和 Device 之间的最大传输带宽。Pinned Memory 是一种特殊的 Host Memory，其物理地址被锁定，不会被操作系统交换到磁盘。Pinned Memory 物理上位于主机（Host）的 RAM 中，具有以下两个核心优势：
 
-综上所述，出现了 Pinned Memory，为了消除传输的开销，直接把一部分内存固定住，让它不会被交换到磁盘，借此可以实现 Host 和 Device 之间的高带宽数据传输。相当于用户控制的磁盘缓存。
-
-Page-locked（锁页）或者 Pinned（固定）Memory 可以取得 Host 和 Device 之间的最大带宽。Pinned Memory 是一种特殊的 Host Memory，它的物理地址被锁定，不会被操作系统交换的磁盘。Pinned Memory 位于 Host，其有两个优势：
-
-1. **更高的带宽**：Pinned Memory 可以通过 DMA（直接内存访问）直接与 Device Memory 进行数据传输，减少了内存复制开销。
-2. **更低的延迟**：Pinned Memory 的物理地址固定，数据传输的延迟更低。
+1. 更高的带宽：Pinned Memory 可以通过 DMA（Direct Memory Access，直接内存访问） 直接与 Device Memory 进行数据传输，省去了中间拷贝步骤，减少了内存复制开销。而普通内存在传输前需要先拷贝到临时的页锁定缓冲区。
+2. 更低的延迟：由于 Pinned Memory 的物理地址固定，GPU 的 DMA 控制器可以直接访问该内存区域，无需等待额外的拷贝操作，因此数据传输的延迟更低。
 
 Pinned Memory 是通过 Runtime API 中的`cudaHostAlloc()`函数分配的。CUDA 示例程序[bandwidthTest](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/1_Utilities/bandwidthTest)展示了如何使用这些函数以及如何测量内存传输性能。
 
@@ -47,9 +48,11 @@ Pinned Memory 是通过 Runtime API 中的`cudaHostAlloc()`函数分配的。CUD
 
 Pinned Memory 不应被过度使用。过度使用可能会降低整体系统性能，因为 Pinned Memory 是一种稀缺资源，但很难提前知道多少才算过多。此外，与大多数常规系统内存分配相比，固定系统内存是一项开销较大的操作，因此与所有优化一样，应测试应用程序及其运行的系统以确定最佳性能参数。
 
-#### 9.1.2. 异步传输与计算的重叠
+#### 10.1.2. 异步传输与计算的重叠
 
-使用`cudaMemcpyAsync()`可以异步传输数据，从而允许数据传输与计算重叠。这里有一个例子[Asynchronous and Overlapping Transfers with Computation](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#asynchronous-transfers-and-overlapping-transfers-with-computation)：
+使用`cudaMemcpyAsync()`可以异步传输数据，控制权会立即返回主机线程，从而允许数据传输与计算重叠。异步的复制需要pinned meomory，以及一个额外的参数stream id，stream就是设备上按顺序执行的一系列操作序列。不同流中的操作可以**交错执行**，在某些情况下甚至可以重叠执行。这个特性可以用来隐藏数据传输延迟、提高GPU利用率。
+
+这里有一个例子[Asynchronous and Overlapping Transfers with Computation](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#asynchronous-transfers-and-overlapping-transfers-with-computation)：
 
 ##### 计算和数据传输的重叠
 
@@ -59,7 +62,7 @@ Kernel<<<Grid, Block>>>(a_d);
 cpuFunction();
 ```
 
-例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。所以 Kernel 也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，它与数据复制和 Kernel 的执行重叠。
+例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，二者使用的stream相同，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。因为 Kernel 的启动也是异步的，因此Kernel也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，它与数据复制和 Kernel 的执行重叠。
 
 这个例子中，数据传输和 Kernel 执行是按顺序执行的。在能够并发复制和计算的设备上，还可以将设备的 Kernel 执行与 Host 和 Device 之间的数据传输重叠。设备是否具有此功能由`cudaDeviceProp`结构的`asyncEngineCount`字段指示（或列在 DeviceQuery CUDA Sample 的输出中）。这个功能要求是 Pinned Memory 并且数据传输和 Kernel 需要使用不同的、非默认的 Stream。（之所以需要非默认的 Stream，是因为 Default Stream 是独占的，只有在先前所有 Stream 中的调用完成后，Default Stream 中的操作才能开始，第 8 章提到过。）
 
@@ -516,5 +519,6 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
