@@ -50,7 +50,14 @@ Pinned Memory 不应被过度使用。过度使用可能会降低整体系统性
 
 #### 10.1.2. 异步传输与计算的重叠
 
-使用`cudaMemcpyAsync()`可以异步传输数据，控制权会立即返回主机线程，从而允许数据传输与计算重叠。异步的复制需要pinned meomory，以及一个额外的参数stream id，stream就是设备上按顺序执行的一系列操作序列。不同流中的操作可以**交错执行**，在某些情况下甚至可以重叠执行。这个特性可以用来隐藏数据传输延迟、提高GPU利用率。
+一些背景知识，GPU 具备同时进行数据拷贝和计算的硬件能力：
+
+- Copy Engine：负责 Host ↔ Device 数据传输
+- SMs（流式多处理器）：负责执行 kernel 计算
+
+两者是独立的硬件单元，可以并行工作。
+
+使用`cudaMemcpyAsync()`可以异步传输数据，控制权会立即返回主机线程，从而允许数据传输与CPU计算重叠。异步的复制需要pinned meomory（否则会回退成隐式的同步拷贝，CPU 会阻塞一段时间（拷贝到临时缓冲区）），以及一个额外的参数stream id，stream就是设备上按顺序执行的一系列操作序列。不同流中的操作可以**交错执行**，在某些情况下甚至可以重叠执行。这个特性可以用来隐藏数据传输延迟、提高GPU利用率。
 
 这里有一个例子[Asynchronous and Overlapping Transfers with Computation](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#asynchronous-transfers-and-overlapping-transfers-with-computation)：
 
@@ -62,31 +69,35 @@ Kernel<<<Grid, Block>>>(a_d);
 cpuFunction();
 ```
 
-例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，二者使用的stream相同，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。因为 Kernel 的启动也是异步的，因此Kernel也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，它与数据复制和 Kernel 的执行重叠。
+例如，在执行`MemcpyAsync()`之后，控制权立即返回给 Host 线程，由于 Kernel 也使用 Default Stream，二者使用的stream相同，所以 Kernel 会在数据复制之后执行，因此，不需要显式地同步。因为 Kernel 的启动也是异步的，因此Kernel也会将控制权返回给 Host 线程，然后`cpuFunction()`开始执行，这里，CPU的计算与GPU的复制、计算重叠了。
 
 这个例子中，数据传输和 Kernel 执行是按顺序执行的。在能够并发复制和计算的设备上，还可以将设备的 Kernel 执行与 Host 和 Device 之间的数据传输重叠。设备是否具有此功能由`cudaDeviceProp`结构的`asyncEngineCount`字段指示（或列在 DeviceQuery CUDA Sample 的输出中）。这个功能要求是 Pinned Memory 并且数据传输和 Kernel 需要使用不同的、非默认的 Stream。（之所以需要非默认的 Stream，是因为 Default Stream 是独占的，只有在先前所有 Stream 中的调用完成后，Default Stream 中的操作才能开始，第 8 章提到过。）
 
 > 就是非默认的 Stream 之间可以并行。这个在实践中是基础，这个文档里面说得有点绕，不过也很全面。
 
-##### 并发复制和执行
+##### 并发复制和计算
 
 ```cpp
 cudaStreamCreate(&Stream1);
 cudaStreamCreate(&Stream2);
 cudaMemcpyAsync(a_d, a_h, size, cudaMemcpyHostToDevice, Stream1);
-Kernel<<<Grid, Block, 0, Stream2>>>(otherData_d);a
+Kernel<<<Grid, Block, 0, Stream2>>>(otherData_d);
 ```
 
-##### 顺序复制和执行
+复制和计算使用了不同的stream，是并发的。Copy engine和SMs的存在提供了GPU计算和复制并行的可能。
+
+##### 顺序复制和计算
 
 ```cpp
 cudaMemcpy(a_d, a_h, N*sizeof(float), dir);
 Kernel<<<N/nThreads, nThreads>>>(a_d);
 ```
 
-上面两者的结果是相同的。
+一个大数组，使用阻塞的复制，复制和计算串行。那么如何优化呢？把数据分块，让复制和计算重叠。
 
-##### 分阶段并发复制和执行
+即使异步复制
+
+##### 分块并发复制和计算
 
 ```cpp
 size = N * sizeof(float) / nStreams;
@@ -519,6 +530,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
