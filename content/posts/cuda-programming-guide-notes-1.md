@@ -1,5 +1,5 @@
 +++
-date = '2025-02-09T10:19:07+08:00'
+date = '2026-02-09T10:19:07+08:00'
 draft = false
 title = 'CUDA Programming Guide Notes 1'
 tags = ['CUDA']
