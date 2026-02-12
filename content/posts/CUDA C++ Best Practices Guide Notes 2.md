@@ -40,7 +40,9 @@ series = ["CUDA C++ Best Practices Guide Notes"]
 Page-locked（锁页）或 Pinned（固定）Memory 可以实现 Host 和 Device 之间的最大传输带宽。Pinned Memory 是一种特殊的 Host Memory，其物理地址被锁定，不会被操作系统交换到磁盘。Pinned Memory 物理上位于主机（Host）的 RAM 中，具有以下两个核心优势：
 
 1. 更高的带宽：Pinned Memory 可以通过 DMA（Direct Memory Access，直接内存访问） 直接与 Device Memory 进行数据传输，省去了中间拷贝步骤，减少了内存复制开销。而普通内存在传输前需要先拷贝到临时的页锁定缓冲区。
-2. 更低的延迟：由于 Pinned Memory 的物理地址固定，GPU 的 DMA 控制器可以直接访问该内存区域，无需等待额外的拷贝操作，因此数据传输的延迟更低。
+  1. 说白了，就是Pinned Memory的话，DMA直接搬运数据，带宽高。
+3. 更低的延迟：由于 Pinned Memory 的物理地址固定，GPU 的 DMA 控制器可以直接访问该内存区域，无需等待额外的拷贝操作，因此数据传输的延迟更低。
+  1. 也是DMA，也是直接搬运，如果普通CPU到GPU，系统会先把这段内存搬到一个临时的Pinned Buffer，再通过DMA搬运到GPU，所以多花时间。直接使用Pinned Memory省略的是这部分的耗时。
 
 总结就是通过DMA复制Pinned memory实现更高带宽和更低延迟的复制。
 
@@ -49,6 +51,8 @@ Pinned Memory 是通过 Runtime API 中的`cudaHostAlloc()`函数分配的。CUD
 对于已经预先分配的系统内存区域（Host Memory），可以使用`cudaHostRegister()`动态地将其固定住，而无需分配单独的缓冲区并将数据复制到其中。
 
 Pinned Memory 不应被过度使用。过度使用可能会降低整体系统性能，因为 Pinned Memory 是一种稀缺资源，但很难提前知道多少才算过多。此外，与大多数常规系统内存分配相比，固定系统内存是一项开销较大的操作，因此与所有优化一样，应测试应用程序及其运行的系统以确定最佳性能参数。
+
+另外，一般情况下Pinned Memory有主机和设备两个地址，主机就是
 
 #### 10.1.2. 异步传输与计算的重叠
 
@@ -186,15 +190,15 @@ Kernel<<<GridSize, BlockSize>>>(a_map);
 
 #### 10.1.4. 统一虚拟地址
 
-计算能力 2.0 及更高版本的设备在 64 位 Linux 和 Windows 上支持一种称为统一虚拟地址空间（Unified Virtual Addressing, UVA）的特殊寻址模式。在 UVA 下，Host Memory 和所有已安装支持设备的内存共享一个单一的虚拟地址空间。
+计算能力 2.0 及更高版本的设备在 64 位 Linux 和 Windows 上支持一种称为统一虚拟地址空间（Unified Virtual Addressing, UVA）的特殊寻址模式。在 UVA 下，Host Memory 和所有已安装支持设备的内存共享一个单一的虚拟地址空间。主机内存和设备内存在同一个地址空间里面。
 
 在 UVA 之前，应用程序必须跟踪哪些指针指向 Device Memory（以及哪个设备），哪些指针指向 Host Memory，这需要为每个指针单独存储元数据（或在程序中硬编码信息）。而在 UVA 下，通过使用`cudaPointerGetAttributes()`检查指针的值，可以简单地确定指针指向的物理内存空间。
+
+> UVA之前，就是程序员手动记录，之后通过`cudaPointerGetAttributs()`查询就行
 
 在 UVA 下，使用`cudaHostAlloc()`分配的固定 Host Memory 将具有相同的 Host 和 Device 指针，因此无需为此类分配调用`cudaHostGetDevicePointer()`。然而，通过`cudaHostRegister()`事后固定的 Host Memory 分配将继续具有与 Host 指针不同的 Device 指针，因此在这种情况下仍然需要调用`cudaHostGetDevicePointer()`。
 
 UVA 还是在支持的配置中启用点对点（Peer-to-Peer, P2P）数据传输的必要前提条件，P2P 允许数据直接通过 PCIe 总线或 NVLink 在支持的 GPU 之间传输，而无需经过 Host Memory。
-
-有关 UVA 和 P2P 的进一步解释和软件要求，请参阅《CUDA C++ 编程指南》。
 
 ### 10.2. Device 内存空间
 
@@ -549,6 +553,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
