@@ -198,6 +198,8 @@ Kernel<<<GridSize, BlockSize>>>(a_map);
 
 在 UVA 下，使用`cudaHostAlloc()`分配的固定 Host Memory 将具有相同的 Host 和 Device 指针，因此无需为此类分配调用`cudaHostGetDevicePointer()`。然而，通过`cudaHostRegister()`事后固定的 Host Memory 分配将继续具有与 Host 指针不同的 Device 指针，因此在这种情况下仍然需要调用`cudaHostGetDevicePointer()`。
 
+> *这文档有点旧了，我使用3080验证，发现cudaHostAlloc、cudaHostRegister 还是 mapped pinned，主机地址和设备地址完全相同，kernel随便直接访问，零拷贝，行为一致
+
 UVA 还是在支持的配置中启用点对点（Peer-to-Peer, P2P）数据传输的必要前提条件，P2P 允许数据直接通过 PCIe 总线或 NVLink 在支持的 GPU 之间传输，而无需经过 Host Memory。
 
 ### 10.2. Device 内存空间
@@ -205,9 +207,34 @@ UVA 还是在支持的配置中启用点对点（Peer-to-Peer, P2P）数据传�
 ![图2：CUDA上的内存空间](/memory-spaces-on-cuda-device.png)
 **图 2：CUDA 上的内存空间**
 
-CUDA 设备使用多个内存空间，这些内存空间具有不同的特性，反映了它们在 CUDA 应用程序中的不同用途。
+这样描述这张图片：
 
-在这些不同的存储空间中，global Memory 是最丰富的；有关每个计算能力级别的每个存储空间中可用的内存量，请参阅《CUDA C++编程指南》的功能和技术规格。global、local 和 texture 内存的访问延迟最大，其次是 constant Memory、shared Memory 和 regiter file。
+GPU有多层次、分用途的多种内存类型，有大容量低速的DRAM，有小容量高速的寄存器和块内共享内存，结合constant和texture达成高效并行。
+
+Device（设备）部分分为片外显存（DRAM）和GPU（其中SM），它们共同组成了GPU的完整内存体系。
+
+*****DRAM*****
+
+- DRAM是GPU的物理显存（比如24GB GDDR6X），存放绝大部分大块数据，所有的GPU计算核心都可以共享访问。
+- DRAM里面按照访问特性和用途区分为：
+  - Global Memory：最大空间，读写都可以，GPU中的所有线程以及host都可以访问，和host之间可以相互拷贝数据。
+  - Local Memory：每个线程私有的内存，实际上放在显存里（），比如溢出寄存器的时候，就会用到local memory。
+  - Constant Memory：只读空间，所有线程都可以访问，适合存参数和常量。共享一份，全局可见。
+  - Texture Memory：专为纹理采样优化的只读空间，有硬件换存、插值、电源优化。适合图片、体渲染等场景。
+
+*****GPU（Multiprocessor，SM）
+
+- GPU由大量的SM组成，是实际跑kernel指令的地方
+- 每个SM划分为
+  - Registers，每个线程独占，速度最快。
+  - Shared Memory，同一个block内线程共享的快速片上内存，做线程间通信、换存。
+- 此外，每个SM有：
+  - Constant and Texture Caches，针对Constant/Texture Memory加速访问做的专用硬件换存，缓解多SM并发只读时的带宽瓶颈
+  
+
+CUDA 设备使用多个内存空间（指GPU的几种不同的内存，和前面的地址空间不一样），这些内存空间具有不同的特性，反映了它们在 CUDA 应用程序中的不同用途。
+
+在这些不同的存储空间中，Global Memory 是最丰富的。global、local 和 texture 内存的访问延迟最大，其次是 constant Memory、shared Memory 和 regiter file。
 
 | Memory   | Location on/off chip | Cached  | Access | Scope                | Lifetime        |
 | -------- | -------------------- | ------- | ------ | -------------------- | --------------- |
@@ -553,6 +580,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
