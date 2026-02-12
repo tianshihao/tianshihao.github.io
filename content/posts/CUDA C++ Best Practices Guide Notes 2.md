@@ -222,7 +222,7 @@ Device（设备）部分分为片外显存（DRAM）和GPU（其中SM），它�
   - Constant Memory：只读空间，所有线程都可以访问，适合存参数和常量。共享一份，全局可见。
   - Texture Memory：专为纹理采样优化的只读空间，有硬件换存、插值、电源优化。适合图片、体渲染等场景。
 
-*****GPU（Multiprocessor，SM）
+*****GPU（Multiprocessor，SM）*****
 
 - GPU由大量的SM组成，是实际跑kernel指令的地方
 - 每个SM划分为
@@ -252,7 +252,7 @@ CUDA 设备使用多个内存空间（指GPU的几种不同的内存，和前面
 
 #### 10.2.1. 对全局内存的合并访问
 
-在为支持 CUDA 的 GPU 架构编程时，一个非常重要的性能考虑因素是全局内存访问的合并（Coalescing）。设备会将一个 Warp 中线程的全局内存加载和存储操作合并为尽可能少的事务。
+在一个非常重要的性能考虑因素是全局内存访问的合并（Coalescing）。设备会将一个 Warp 中线程的全局内存加载和存储操作合并为尽可能少的事务。
 
 > 确保全局内存访问尽可能合并。
 
@@ -580,6 +580,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
