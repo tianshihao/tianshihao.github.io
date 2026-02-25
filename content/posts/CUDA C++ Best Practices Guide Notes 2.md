@@ -415,7 +415,7 @@ cudaStreamSetAttribute(Stream, cudaStreamAttributeAccessPolicyWindow,
 
 ##### 10.2.2.2. 微调访问窗口的命中率
 
-`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域$[ \mathrm{ptr} \ldots \mathrm{ptr} + \mathrm{num\_bytes} ) $中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
+`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域$[\text{ptr} \ldots \text{ptr} + \text{num\_bytes})$中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
 
 > 为什么不直接减小`num_bytes`？当然可以！只是在实际大多数场景下，热点数据经常会分布在更大的区间。程序员无法定位，究竟哪些地址才是100%最热的。有时热点本身就会在一个更大的区间内滑动。
 
@@ -620,6 +620,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
