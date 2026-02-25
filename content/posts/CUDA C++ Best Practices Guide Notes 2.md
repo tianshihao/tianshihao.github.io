@@ -355,55 +355,73 @@ __global__ void strideCopy(float *odata, float* idata, int stride)
 
 如图 7 中所示，应尽可能避免非单位步长的全局内存访问。实现这一点的一种方法是利用共享内存，这将在下一节中讨论。
 
+> 人话，比如还是一个线程束里面的线程访问4字节的数据。如果是相邻的，那么4次事务就足够了。但如果步长为2，那么就需要8次事务，因为每次事务里面只有一半的数据会被使用，效率就是50%。如果步长是32，则32个字节里面只有一个4字节的元素会被用到，效率是1/32。
+
 #### 10.2.2. L2 缓存
 
-CUDA 11.0 之后设备可以影响 L2 缓存。因为 L2 是 On-Chip 的，所以它能提供更高的带宽和更低的延迟来访问全局内存。
+CUDA 11.0 之后设备可以操作 L2 缓存。因为 L2 是 On-Chip 的，所以它能提供更高的带宽和更低的延迟来访问全局内存。
 
 ##### 10.2.2.1. L2 缓存访问窗口
 
-当一个 CUDA Kernel 不断访问全局内存的同一个区域时，这些数据可以被认为是持久的（Persisting）。而如果数据只被访问了一次，那么这些数据就是流式的（Streaming）。L2 缓存的一部分区域可以被预留出来（Set-aside）用于对全局内存中的数据进行持久访问。如果这部分被留出来的区域没有被使用，其它的访问仍然能够正常的使用它。
+当一个 CUDA Kernel 不断访问全局内存的同一个区域时，这些数据可以被认为是持久的（Persisting）。而如果数据只被访问了一次，那么这些数据就是流式的（Streaming）。L2 缓存的一部分区域可以被预留出来（Set-aside）用于对全局内存中的数据进行持久访问。如果这部分被留出来的区域没有被使用，其它的访问仍然能够正常的使用它。即相比于普通数据，L2 set aside缓存优先缓存被用户指定的数据。
 
-> 类似 L2 中的 Pinned Memory！
+所以可以让用户告诉CUDA runtime哪些数据需要被频繁访问，帮我尽量把这些数据留在L2预留缓存里面，从而提高效率。
 
-用于持久访问的 L2 缓存预留大小可以在限制范围内进行调整：
+> 比如现在我有100MB数据，我知道其中10MB会被高频访问，所以如果它们能被优化缓存在L2缓存，肯定会带来性能提升。假设L2缓存大小20MB，用户可指定预留部分10MB，那么我告诉CUDA runtime，把我10MB的热点数据优先缓存到L2的预留空间，那么运行一段时间之后，热点数据会全部被缓存到L2的预留部分，那么访问这些热点数据的时候，效率就会提高很多。
+
+
+> 在数据持久保留方面类似 L2 中的 Pinned Memory！
+> 但又不太一样。L2 set aside缓存是“优先保留热点数据的空间”，没被用满可自动被其它流式数据访问，属于自动管理。pinned memory是主机RAM被物理锁定，完全专用，用户手动管理。
+
+针对持久型访问，L2缓存的预留大小可以在一定范围内调整：
 
 ```cpp
 cudaGetDeviceProperties(&prop, Device_id);
+// 取最大值
 cudaDeviceSetLimit(cudaLimitPersistingL2CacheSize, prop.persistingL2CacheMaxSize); /* Set aside max possible size of L2 cache for persisting accesses */
 ```
 
-用户数据到 L2 预留部分的映射可以使用 CUDA Stream 或 CUDA graph Kernel 节点上的访问策略窗口进行控制。下面的示例显示了如何在 CUDA 流上使用访问策略窗口。
+用户数据如何映射到预留缓存区域，可以通过CUDA流（CUDA stream）或CUDA图kernel节点的**访问策略窗口**（access policy window）来控制。下面的例子展示了在CUDA流上如何使用访问策略窗口：
 
 ```cpp
-// Stream level attributes data structure
 cudaStreamAttrValue Stream_attribute;
-// Global Memory data pointer
 Stream_attribute.accessPolicyWindow.base_ptr = reinterpret_cast<void*>(ptr);
-// Number of bytes for persisting accesses.
-// (Must be less than cudaDeviceProp::accessPolicyMaxWindowSize)
-Stream_attribute.accessPolicyWindow.num_bytes = num_bytes;
+Stream_attribute.accessPolicyWindow.num_bytes = num_bytes; // 窗口有最大值，不能超过
 
-// Hint for L2 cache hit ratio for persisting accesses in the num_bytes region
 Stream_attribute.accessPolicyWindow.hitRatio = 1.0;
-// Type of access property on cache hit
 Stream_attribute.accessPolicyWindow.hitProp = cudaAccessPropertyPersisting;
-// Type of access property on cache miss.
 Stream_attribute.accessPolicyWindow.missProp = cudaAccessPropertyStreaming;
 
-// Set the attributes to a CUDA Stream of type cudaStream_t
 cudaStreamSetAttribute(Stream, cudaStreamAttributeAccessPolicyWindow,
                         &Stream_attribute);
 ```
 
-访问策略窗口需要`hitRaio`和`num_bytes`的值。根据`num_bytes`参数的值和 L2 缓存的大小，可能需要调整`hitRaio`的值，以避免 L2 缓存的抖动。
+上面是最基础的设置。**意思是说，从`ptr`开始的数据，其中`num_bytes`字节的数据希望在L2上持久化**。访问策略窗口需要`hitRaio`和`num_bytes`的值。根据num_bytes参数值和L2缓存的实际大小，需要调整hitRatio参数，以避免L2缓存行的thrashing（反复冲刷、**抖动**）。
+
+> 意思是，热点数据比如说10MB，往往大于L2的预留缓存大小，比如3080的3MB。如果仍然设置hitRatio是1，即希望窗口中的10MB数据全部都在L2预留缓存部分持久化，这会导致L2预留部分频繁被新来的热点数据驱逐，抖动严重，效率反而下降。因此需要调整hitRatio。
+> 这时可以将hitRatio设置为一个小于1的值，比方说0.25，就是告诉CUDA runtime，我知道只有2.5MB（10MB*0.25）的数据真有机会驻留L2预留部分，剩下的就当普通缓存流式处理就好了。
+> 这样L2预留区域就只为最热的子集服务，明显减少缓存冲刷、提升即使命中率和整体性能。
+> 当然，这种情况下最佳的hitRatio需要微调。
+
+以3080为例，L2缓存物理大小为5MB，L2持久化最大预留大小为3MB，access policy window size是127MB。为什么access policy window这么大？原因是
+
+- CUDA在stream/graph访问策略时，需要允许用户为某段“可能很大”的数据定义access window，以支持大区间/多kernel场景。
+- 声明窗口可以很大（比如127MB），但实际能驻留于L2缓存的空间受物理大小和预留上限约束（比如只有3MB），所以大窗口内只有部分“热点”数据能够高效缓存，剩余还是被换出。这方便用户做更加复杂的局部性/滑动窗口/分批访问实验（比如持久化数据窗口可以覆盖1MB、10MB、50MB、100MB，观察这些情况下的性能变化）。
+- 方便调节hitRatio。如果hitRatio调得很小，num_bytes自然变大，所以不能限制得太小。
 
 > 项目中倒是没用到这个。
 
+所以需要微调`hitRatio`。
+
 ##### 10.2.2.2. 微调访问窗口的命中率
 
-`hitRatio`参数可以用来指定接收`hitProp`属性的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域[ptr..ptr_num_bytes)中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
+`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域[ptr..ptr_num_bytes)中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
 
-假设我们使用 GPU 全局内存中大小为 1024 MB 的区域。首先，我们使用`cudaDeviceSetLimit()`把 L2 缓存中的 30 MB 预留给持久化访问。然后，如下图所示，我们指定对于内存区域前`freqSize * sizeof(int)`字节的访问是持久化的。因此，这些数据将使用 L2 缓存的预留部分。在我们的实验当中，我们将 1024 MB 全局内存中持久化数据区域的大小从 10 MB 调整到 60 MB，以模拟数据适合或超出可用 L2 预留部分（本例中固定为 30 MB）的各种场景。注意，NVIDIA Tesla A100 GPU 的 L2 缓存总容量是 40 MB。对剩余内存区域剩余数据（即流式数据）的访问仍将被视为正常或流式访问，因此，将使用剩余的 10 MB 非预留部分。
+> 为什么不直接减小`num_bytes`？当然可以！只是在实际大多数场景下，热点数据经常会分布在更大的区间。程序员无法定位，究竟哪些地址才是100%最热的。有时热点本身就会在一个更大的区间内滑动。
+
+官方文档以NVIDA Tesla V100为例，L2大小40MB，L2预留最大30MB。
+
+现在假设我们在全局内存中有1024MB的数据。首先，我们使用`cudaDeviceSetLimit()`把 L2 缓存中的 30 MB 预留给持久化访问（先最大化预留）。然后，如下图所示，我们指定对于内存区域前`freqSize * sizeof(int)`字节的访问是持久化的。因此，这些数据将使用 L2 缓存的预留部分。在我们的实验当中，我们将 1024 MB 全局内存中希望被持久化的数据区域的大小从 10 MB 调整到 60 MB，以模拟数据适合或超出可用 L2 预留部分（本例中固定为 30 MB）的各种场景。注意，NVIDIA Tesla A100 GPU 的 L2 缓存总容量是 40 MB。对剩余内存区域剩余数据（即流式数据）的访问仍将被视为正常或流式访问，因此，将使用剩余的 10 MB 非预留部分。
 
 ![图8：在滑动窗口试验中将持久化数据访问映射到L2的预留部分](/sliding-window-l2.png)
 **图 8：在滑动窗口试验中将持久化数据访问映射到 L2 的预留部分**
@@ -602,6 +620,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
