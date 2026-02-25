@@ -415,7 +415,7 @@ cudaStreamSetAttribute(Stream, cudaStreamAttributeAccessPolicyWindow,
 
 ##### 10.2.2.2. 微调访问窗口的命中率
 
-`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域$[\text{ptr} \ldots \text{ptr} + \text{num\_bytes})$中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
+`hitRatio`参数可以用来指定具有`hitProp`属性的数据的访问比例。如果`hitRatio`的值是 0.6，那么全局内存区域$[ptr \ldots ptr + num\_bytes)$中的 60%的内存访问具有持久化属性，40%的内存访问具有流式属性。下面用一个 benchmark 来说明。
 
 > 为什么不直接减小`num_bytes`？当然可以！只是在实际大多数场景下，热点数据经常会分布在更大的区间。程序员无法定位，究竟哪些地址才是100%最热的。有时热点本身就会在一个更大的区间内滑动。
 
@@ -481,6 +481,10 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 
 由于共享内存是 On-Chip 的，因此相比于全局内存，共享内存有更高的带宽和更低的延迟，前提是线程之间没有 Bank Conflict。
 
+Shared memory 是由程序员显式管理、每个 SM 独享的超高速片上存储，而 L2 cache 是全 GPU 共享、由硬件自动管理的大容量片上缓存。Shared memory比L2 cache快，且shared memory是SM独有的。每个SM还有L1缓存，和Shared memory一样，区别是系统自动管理，shared memory用户管理。Shared memory就是用户手动管理的L1缓存，所以肯定比L2快。
+
+还是以3080为例，3080共有68个SM，每个SM有自己的L1和shared memory，大小都是100KB，68个SM的L1和shared memory大小总共为6MB，所有SM共享一个L2，大小为5MB，L2的最大预留是3MB，Global Memory 9.75GB。
+
 ##### 10.2.3.1. 共享内存和 Meomry Banks
 
 为了实现高带宽的并发访问，共享内存被划分成了多个大小相同的 Memory Bank，这些 Bank 可以被同时访问。因此，任何跨越 n 个不同 Bank 的 n 个地址的内存加载或者存储操作都可以同时进行，从而使得有效带宽是单个 Bank 的 n 倍。
@@ -490,6 +494,10 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 为了最小化 Bank 冲突，理解内存地址如何映射到 Bank 以及如何优化调度内存请求非常重要。
 
 在计算能力大于等于 5.x 的设备上，每一个 Bank 在每个时钟周期的带宽为 32 bit，连续的 32 bit 字被分配到连续的 Bank 中。Warp 中有 32 个线程，bank 的数量也是 32 个，因此，Warp 中的任何线程之间都可能发生 Bank 冲突。
+
+> 共享内存被分为32个memory bank和线程束里面有32个线程，正好可以一一对应上。所以利用这个硬件特性，可以让线程束内的每一个线程，在同一个周期内，访问独立地址，能够极大提高访存效率。前提是不发生bank conflict。
+> 至于时钟周期就是，每个bank每个时钟周期最多可以并行传输32bit（4字节），如果没有memory conflict的话，一个时钟周期内，一个warp里面的线程可以最多可以完成32笔访存。
+> 所以什么是memory conflict呢？假设shared memory是一个int的数组`shmem[32]`，每个`shmem[i]`占4字节，每个`shmem[i]`会映射到第`i`个bank。如果线程束里面每个线程分别访问`shmem[threadIdx.x]`，那么每个线程会落到不同的bank，不会冲突，带宽最大。如果变成线程访问`shmem[threadIdx.x % 4]`，就会产生bank conflict，此时每8个线程访问同一个bank，bank内部串行，并行度下降，效率降低。
 
 ##### 10.2.3.2. 矩阵乘法（$C=AB$）中的共享内存
 
@@ -620,6 +628,7 @@ __global__ void simpleMultiply(float *a, float *c, int M)
 在这个转置的例子中，每一次迭代`i`，`a[col * TILE_DIM + i]`中的`col`表示$A^T$连续的列，因此，`col * TILE_DIM`表示以步长`TILE_DIM`访问全局内存，导致带宽的浪费。
 
 [^3]: 但例子中不是 float 么？
+
 
 
 
