@@ -613,6 +613,8 @@ __global__ void sharedABMultiply(float* a, float* b, float* c, int N) {
 | Coalesced using shared memory to store a tile of A              | 144.4 GB/s        | 77.4 GB/s            |
 | Using shared memory to eliminate redundant reads of a tile of B | 195.5 GB/s        |                      |
 
+
+
 ##### 10.2.3.3. 矩阵乘法（$C=AA^T$）中的共享内存
 
 另一个可以是说明全局内存的跨步访问和共享内存的 Bank 冲突的例子是用$A$的转置替换$B$得到的矩阵乘法$C=AA^T$。
