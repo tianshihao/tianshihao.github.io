@@ -614,6 +614,68 @@ __global__ void sharedABMultiply(float* a, float* b, float* c, int N) {
 | Using shared memory to eliminate redundant reads of a tile of B | 195.5 GB/s        |                      |
 
 
+###### 通用的解法
+
+上面的矩阵乘法优化只适用于$A$、$B$的行和列分别可以被`blockDim.x`或者`blockDim.y`整除的情况，如果任意条件不满足，计算就会出错。原因是如果一开始根据计算出来的row和col过滤掉不需要最终参与计算的线程，共享内存的填充是不充分的。所以最佳实践不是early return，而是让每一个线程都向共享内存中写入数据，符合条件从矩阵中读取，不符合条件将共享内存设置为0，在最后向结果矩阵中写值时，才判断row和col。
+
+其次，如果$A$的列或者$B$的行如果不是`TILE_SIZE`的倍数，计算也会出错。举个例子，矩阵$A$的大小是$32 \times 33$，矩阵$B$的大小是$33\times32$，结果矩阵$C$的大小是$32 \times 32$，`TILE_SIZE`是32，那么根据`TILE_SIZE`计算出来的`gridDim`将是1，即只有一个block，而block中的共享内存大小也是$32\times 32$。那么问题就来了，共享内存的大小比实际计算需要用到的元素少，计算$C$中每一个元素时，都需要$A$中一行33个元素和$B$中一列的33个元素，但是共享内存中只要32个。解决方法也很简单，tile循环。可以画一张图，一个长长的行矩阵和一个长长的列矩阵相乘，就是这种情况。
+
+结合上面两点，给出通用矩阵乘法：
+
+```cpp
+template <typename T>
+__global__ void shared_ab_matrix_multipy_kernel(
+    cuda_lab::MatrixDevice<T> const* const a,
+    cuda_lab::MatrixDevice<T> const* const b,
+    cuda_lab::MatrixDevice<T>* const c) {
+  auto const row{blockIdx.y * blockDim.y + threadIdx.y};
+  auto const col{blockIdx.x * blockDim.x + threadIdx.x};
+
+  __shared__ T tile_a[kBlockSize][kBlockSize], tile_b[kBlockSize][kBlockSize];
+
+  // 计算所需的tile数
+  std::size_t const K{a->cols};
+  std::size_t const num_tiles{(K + kBlockSize - 1) / kBlockSize};
+
+  T sum{0};
+
+  // tile循环，有点类似滑动窗口
+  for (std::size_t tile{0}; tile < num_tiles; ++tile) {
+    std::size_t const k_col{tile * kBlockSize + threadIdx.x};
+    if (row < a->rows && k_col < K) {
+      tile_a[threadIdx.y][threadIdx.x] = a->get(row, k_col);
+    } else {
+      tile_a[threadIdx.y][threadIdx.x] = 0;
+    }
+
+    std::size_t const k_row{tile * kBlockSize + threadIdx.y};
+    if (k_row < K && col < b->cols) {
+      tile_b[threadIdx.y][threadIdx.x] = b->get(k_row, col);
+    } else {
+      tile_b[threadIdx.y][threadIdx.x] = 0;
+    }
+
+    // 因为需要block中所有线程都到达这里才能继续，所以不能early return，否则会死锁
+    // 那些一开始就return的线程不会到达这里，所以剩余线程会无限等待，死锁
+    __syncthreads();
+
+    if (row < c->rows && col < c->cols) {
+      std::size_t const k_in_tile{
+          (tile + 1) * kBlockSize <= K ? kBlockSize : K - tile * kBlockSize};
+      for (std::size_t i{0}; i < k_in_tile; ++i) {
+        sum += tile_a[threadIdx.y][i] * tile_b[i][threadIdx.x];
+      }
+    }
+    __syncthreads();
+  }
+
+  // 最后写入
+  if (row < c->rows && col < c->cols) {
+    c->set(row, col, sum);
+  }
+}
+```
+
 
 ##### 10.2.3.3. 矩阵乘法（$C=AA^T$）中的共享内存
 
