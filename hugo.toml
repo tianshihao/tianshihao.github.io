@@ -17,7 +17,7 @@ theme = "hugo-theme-tokiwa"
     style = "monokailight"  # Syntax highlighting theme, e.g., monokailight, solarized-light, dracula, etc.
 
   [markup.tableOfContents] # Correct spelling
-    startLevel = 1
+    startLevel = 2
     endLevel = 4
 
   [markup.goldmark]
@@ -31,6 +31,8 @@ env = "production"          # Set the environment, often used for conditional se
 useChineseFonts = true      # Use Chinese fonts like Noto Serif
 bannerFont = "fonts/noto-serif-sc-v7-latin_chinese-simplified-regular" # Use bundled serif font for the title
 postDateFormat = "2006-1-2" # Date format for posts
+homePageSize = 7            # Number of posts on homepage per page
+postsPageSize = 12          # Number of posts on posts list page
 fuse = true                 # Fuse.js enabled for searchbox
 
 [menu]
