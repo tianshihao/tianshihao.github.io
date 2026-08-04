@@ -7,8 +7,6 @@ toc = true
 series = ["CUDA Programming Guide Notes"]
 +++
 
-# CUDA Programming Guide Notes 1
-
 > 原文地址：https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html
 
 ## CUDA编程模型
