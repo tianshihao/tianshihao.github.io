@@ -29,7 +29,7 @@ description = "Tokiwa-iro is the theme color of this site."
 math = true                 # Enable KaTeX for math rendering
 env = "production"          # Set the environment, often used for conditional settings like analytics
 useChineseFonts = true      # Use Chinese fonts like Noto Serif
-bannerFont = "fonts/exampleFont" # Custom font for the title
+bannerFont = "fonts/noto-serif-sc-v7-latin_chinese-simplified-regular" # Use bundled serif font for the title
 postDateFormat = "2006-1-2" # Date format for posts
 fuse = true                 # Fuse.js enabled for searchbox
 

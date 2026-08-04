@@ -1,0 +1,29 @@
+{{- $key := .key -}}
+{{- $term := .term -}}
+{{- $plural := .plural -}}
+{{- $singular := .singular -}}
+{{- $display := $key -}}
+
+{{- if gt (len $term.Pages) 0 -}}
+  {{- $firstPage := index $term.Pages 0 -}}
+  {{- $termValues := slice -}}
+
+  {{- with index $firstPage.Params $plural -}}
+    {{- $termValues = . -}}
+  {{- end -}}
+
+  {{- if eq (len $termValues) 0 -}}
+    {{- with index $firstPage.Params $singular -}}
+      {{- $termValues = . -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- range $termValues -}}
+    {{- $termValue := printf "%v" . -}}
+    {{- if eq (lower $termValue) (lower $key) -}}
+      {{- $display = $termValue -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $display -}}
