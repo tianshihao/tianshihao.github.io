@@ -81,13 +81,13 @@ GPU 和 CPU 都有直接连接的 DRAM 芯片。在拥有多个 GPU 的系统中
 
 CUDA 提供了 API 来分配 GPU 内存、CPU 内存，以及在 CPU 和 GPU 之间、GPU 内部或多 GPU 系统中的 GPU 之间进行数据拷贝。当需要时，可以显式控制数据的位置。下文讨论的**统一内存（Unified Memory）** 允许由 CUDA 运行时或系统硬件自动处理内存的放置。
 
-| 概念| 说明|
-|:-----|:-------|
-|物理内存独立|CPU、GPU 0、 GPU 1、各有自己的DRAM|
-|Global Memory|GPU内全局（所有SM可访问），非系统全局|
-|统一虚拟地址内存|CPU和所有GPU共享同一个虚拟地址空间，地址范围唯一|
-|显式控制|使用`cudaMalloc`和`cudaMemcpy`手动管理数据位置|
-|统一内存|使用`cudaMallocManaged`自动管理数据迁移|
+| 概念             | 说明                                             |
+| :--------------- | :----------------------------------------------- |
+| 物理内存独立     | CPU、GPU 0、 GPU 1、各有自己的DRAM               |
+| Global Memory    | GPU内全局（所有SM可访问），非系统全局            |
+| 统一虚拟地址内存 | CPU和所有GPU共享同一个虚拟地址空间，地址范围唯一 |
+| 显式控制         | 使用`cudaMalloc`和`cudaMemcpy`手动管理数据位置   |
+| 统一内存         | 使用`cudaMallocManaged`自动管理数据迁移          |
 
 ### 6. GPU的片上内存
 
