@@ -2,7 +2,6 @@
   "recommendations": [
     "christian-kohler.path-intellisense",
     "eamodio.gitlens",
-    "esbenp.prettier-vscode",
     "github.codespaces",
     "github.copilot-chat",
     "github.copilot",
