@@ -10,24 +10,26 @@
     {{ range $key, $value := .Data.Terms }}
     {{ $display := partial "taxonomy-term-display.html" (dict "key" $key "term" $value "plural" $.Data.Plural "singular" $.Data.Singular) }}
     <section class="pin">
-      <hr class="p-0 my-4" />
-      <div class="clearfix">
-        <span class="float-left text-3xl pr-6 font-serif pt-1">
-          <a href="{{ "/" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}">
+      <div data-home-tag-divider></div>
+      <div class="tag-card-content">
+        <span class="float-left font-serif" data-home-tag-name>
+          <a href="{{ "/" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}" title="{{ $display }}">
             {{ $display }}
           </a>
         </span>
-        {{ $count := len (first $pageCount $value.Pages) }}
-        {{ range $k, $v := (first $pageCount $value.Pages) }}
-        <a class="font-serif leading-relaxed text-gray-600 hover:text-gray-700 focus:text-gray-700 font-light "
-          href="{{ .RelPermalink }}">
-          {{ $v.Title }}
-        </a>
-        <span class="text-gray-600">{{ if lt $k (sub $count 1) }}&nbsp;&#47;&nbsp;{{ end }}</span>
-        {{ end }}
-        {{ if gt (len $value.Pages) $pageCount }}
-        <span class="text-gray-600">&nbsp;&#47;&nbsp;&hellip;</span>
-        {{ end }}
+        <span class="tag-card-titles">
+          {{ $count := len (first $pageCount $value.Pages) }}
+          {{ range $k, $v := (first $pageCount $value.Pages) }}
+          <a class="font-serif leading-relaxed text-gray-600 hover:text-gray-700 focus:text-gray-700 font-light "
+            href="{{ .RelPermalink }}">
+            {{ $v.Title }}
+          </a>
+          <span class="text-gray-600">{{ if lt $k (sub $count 1) }}&nbsp;&#47;&nbsp;{{ end }}</span>
+          {{ end }}
+          {{ if gt (len $value.Pages) $pageCount }}
+          <span class="text-gray-600">&nbsp;&#47;&nbsp;&hellip;</span>
+          {{ end }}
+        </span>
       </div>
     </section>
     {{ end }}
