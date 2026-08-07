@@ -13,9 +13,11 @@
 		<div data-home-tag-divider></div>
 			<div class="tag-card-content">
 				<span class="float-left font-serif" data-home-tag-name>
-					<a href="{{ "/" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}" title="{{ $display }}">
-						{{ $display }}
-					</a>
+					<span class="tag-label">
+						<a href="{{ "/" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}" title="{{ $display }}">
+							{{ $display }}
+						</a>
+					</span>
 				</span>
 				<span class="tag-card-titles">
 					{{ $count := len (first $pageCount $value.Pages) }}
