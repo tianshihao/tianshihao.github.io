@@ -70,6 +70,7 @@ fuse = true                 # Fuse.js enabled for searchbox
 
 [params.social]
   github = "http://github.com/tianshihao"
+  rss = "/index.xml"
   # instagram = "http://example.com/"
   # bilibili = "http://example.com/"
   # weibo = "http://example.com/"
