@@ -6,7 +6,11 @@ copyright = "Copyright © 2025"
 languageCode = "cn"
 DefaultContentLanguage = "zh-cn"
 disqusShortname = ""
-googleAnalytics = "UA-1234567890" # or "G-xxxxxxxx" for Google Analytics v4
+# Google Analytics is disabled: the placeholder UA ID was retired by Google in
+# July 2023 (that's why Hugo warns). To enable analytics, add a GA4 property ID
+# under [services.googleAnalytics] instead, e.g.:
+#   [services.googleAnalytics]
+#     ID = "G-XXXXXXXXXX"
 enableInlineShortcodes = true
 footnoteReturnLinkContents = "^"
 hasCJKLanguage = true
