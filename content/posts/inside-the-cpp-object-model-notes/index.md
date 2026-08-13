@@ -1,27 +1,27 @@
 +++
 date = '2025-03-29T20:21:00+08:00'
 draft = false
-title = '《深度探索C++对象模型》（Inside The C++ Object Model）读书笔记'
+title = '《深度探索 C++ 对象模型》（Inside The C++ Object Model）读书笔记'
 tags = ['C++']
 toc = true
 +++
 
-# 《深度探索 C++对象模型》（Inside The C++ Object Model）读书笔记
+# 《深度探索 C++ 对象模型》（Inside The C++ Object Model）读书笔记
 
-带\*标题为重点章节的笔记。
+带 \* 标题为重点章节的笔记。
 
 ## 第 1 章 关于对象（Object Lessons）
 
 ### 1.1 C++对象模型（The C++ Object Model）
 
-![C++对象模型](https://img2023.cnblogs.com/blog/1524253/202403/1524253-20240309221739570-856534258.png)
+![C++对象模型](images/cpp_object_model.png)
 
-在 C++中，有两种 class data members:
+在 C++ 中，有两种 class data members：
 
 1. static data members，存储在 class object 之外。
 2. non-static data members，存储在每个 object 中。
 
-和三种 class member functions:
+和三种 class member functions：
 
 1. static member functions，不与任何 object 相关联。
 2. non-static member functions，与 object 相关联。
@@ -30,7 +30,7 @@ toc = true
 C++对象模型通过两个步骤支持 virtual functions：
 
 1. 每一个 class 产生出一堆指向 virtual functions 的指针，放在表格之中。这个表格被称为 virtual table（**vtbl**）。
-2. 每一个 class object 都被安插一个指针，指向相关的 virtual table。通常这个指针被称为**vptr**。vptr 的设定（setting）和重置（resetting）都由每一个 class 的 constructor、destructor 和 copy assignment 运算符自动完成。每一个 class 所关联的*type_info* object（用以支持 runtime type identification，RTTI）也经由 virtual table 被指出来，通常放在表格的第一个 slot。
+2. 每一个 class object 都被安插一个指针，指向相关的 virtual table。通常这个指针被称为**vptr**。vptr 的设定（setting）和重置（resetting）都由每一个 class 的 constructor、destructor 和 copy assignment 运算符自动完成。每一个 class 所关联的 *type_info* object（用以支持 runtime type identification，RTTI）也经由 virtual table 被指出来，通常放在表格的第一个 slot。
 
 ### 1.2 关键词所带来的差异（A Keyword Distinction）
 
@@ -54,7 +54,7 @@ C struct 在 C++中的一个合理用处是，当你要传递“一个复杂的 
 
 #### 指针的类型
 
-一个指向 ZooAnimal 的指针是如何地与一个指向 int 的指针或者指向 template Array 的指针不同的呢？从内存角度来看，其实这三者没有什么不同！其不同不在指针类型的不同、不在指向内容的不同（都是一个地址，通常为一个 word，在 64 位机器上是 8-bytes），而是**在其所寻址出来的 object 的类型不同。也就是说，“指针类型”会教导编译器如何解释某个特定地址中的内存内容及其大小**！
+一个指向 ZooAnimal 的指针是如何地与一个指向 int 的指针或者指向 template Array 的指针不同的呢？从内存角度来看，其实这三者没有什么不同！差别不在于指针类型，也不在于指向的内容（都是一个地址，通常为一个 word，在 64 位机器上是 8-bytes），而在于**其所寻址出来的 object 的类型不同。也就是说，“指针类型”会教导编译器如何解释某个特定地址中的内存内容及其大小**！
 
 因此，转换（cast）其实是一种编译器指令。大部分情况下它不会改变一个指针所含的真正地址，它只影响“被指出之内存的大小和其内容”的**解释方式**。
 
@@ -69,7 +69,7 @@ C struct 在 C++中的一个合理用处是，当你要传递“一个复杂的 
 > A default constructor is a constructor which can be called with no arguments.
 > https://en.cppreference.com/w/cpp/language/default_constructor
 
-默认构造函数只会在编译器需要的时候被合成出来（为了编译通过），如果一个 class 没有任何用户定义的构造函数，那么就会有一个默认构造函数被隐式（implicitly）声明出来……一个被隐式声明出来的默认构造函数将是一个 trivial（平凡的）的构造函数，例如：
+默认构造函数只会在编译器需要的时候被合成出来（为了编译通过），如果一个 class 没有任何用户定义的构造函数，那么就会有一个默认构造函数被隐式（implicitly）声明出来……一个被隐式声明出来的默认构造函数将是一个 trivial（平凡）的构造函数，例如：
 
 ```cpp
 class Point {
@@ -147,8 +147,8 @@ Bar2 b2;  // output: Foo constructor
 
 所以，常见的两种说法：
 
-1. 任何 class 如何没有定义 default constructor，编译器都会合成一个 default constructor。错！只有在编译器需要的时候（上述 4 种情况）才会合成一个 default constructor，剩下的所谓 implicit trivial default constructor 并不会被合成出来，也不会被调用。
-2. 编译器合成出来的 default constructor 会显示设定“class 内每一个 data member 的默认值”。错！编译器合成出来的 default constructor 只会显示设定 base class subobjects 和 member class objects 的默认值。
+1. 任何 class 如果没有定义 default constructor，编译器都会合成一个 default constructor。错！只有在编译器需要的时候（上述 4 种情况）才会合成一个 default constructor，剩下的所谓 implicit trivial default constructor 并不会被合成出来，也不会被调用。
+2. 编译器合成出来的 default constructor 会显式设定“class 内每一个 data member 的默认值”。错！编译器合成出来的 default constructor 只会显式设定 base class subobjects 和 member class objects 的默认值。
 
 ### 2.2 Copy Constructor 的构造操作
 
@@ -160,13 +160,13 @@ Bar2 b2;  // output: Foo constructor
 
 如果用户定义了 copy constructor，那么编译器就不会合成一个 default copy constructor。如果没有，那么编译器会合成一个 default copy constructor，这个 default copy constructor 会对 object 中的每个 non-static data member 进行 default memberwise initialization，即复制每一个 non-static data member 的值，但是它并不会复制其中的 member class object，而是以递归的方式对其施行 memberwise initialization。
 
-和 default constructor 一样，C++ Standard 也把 copy constructor 分为 trivial 和 non-trivial，只有 non-trival 的 copy constructor 才会被合成出来、被调用。
+和 default constructor 一样，C++ Standard 也把 copy constructor 分为 trivial 和 non-trivial，只有 non-trivial 的 copy constructor 才会被合成出来、被调用。
 
-那么怎样的 copy constructor 是 trivial 的呢？关键就在于其是否展现了 bitwise copy semantics。如果展现了，就是 trivial，如果不展现，就不是。所谓 bitwise copy semantics，就是指可以通过简单地复制内存中地每一个位（bit）来创建一个对象的副本，这种复制是不考虑对象内部结构和数据成员含义的，只是简单地复制内存中的位。
+那么怎样的 copy constructor 是 trivial 的呢？关键就在于其是否展现了 bitwise copy semantics。如果展现了，就是 trivial，如果不展现，就不是。所谓 bitwise copy semantics，就是指可以通过简单地复制内存中的每一个位（bit）来创建一个对象的副本，这种复制是不考虑对象内部结构和数据成员含义的，只是简单地复制内存中的位。
 
 有 4 种情况，一个 class 不展现 bitwise copy semantics：
 
-1. 当 class 内含一个 member object 而后者的 class 声明有一个 copy constructor 时（不论是被 class 设计者显式地声明，就像前面的 String 那样;或是被编译器合成，像 class Word 那样）。
+1. 当 class 内含一个 member object 而后者的 class 声明有一个 copy constructor 时（不论是被 class 设计者显式地声明，就像前面的 String 那样；或是被编译器合成，像 class Word 那样）。
 2. 当 class 继承自一个 base class 而后者存在一个 copy constructor 时（再次强调，不论是被显式声明或是被合成而得）。
 3. 当 class 声明了一个或多个 virtual functions 时。
 4. 当 class 派生自一个继承串链，其中有一个或多个 virtual base classes 时。
@@ -175,7 +175,7 @@ Bar2 b2;  // output: Foo constructor
 
 总而言之，当 class 复制操作不再保持 bitwise copy semantics，且未定义 copy constructor，则会被视为 non-trivial 的。
 
-> 比如`std::vector`就是 non-trivial 的，因为含有复制构造函数，所以编译器会合成一个 non-trivial 的复制构造函数。
+> 比如 `std::vector` 就是 non-trivial 的，因为含有复制构造函数，所以编译器会合成一个 non-trivial 的复制构造函数。
 
 ### 2.3 程序转化语意学（Program Transformation Semantics）
 
@@ -197,10 +197,10 @@ NRV（Named Return Value）：编译器会尝试避免不必要的拷贝构建�
 X bar() {
   X xx;
   // ... process xx
-  return xx;fd03bf43f0414473dcb0b54d3ad57283845c9fa1
+  return xx;
 }
 
-void bar(X &__result ) {
+void bar(X &__result) {
   // default constructor invoked
   __result.X::X();
 
@@ -212,9 +212,9 @@ void bar(X &__result ) {
 
 ### 2.4 成员们的初始化队伍（Member Initialization List）
 
-我们知道，初始化 data member 一般有两个机会，constructor 里面，或者在 member initialization list 里面。那么这两者有什么区别呢？大学学习的时候看过，背面经的时候也学习过，工作时间久了，才发现自己已经忘记这么做的具体原因是什么了。
+我们知道，初始化 data member 一般有两个机会，constructor 里面，或者在 member initialization list 里面。那么这两者有什么区别呢？大学学习的时候看过，背面试题的时候也学习过，工作时间久了，才发现自己已经忘记这么做的具体原因是什么了。
 
-在 constructor 里面初始化，编译器会先产生一个临时对象，然后将它初始化，之后用一个 assignment 运算符将临时的 object 指定给成员数据成员，然后在销毁临时对象。而在 member initialization list 里面初始化，编译器扩充之后的构造函数就会直接调用 member object 的 constructor，相当于直接从参数进行复制，而不是先产生一个临时对象，然后再用 assignment 运算符。
+在 constructor 里面初始化，编译器会先产生一个临时对象，然后将它初始化，之后用一个 assignment 运算符将临时的 object 指定给成员数据成员，然后再销毁临时对象。而在 member initialization list 里面初始化，编译器扩充之后的构造函数就会直接调用 member object 的 constructor，相当于直接从参数进行复制，而不是先产生一个临时对象，然后再用 assignment 运算符。
 
 另外，扩充之后的构造函数中的变量初始化顺序，不是由 initialization list 的顺序决定的，而是由变量声明的顺序决定的。所以，如果一个变量的初始化依赖于另一个变量的初始化，那么就要注意变量的声明顺序。
 
@@ -251,13 +251,13 @@ class MyClass {
 
 #### Static Data Members
 
-会被转化为对该唯一 extern 实例的直接参考（？reference）操作，零成本。另外，若对一个 static data member 取地址，会得到一个指向其数据类型的指针（即非&Point3d::chunkSzie，因其本质是 int const \*），而不是一个指向其 class member 的指针，因为 static member 并不内含在一个 class object 之中，而是在程序的 data segment 之中。
+会被转化为对该唯一 extern 实例的直接参考（reference）操作，零成本。另外，若对一个 static data member 取地址，会得到一个指向其数据类型的指针（即非 &Point3d::chunkSize，因其本质是 int const \*），而不是一个指向其 class member 的指针，因为 static member 并不内含在一个 class object 之中，而是在程序的 data segment 之中。
 
 此外，static data member 的存取许可（public、protected 或 private），以及其本身与 class 的关联，并不会造成额外的负担。
 
 有疑问的一句话：
 
-且尽管 static data member 某种程度上可以被视为 global 变量，但是其只在 class 生命周期那可见。
+且尽管 static data member 某种程度上可以被视为 global 变量，但是其只在 class 生命周期内可见。
 
 一个可能的理解：
 
@@ -266,7 +266,7 @@ class MyClass {
 #### Non-static Data Members
 
 1. 存取一个**class object（不是指针）**里面的 non-static data member，其效率和存取一个 C struct member 或者一个 non-derived class 的 member 是一样的。因为编译期就可以知道偏移量。
-2. 存取一个**指向 class object 的指针**里面的、继承自 virtual base class 的 non-static data member，会多出一个间接寻址的操作。因为在编译的时候，我们不知道这个指针必然指向哪一种 class type，因此也就不知道偏移量，所以这个操作必须延迟到执行期，经由一个额外的简介导引，才能解决。
+2. 存取一个**指向 class object 的指针**里面的、继承自 virtual base class 的 non-static data member，会多出一个间接寻址的操作。因为在编译的时候，我们不知道这个指针必然指向哪一种 class type，因此也就不知道偏移量，所以这个操作必须延迟到执行期，经由一个额外的间接导引，才能解决。
 
 ### \*3.4 “继承”与 Data Member
 
@@ -274,15 +274,15 @@ class MyClass {
 
 #### 只要继承不要多态（Inheritance without Polymorphism）
 
-![单一继承而且没有virtual function时的数据布局](https://img2023.cnblogs.com/blog/1524253/202403/1524253-20240329154050281-429345519.png)
+![单一继承而且没有virtual function时的数据布局](images/single_inheritance_no_virtual_layout.png)
 
 注意，这种情况下，Point3d 中不会含有 vptr，因为没有 virtual function。
 
 注意要避免为了继承而继承，因为**C++会保证“base class subobject 在 derived class 中的原样性”**，所以若无法避免，会导致到对象的膨胀。
 
-![base class subobject在derived class中的原样性](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240403164137726-1181261180.png)
+![base class subobject在derived class中的原样性](images/base_subobject_integrity.png)
 
-C++不会将 derived class 中的数据与 base class 中的数据合并，否则在复制的时候会产生 bug。试想 derived class 中的数据成员被安排到了 base class 中的 padding，那么将一个 base class object 复制给一个 derived class object 时，derived class object 中的数据成员就会 base class 的 padding 覆盖，从而产生 bug。
+C++不会将 derived class 中的数据与 base class 中的数据合并，否则在复制的时候会产生 bug。试想 derived class 中的数据成员被安排到了 base class 中的 padding，那么将一个 base class object 复制给一个 derived class object 时，derived class object 中的数据成员就会被 base class 的 padding 覆盖，从而产生 bug。
 
 #### 加上多态（Adding Polymorphism）
 
@@ -290,19 +290,17 @@ C++不会将 derived class 中的数据与 base class 中的数据合并，否�
 
 单一继承下的内存布局：
 
-![单一继承下的内存布局](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240415151255709-982775891.png)
+![单一继承下的内存布局](images/single_inheritance_layout.png)
 
 #### 多重继承（Multiple Inheritance）{#多重继承内存布局}
 
-和普通继承区别不大，多重继承的问题主要发生在 derived class objects 和其第二或者后继的 base class objects 之间的转换。有多态的的话，考虑 vptr 就行了。
+和普通继承区别不大，多重继承的问题主要发生在 derived class objects 和其第二或者后继的 base class objects 之间的转换。有多态的话，考虑 vptr 就行了。
 
-![多重继承](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240403172225838-592757973.png)
-
-<!-- ![多重继承下的内存布局](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240415151515935-1597670662.png) -->
+![多重继承](images/multiple_inheritance.png)
 
 待办事项：画本例子中的内存布局。
 
-对于一个多重派生的对象，将其地址指定给“最左端的 base class 的指针”，情况将和单一继承时相同，因为二者都指向相同的起始地址。至于第二个或者后继的 base class 的地址制定操作，则需要将地址修改过来，这个操作由编译器完成，加上或者减去介于中间的 base class subobjects 的大小。下面的讨论也是基于这个前提。
+对于一个多重派生的对象，将其地址指定给“最左端的 base class 的指针”，情况将和单一继承时相同，因为二者都指向相同的起始地址。至于第二个或者后继的 base class 的地址指定操作，则需要将地址修改过来，这个操作由编译器完成，加上或者减去介于中间的 base class subobjects 的大小。下面的讨论也是基于这个前提。
 
 ```cpp
 Vertex3d v3d;
@@ -325,7 +323,7 @@ pv = (Vertex*)(((char *)&v3d) + sizeof(Point3d));
 地址高处 +-----------------+
 ```
 
-其他情况也是类似的，只是注意，如果指针的话，实际转换的代码还需要判断指针是否为 NULL。至于引用，则不需要针对可能的 0 值做判断，因为引用不可能参考到“无物”（no object）。
+其他情况也是类似的，只是注意，如果是指针，实际转换的代码还需要判断指针是否为 NULL。至于引用，则不需要针对可能的 0 值做判断，因为引用不可能参考到“无物”（no object）。
 
 ```cpp
 // pv是一个指针。
@@ -337,11 +335,11 @@ Vertex *pv = pv ? (Vertex *)((char *)pv + sizeof(Point3d)) : 0;
 
 #### 虚拟继承（Virtual Inheritance）
 
-![虚拟继承](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240411092311341-1406564193.png)
+![虚拟继承](images/virtual_inheritance.png)
 
 虚拟继承需要解决的问题是 shared subobject 继承的问题，即一个 derived class object（Vertex3d）中的多个 base class subobjects（Vertex 和 Point3d）共享一个 virtual base class subobject（Point2d）。Vertex 和 Point3d 之于 Vertex3d 是 base class，不是 virtual base class。
 
-具体来说就是，虚拟继承需要将原来 Vectex 和 Point3d 各自维护的 Point2d，折叠成为一个由 Vertex3d 维护的单一的 Point2d object，只保留一个。同时还要保存 base class 和 derived class 的指针（以及引用）之间的多态指定操作。
+具体来说就是，虚拟继承需要将原来 Vertex 和 Point3d 各自维护的 Point2d，折叠成为一个由 Vertex3d 维护的单一的 Point2d object，只保留一个。同时还要保持 base class 和 derived class 的指针（以及引用）之间的多态指定操作。
 
 因此可以这么说，对于中间的 Vertex 和 Point3d 而言，采用虚拟继承，将导致原来在多重继承中维护的 Point2d 的 subobject 发生变化（从各自拥有一个变成共享一个）。因此，可以将 Vertex 和 Point3d 分割为两个部分：一个共享区域和一个不变区域。共享区域就是存储会因每次派生继承操作而变化的数据，采用间接存取的方式，例如继承的部分；不变区域就是存储不会因每次派生继承操作而变化的数据，总是拥有固定的 offset，采用直接存取的方式，例如自己的数据成员。
 
@@ -383,7 +381,7 @@ Point2d *p2d = pv3d ? pv3d->__vbcPoint2d : 0;
 
 对于第二个问题，可以使用 Pointer Strategy 来解决，即通过拷贝将所有 nested virtual base class 的指针，放到 derived class object 中，这样就没有了多次间接寻址的操作。但是这样会导致对象的膨胀，因为每一个 derived class object 都要拷贝一份 virtual base class 的指针。这是该策略产生的数据布局：
 
-![Virtual Inheritance Pointer Strategy](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240411133020018-1958774843.png)
+![Virtual Inheritance Pointer Strategy](images/virtual_inheritance_pointer_strategy.png)
 
 注意，上图中 base class subobject 在 derived subobject 的上面，而不是在下面，这是因为 derived class object 的地址是指向 base class subobject 的地址，而 virtual base class subobject 在 derived class object 的下面，通过一次间接寻址就可以找到。
 
@@ -397,24 +395,24 @@ Point2d *p2d = pv3d ? pv3d->__vbcPoint2d : 0;
 
 ### 3.6 指向 Data Members 的指针（Pointer to Data Member）
 
-一个有点神秘但颇有用处的语言特性，特别是如果你需要详细调查 class m embers 的底层布局的话。
+一个有点神秘但颇有用处的语言特性，特别是如果你需要详细调查 class members 的底层布局的话。
 
 #### “指向 Members 的指针”的效率问题
 
-## 第 4 章 Function 语意学（The Semantics of Funtion）
+## 第 4 章 Function 语意学（The Semantics of Function）
 
 ### 4.1 Member 的各种调用方式
 
 #### Nonstatic Member Function（非静态成员函数）
 
-Nonstatic Member Function 相比 Nonmember function 有相同的效率，编译器会将其转换为一个普通的函数，只是多了一个 this 指针，指向调用该函数的对象，编译器会将 this 指针作为一个隐式参数传递给函数。怎么转换的呢？以`Point3d Point3d::magitude()`为例：
+Nonstatic Member Function 相比 Nonmember function 有相同的效率，编译器会将其转换为一个普通的函数，只是多了一个 this 指针，指向调用该函数的对象，编译器会将 this 指针作为一个隐式参数传递给函数。怎么转换的呢？以 `Point3d Point3d::magnitude()` 为例：
 
 1. 改函数签名，参数列表中加入 this 指针，
-   1. 如果 non-const nonstatic member：`Point3d Point3d::magitude(Point3d * const this)`。
-   2. 如果是 const nonstatic member：`Point3d Point3d::magitude(const Point3d * const this)`。
+   1. 如果 non-const nonstatic member：`Point3d Point3d::magnitude(Point3d * const this)`。
+   2. 如果是 const nonstatic member：`Point3d Point3d::magnitude(const Point3d * const this)`。
 2. 修改函数中 nonstatic data member 的使用，改为 this->data_member。
-3. 修改函数名称，通过 mangling 技术，将函数名改为`extern magnitude_7Point3dFv(register Point3d * const this)`。之后，其调用从`obj.magnitude();`变成了`magnitude__7Point3dFv(&obj)`。
-   NRV 的优化也会实施，函数变成`void magnitude_7Point3dFv(register Point3d * const this, register Point3d * const __result)`。
+3. 修改函数名称，通过 mangling 技术，将函数名改为 `extern magnitude_7Point3dFv(register Point3d * const this)`。之后，其调用从 `obj.magnitude();` 变成了 `magnitude__7Point3dFv(&obj)`。
+   NRV 的优化也会实施，函数变成 `void magnitude_7Point3dFv(register Point3d * const this, register Point3d * const __result)`。
 
 ##### 名称的特殊处理（Name Mangling）
 
@@ -422,7 +420,7 @@ Name Mangling 是一种编译器技术，用于处理函数重载。C++支持函
 
 #### \*Virtual Member Functions（虚拟函数成员）
 
-变成`(*this->vptr[1])(this);`。另外，如果在一个虚函数里面又调用了虚函数，按照之前的思路，这个调用会被编译器转换为`register folat mag = (*this->vptr[2])(this);`，但是，对于嵌套的虚函数调用，其已经被起初的虚拟机制处理过了（编译器已经知道 this 的类型了），所以显示地调用该函数实例会更加高效，因此会压制虚拟机制，实际会变成这样`register float mag = Point3d::magnitude();`。
+变成 `(*this->vptr[1])(this);`。另外，如果在一个虚函数里面又调用了虚函数，按照之前的思路，这个调用会被编译器转换为 `register float mag = (*this->vptr[2])(this);`，但是，对于嵌套的虚函数调用，其已经被起初的虚拟机制处理过了（编译器已经知道 this 的类型了），所以显式地调用该函数实例会更加高效，因此会压制虚拟机制，实际会变成这样 `register float mag = Point3d::magnitude();`。
 
 #### Static Member Functions（静态成员函数）
 
@@ -461,9 +459,9 @@ Name Mangling 是一种编译器技术，用于处理函数重载。C++支持函
 
 而在执行期要做的，只是在特定的 virtual table slot（记录着 virtual function 的地址）中，激活 virtual function。
 
-![Virtual Table的布局：单一继承的情况](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240412150026216-836006237.png)
+![Virtual Table的布局：单一继承的情况](images/virtual_table_single_inheritance.png)
 
-注：`mult()`是纯虚函数，所以 Point 的 vtbl 中没有其对应的地址，只有一个`pure_virtul_called()`作为占位符。
+注：`mult()` 是纯虚函数，所以 Point 的 vtbl 中没有其对应的地址，只有一个 `pure_virtual_called()` 作为占位符。
 
 ```cpp
 ptr->z();
@@ -480,9 +478,9 @@ ptr->z();
 
 记住理解这张图就可以了。
 
-![多重继承下的内存布局](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240415151515935-1597670662.png)
+![多重继承下的内存布局](images/multiple_inheritance_layout.png)
 
-多重继承下有三个问题需要解决，以本例来说，分别是：（1）virutal destructor，（2）被继承下来的 Base2::memble()，（3）一组 clone()函数实例。
+多重继承下有三个问题需要解决，以本例来说，分别是：（1）virtual destructor，（2）被继承下来的 Base2::mumble()，（3）一组 clone() 函数实例。
 
 ##### Virtual destructor
 
@@ -499,24 +497,24 @@ Base2 *pbase2 = temp ? (Base2 *)((char *)temp + sizeof(Base1)) : 0;
 delete pbase2;
 ```
 
-此时，指针`pbase2`需要再次被调整，因为此时该指针指向 subobject Base2 地址开始的地方，但是我们需要指向整个 Derived object 的地址。所以，编译器会将`delete pbase2;`转换为`delete (Derived *)((char *)pbase2 - sizeof(Base1));`。然而，这个偏移量，在编译时期是无法确定的！因为 pbase2 所指的真正对象只有在执行期才能确定下来。怎么办呢？
+此时，指针 `pbase2` 需要再次被调整，因为此时该指针指向 subobject Base2 地址开始的地方，但是我们需要指向整个 Derived object 的地址。所以，编译器会将 `delete pbase2;` 转换为 `delete (Derived *)((char *)pbase2 - sizeof(Base1));`。然而，这个偏移量，在编译时期是无法确定的！因为 pbase2 所指的真正对象只有在执行期才能确定下来。怎么办呢？
 
-1. 扩容 virtual table，使它容纳此处所需要的 this 指针。每一个 virtual table slot，不再只是一个指针，而是一个集合体，内含可能的 offset 以及地址，于是析构操作变成了`(*pbase2->vptr[1].faddr)(pbase2 + pbase2->vptr[1].offset);`。这么做的缺点也很明显。
+1. 扩容 virtual table，使它容纳此处所需要的 this 指针。每一个 virtual table slot，不再只是一个指针，而是一个集合体，内含可能的 offset 以及地址，于是析构操作变成了 `(*pbase2->vptr[1].faddr)(pbase2 + pbase2->vptr[1].offset);`。这么做的缺点也很明显。
 2. Thunk 技术，所谓 thunk 就是一小段汇编代码，用来调整 this 指针。这么做有个缺点，需要调整 this 指针的类型，其虚表对应的 slot 指向的是 thunk 代码，不需要调整的，指向的是析构函数。
 
 ```cpp
 Base1 *pbase1 = new Derived;
 Base2 *pbase2 = new Derived;
 
-delete pbase1; // Base1的virtual table slot对应slot指向其析构函数。
-delete pbase2; // Base2的virtual table slot对应slot指向thunk地址。
+delete pbase1; // Base1的virtual table slot指向其析构函数。
+delete pbase2; // Base2的virtual table slot指向thunk地址。
 ```
 
 所以，真正的做法是，在一个 derived class 内含 n-1 个额外的 virtual tables，n 表示上一层的 base classes 的个数。对于本例而言，会有两个 virtual tables 被编译器产生出来。
 
 ##### 被继承下来的函数 mumble()
 
-这个和上面的问题反过来了，是通过一个 derived class 的指针，调用从第二个 base class 中继承而来的 virtual function。在次情况下，derived class 指针需要再次调整，以指向第二个 base class subobject。
+这个和上面的问题反过来了，是通过一个 derived class 的指针，调用从第二个 base class 中继承而来的 virtual function。在此情况下，derived class 指针需要再次调整，以指向第二个 base class subobject。
 
 ```cpp
 Derived *pd = new Derived;
@@ -540,7 +538,7 @@ Base2 *pb2 = pb1->clone();
 
 #### 虚拟继承下的 Virtual Functions
 
-![虚拟继承下的Virtual Table布局](https://img2023.cnblogs.com/blog/1524253/202404/1524253-20240415163018282-1763989068.png)
+![虚拟继承下的Virtual Table布局](images/virtual_table_virtual_inheritance.png)
 
 ### 4.3 函数的效能
 
@@ -552,9 +550,9 @@ Base2 *pb2 = pb1->clone();
 
 ### 4.5 Inline Functions
 
-如果把这些存取函数声明为 inline，我们就可以继续保持直接存取 members 的那种高效率——虽然我们亦兼顾了函数的封装性
+如果把这些存取函数声明为 inline，我们就可以继续保持直接存取 members 的那种高效率——虽然我们亦兼顾了函数的封装性。
 
-真正的 inline 函数操作，是在调用的那一点上的。这会带来参数的求值操作以及临时性对象的管理问题。所以，inline 函数的效率并不是绝对的。
+真正的 inline 函数操作，是在调用发生的那一点上展开的。这会带来参数的求值操作以及临时性对象的管理问题。所以，inline 函数的效率并不是绝对的。
 
 #### 形式参数（Formal Arguments）
 
@@ -593,9 +591,9 @@ inline 函数中的局部变量，再加上有副作用的参数，可能会导�
 
 #### 纯虚函数的存在（Presence of a Pure Virtual Function）
 
-一个人竟然可以定义和调用（invoke）一个 pure virtual function；不过它只能被静态地调用（invoked statically，经有::），不能经由虚拟机制调用。
+一个人竟然可以定义和调用（invoke）一个 pure virtual function；不过它只能被静态地调用（invoked statically，经由::），不能经由虚拟机制调用。
 
-唯一的例外是 pure virtual destructor：class 设计者一定得定义它。为什么？因为每一个 derived class destructor 会被编译器加以扩张，以静态调用的方式调用其“每一个 virtual base class”以及“上一层 base class”的 destructor。因此，只要缺乏任何一个 basec lass destructors 的定义，就会导致链接失败。且为了实现这个功能，编译器不会压抑用户对于纯虚析构函数的调用。
+唯一的例外是 pure virtual destructor：class 设计者一定得定义它。为什么？因为每一个 derived class destructor 会被编译器加以扩张，以静态调用的方式调用其“每一个 virtual base class”以及“上一层 base class”的 destructor。因此，只要缺乏任何一个 base class destructor 的定义，就会导致链接失败。且为了实现这个功能，编译器不会压抑用户对于纯虚析构函数的调用。
 
 **所以较好的方式是，不要将析构函数声明为纯虚函数。**
 
@@ -612,21 +610,21 @@ inline 函数中的局部变量，再加上有副作用的参数，可能会导�
 结合上面的讨论，得到的较为适当的一种设计。
 
 ```cpp
-class AbstructBase{
+class AbstractBase{
  public:
-  virtual ~AbstructBase(); // 不再是pure virual.
+  virtual ~AbstractBase(); // 不再是pure virtual.
   virtual void interface() = 0; // 不再是const.
   const char* mumble() const { return _mumble; } // 不再是virtual.
 
  protected:
-  AbstructBase(char *pc = 0); // 新增一个带唯一参数的构造函数。
+  AbstractBase(char *pc = 0); // 新增一个带唯一参数的构造函数。
   char * _mumble;
 };
 ```
 
 ### 5.1 “无继承”情况下的对象构造
 
-如果是 Plain Ol' Data，观念上，trival 的构造函数和析构函数都会被产生并且被调用，但是这些 trival 函数，不是没被定义，就是没被调用。
+如果是 Plain Ol' Data，观念上，trivial 的构造函数和析构函数都会被产生并且被调用，但是这些 trivial 函数，不是没被定义，就是没被调用。
 
 ```cpp
 // Plain Ol' Data
@@ -639,17 +637,16 @@ Point global; // 既没有被构造，也没有被析构。
 Point foobar() {
   Point local; // 没有被构造，也没有被析构。
   Point *heap = new Point; // 没有default constructor被触发。
-  *heap = local; // 无non trival的assignment operator生成，bitwise的。
+  *heap = local; // 无 non-trivial 的 assignment operator 生成，bitwise 的。
   // ...stuff...
-  delete heap; // 并不会触发trival的destructor.
-  return local; // 观念上会触发trival copy constructor，但是Plain Ol' Data, 因此是bitwise的。
+  delete heap; // 并不会触发trivial的destructor.
+  return local; // 观念上会触发trivial copy constructor，但是Plain Ol' Data, 因此是bitwise的。
 }
-
 ```
 
 #### 抽象数据结构（Abstract Data Type）
 
-对于 Plain Ol' Data，如果用户提供了 defualt constructor 或者 default destructor，则会被调用之。Default constructor 会在调用处被 inline expansion，即：
+对于 Plain Ol' Data，如果用户提供了 default constructor 或者 default destructor，则它们会被调用。Default constructor 会在调用处被 inline expansion，即：
 
 ```cpp
 Point local;
@@ -665,7 +662,7 @@ Point local1 = {1.0, 1.0, 1.0};
 
 #### 为继承做准备
 
-可以参考 2.1 和 2.2，这一小节是上述两个章节的补充。一般来说，这种情况下合成的 non trivial 函数，对 vptr 的设定操作，会被放置到函数的最开始处。
+可以参考 2.1 和 2.2，这一小节是上述两个章节的补充。一般来说，这种情况下合成的 non-trivial 函数，对 vptr 的设定操作，会被放置到函数的最开始处。
 
 最好还是自己提供 default constructor 以及 copy constructor。
 
@@ -675,11 +672,11 @@ Point local1 = {1.0, 1.0, 1.0};
 
 #### \*vptr 初始化语意学（The Semantics of the vptr Initialization）
 
-更一般性地说，在一个 class（本例为 Point3d）的 constructor（和 destructor）中，经由构造中的对象（本例为 PVertex 对象）来调用一个 virtual function，其函数实例应该是在此 class（本例为 Point3d ）中有作用的那个。由于各个 constructors 的调用顺序，上述情况是必要的。
+更一般性地说，在一个 class（本例为 Point3d）的 constructor（和 destructor）中，经由构造中的对象（本例为 PVertex 对象）来调用一个 virtual function，其函数实例应该是在此 class（本例为 Point3d）中有作用的那个。由于各个 constructors 的调用顺序，上述情况是必要的。
 
 意思是，当每一个 PVertex base class constructors 被调用时，编译系统必须保证有适当的 size()（示例函数，用以输出继承体系中每一个 class 的大小）函数实例被调用。怎样才能办到这一点？
 
-如果调用操作限制必须在 constructor（或 destructor）中直接调用，那么答案十分明显：将每一个调用操作以静态方式决议之，千万不要用到虚拟机制。如果是在 Point3d constructor 中，就显式调用 Point3d::size() 。
+如果调用操作限制必须在 constructor（或 destructor）中直接调用，那么答案十分明显：将每一个调用操作以静态方式决议之，千万不要用到虚拟机制。如果是在 Point3d constructor 中，就显式调用 Point3d::size()。
 
 因此，vptr 的设定操作，在 base class constructors 调用操作之后，但是在程序员供应的代码或是“member initialization list 中所列的 members 初始化操作”之前。
 
@@ -690,14 +687,14 @@ Point local1 = {1.0, 1.0, 1.0};
 总结就是：
 
 1. 在 Derived class constructor 中，“所有 virtual base classes”及“上一层 base class”的 constructor 会被调用。
-2. 上述完成之后，对象的 vptr(s)被初始化，指向相关的 virtual table(s)。
+2. 上述完成之后，对象的 vptr(s) 被初始化，指向相关的 virtual table(s)。
 3. 如果有 member initialization list 的话，将在 constructor 体内拓展开来。这必须在 vptr 被设定之后才做，以免有一个 virtual member function 被调用。
 4. 最后，执行程序员提供的代码。
 
 以下情况，vptr 必须被设定：
 
-1. 当一个完整的对象被构造起来时.如果我们声明一个 Point 对象,则 Point constructor 必须设定其 vptr。
-2. 当一个 subobject constructor 调用了一个 virtual function（不论是直接调用或间接调 用）时。
+1. 当一个完整的对象被构造起来时。如果我们声明一个 Point 对象，则 Point constructor 必须设定其 vptr。
+2. 当一个 subobject constructor 调用了一个 virtual function（不论是直接调用或间接调用）时。
 
 #### 虚拟继承
 
@@ -717,8 +714,9 @@ Point local1 = {1.0, 1.0, 1.0};
 
 就像蜕皮一样，一个 PVertex 对象在归还其内存空间之前，会依次变成一个 Vertex3D 对象、一个 Vertex 对象、一个 Point3D 对象，最后会变成一个 Point 对象。当我们在 destructor 中调用 member functions 时，对象的蜕变会因为 vptr 的重新设定而受到影响。
 
-关于为何要重新设置 vptr 的值，见“多重继承下的 Virtual Function”。
+关于为何要重新设置 vptr 的值，见“多重继承下的 Virtual Functions”。
 
 ## 第 6 章 执行期语意学（Runtime Semantics）
 
-## 第 7 章 站在对象模型的尖端（On the Cusp of the ObjectModel）
+## 第 7 章 站在对象模型的尖端（On the Cusp of the Object Model）
+
