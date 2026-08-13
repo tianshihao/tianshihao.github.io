@@ -30,6 +30,7 @@ theme = "hugo-theme-tokiwa"
 
 [params]
 description = "Tokiwa-iro is the theme color of this site."
+favicon = "/favicon.png"    # browser tab icon — the ❧ ivy leaf from the footer, in eucalyptus-400
 math = true                 # Enable KaTeX for math rendering
 env = "production"          # Set the environment, often used for conditional settings like analytics
 useChineseFonts = true      # Use Chinese fonts like Noto Serif
