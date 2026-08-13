@@ -1,5 +1,7 @@
 {
   "vim.autoSwitchInputMethod.enable": true,
   "window.zoomLevel": 1,
-  "pasteImage.path": "${currentFileDir}/images"
+  "workbench.editor.labelFormat": "medium",
+  "pasteImage.path": "${currentFileDir}/images",
+  "MarkdownPaste.path": "${fileDirname}/images"
 }
