@@ -1,9 +1,10 @@
 # Site settings
 baseURL = "https://tianshihao.github.io/"
 title = "笔记本子"
-author = "Shihao Tian"
+# author moved to [params.author] — top-level `author` (.Site.Author) was
+# removed in modern Hugo; .Site.Params.author is the supported convention
 copyright = "Copyright © 2026"
-languageCode = "cn"
+locale = "cn"
 DefaultContentLanguage = "zh-cn"
 disqusShortname = ""
 # Google Analytics is disabled: the placeholder UA ID was retired by Google in
@@ -39,6 +40,9 @@ postDateFormat = "2006-1-2" # Date format for posts
 homePageSize = 7            # Number of posts on homepage per page
 postsPageSize = 12          # Number of posts on posts list page
 fuse = true                 # Fuse.js enabled for searchbox
+
+[params.author]
+  name = "Shihao Tian"
 
 [menu]
   [[menu.main]]
