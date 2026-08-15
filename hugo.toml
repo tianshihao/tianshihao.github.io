@@ -18,9 +18,6 @@ hasCJKLanguage = true
 theme = "hugo-theme-tokiwa"
 
 [markup]
-  [markup.highlight]
-    style = "monokailight"  # Syntax highlighting theme, e.g., monokailight, solarized-light, dracula, etc.
-
   [markup.tableOfContents] # Correct spelling
     startLevel = 2
     endLevel = 4
@@ -30,7 +27,7 @@ theme = "hugo-theme-tokiwa"
       unsafe = true
 
 [params]
-description = "Tokiwa-iro is the theme color of this site."
+description = "我的互联网笔记本子。"
 favicon = "/favicon.png"    # browser tab icon — the ❧ ivy leaf from the footer, in eucalyptus-400
 math = true                 # Enable KaTeX for math rendering
 env = "production"          # Set the environment, often used for conditional settings like analytics
@@ -40,6 +37,8 @@ postDateFormat = "2006-1-2" # Date format for posts
 homePageSize = 7            # Number of posts on homepage per page
 postsPageSize = 12          # Number of posts on posts list page
 fuse = true                 # Fuse.js enabled for searchbox
+codeScheme = "night-owl-light" # Code color theme: "quiet-light" (default) or "night-owl-light" — both are the real VS Code themes, rendered by VS Code's own TextMate engine in the browser
+codeFont = "Fira Code"      # Code font: "Fira Code" (bundled, default) or any installed font name
 
 [params.author]
   name = "Shihao Tian"
