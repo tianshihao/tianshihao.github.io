@@ -143,7 +143,6 @@ $$
 由于每一个 Stream 内的操作是顺序执行的，因此在各自 Stream 中的数据传输完成之前，kernel 不会启动（复制和 kernel 函数使用同一个`Stream[i]`），但是不同 Stream 之间的复制和 kernel 函数执行是可以并行的，效果见下图：
 
 ![图1：复制和kernel执行的时间线比较](/timeline-comparison-for-copy-and-kernel-execution.png)
-**图 1：复制和 Kernel 执行的时间线比较**
 
 上面是顺序复制和执行，下面是并发复制和执行，可以看到并发执行的时候，第一个绿色（`Stream[0]`的复制）和第一个红色（`Stream[0]`的 kernel 函数执行）是并行的，但是第二个绿色（`Stream[1]的复制`）和第一红色是并行的，从而提高了利用率，节省了时间。
 
@@ -214,7 +213,6 @@ UVA 还是在支持的配置中启用点对点（Peer-to-Peer, P2P）数据传�
 ### 10.2. Device 内存空间
 
 ![图2：CUDA上的内存空间](/memory-spaces-on-cuda-device.png)
-**图 2：CUDA 上的内存空间**
 
 这样描述这张图片：
 
@@ -286,7 +284,6 @@ CUDA 设备使用多个内存空间（指GPU的几种不同的内存，和前面
 例如，如果一个 Warp 中的线程访问相邻的 4 字节（k是4）的字（例如相邻的 `float` 值，4 字节），那么就需要 4 次 32 字节对齐的、合并的事务。因为一个 Warp 中共 32 个线程，所以对于整个 Warp 而言，实际要访问一段 128 字节的内存，而一次事务访问32字节，因此需要4次事务，图 3 展示了这种访问模式。
 
 ![图3：合并访问](/coalesced-access.png)
-**图 3：合并访问**
 图中0、384单位是字节
 
 同样，如果k是8，即线程束中的线程需要8字节，那么总共需要访问256字节内容，一次事务32字节，所以需要256/32=8次。一个线程束中32个线程，一次事务访问数据最小单元是32字节，便于计算的巧合。
@@ -298,7 +295,6 @@ CUDA 设备使用多个内存空间（指GPU的几种不同的内存，和前面
 如果 Warp 中的线程顺序访问内存，但内存地址没有和 32 字节段对齐，则会请求 5 个 32 字节段。
 
 ![图4：非对齐的顺序地址，跨越5个32字节段](/misaligned-sequential-addresses.png)
-**图 4：非对齐的顺序地址，跨越 5 个 32 字节段**
 
 箭头整体偏移了，可以看到最左边和最右边的箭头表示访问的地址没有32字节对齐
 
@@ -321,7 +317,6 @@ __global__ void offsetCopy(float *odata, float* idata, int offset)
 在上述代码中，数据从输入数据`idata`复制到输出数组`odata`，两者都存在于 global meomry 中。kernel 在 Host 代码中的一个循环中执行，循环中参数`offset`从 0 变化到 32，以 NVIDIA Tesla V100 为例，不同偏移量下复制的有效带宽如下：
 
 ![图5：offsetCopy的性能](/performance-of-offsetcopy-kernel.png)
-**图 5：offsetCopy 的性能**
 
 即没有偏移量或偏移量为 8 的倍数的全局内存访问会导致 4 个 32 字节事务，带宽约为 790GB/s。否则，每个 Warp 会加载 5 个 32 字节事务，带宽约为无偏移量的$\frac{4}{5}$。
 
@@ -346,12 +341,10 @@ __global__ void strideCopy(float *odata, float* idata, int stride)
 图 6 展示了这种情况，本例中，Warp 中的线程以步长 2 访问内存。这种行为导致在 Tesla V100 上每个 Warp 加载 8 个 L2 缓存段。
 
 ![图6：相邻线程以2为步长访问内存](/adjacent-threads-accessing-memory-with-stride-of-2.png)
-**图 6：相邻线程以 2 为步长访问内存**
 
 步长为 2 导致 50%的加载/存储效率，因为事务中的一半元素没有被使用，代表了带宽的浪费。随着步长的增加，有效带宽会进一步降低，直到每个 Warp 中的 32 个线程都需要加载 32 个 32 字节段。
 
 ![图7：非单位步长数据复制的性能](/performance-of-stridecopy-kernel.png)
-**图 7：非单位步长数据复制的性能**
 
 如图 7 中所示，应尽可能避免非单位步长的全局内存访问。实现这一点的一种方法是利用共享内存，这将在下一节中讨论。
 
@@ -424,7 +417,6 @@ cudaStreamSetAttribute(Stream, cudaStreamAttributeAccessPolicyWindow,
 现在假设我们在全局内存中有1024MB的数据。首先，我们使用`cudaDeviceSetLimit()`把 L2 缓存中的 30 MB 预留给持久化访问（先最大化预留）。然后，如下图所示，我们指定对于内存区域前`freqSize * sizeof(int)`字节的访问是持久化的。因此，这些数据将使用 L2 缓存的预留部分。在我们的实验当中，我们将 1024 MB 全局内存中希望被持久化的数据区域的大小从 10 MB 调整到 60 MB，以模拟数据适合或超出可用 L2 预留部分（本例中固定为 30 MB）的各种场景。注意，NVIDIA Tesla A100 GPU 的 L2 缓存总容量是 40 MB。对剩余内存区域剩余数据（即流式数据）的访问仍将被视为正常或流式访问，因此，将使用剩余的 10 MB 非预留部分。
 
 ![图8：在滑动窗口试验中将持久化数据访问映射到L2的预留部分](/sliding-window-l2.png)
-**图 8：在滑动窗口试验中将持久化数据访问映射到 L2 的预留部分**
 
 下面是上述 benchmark 代码的实现：
 
@@ -456,7 +448,6 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 上述 Kernel 代码的性能如下图所示。当持久化数据区域的大小正好等于 L2 缓存的 30 MB 预留部分时，就可以观察到性能提升了 50%。然而，一旦持久化数据区域的大小超过了 L2 缓存的 30 MB 预留部分，就有出现因为抖动导致的 10%左右的性能下降。
 
 ![图9：hit-ratio固定为1的滑动窗口benchmark的性能表现](/l2-hitratio-before.png)
-**图 9：hit-ratio 固定为 1 的滑动窗口 benchmark 的性能**
 
 为了更加优化性能，当持久化数据区域的大小超过 L2 缓存预留部分的大小时，我们把`num_bytes`和`hitRatio`的值做如下调整。
 
@@ -473,7 +464,6 @@ Stream_attribute.accessPolicyWindow.hitRatio =
 我们把访问窗口中的`num_bytes`固定为 20 MB，然后调整`hitRatio`，使总的持久化数据的随机 20 MB 驻留在 L2 的预留部分。而剩余的持久化数据将使用流式访问。这样做可以减少抖动。结果如下图所示，无论持久化数据是否适合预留的 L2，我们都可以看到良好的性能表现。
 
 ![图10：调整过hit-ratio的滑动窗口benchmark的性能表现](/l2-hitratio-after.png)
-**图 10：调整过 hit-ratio 的滑动窗口 benchmark 的性能表现**
 
 > 总结：通过调整`hitRatio`的值，可以优化持久化数据访问的性能，避免 L2 缓存的抖动。
 
@@ -512,7 +502,6 @@ Shared memory 是由程序员显式管理、每个 SM 独享的超高速片上�
 这种问题的自然分解方式是采用$w \times w$的线程块和tile（分块）尺寸。这样从$w\times w$的 Block 的角度来看，这个这个问题就会被简化为一个列矩阵$A$和一个行矩阵$B$的乘法（$M$和$N$是$w$的倍数），而$C$是它们的外积。如图 11 所示。而完成整个计算任务，则需要$(N/w) \times (M/w)$个 Block，即 Grid 的大小是$(N/w) \times (M/w)$，其中每一个block计算矩阵$C$中的不同分块tile。（列矩阵$A$相当于有$M/w$个元素，行矩阵$B$相当于有$N/w$个元素，分别两两计算，需要$(N/w) \times (M/w)$次，所以需要这么多个block，因此grid的大小也是这个。
 
 ![图11：块列矩阵$A$乘以块行矩阵$B$，结果是矩阵$C$](/matrix-multiplication-block-column-by-block-row.png)
-**图 11：块列矩阵$A$乘以块行矩阵$B$，结果是矩阵$C$**
 
 为此，`simpleMultiply`Kernel 的实现如下：
 
@@ -539,7 +528,6 @@ __global__ void simpleMultiply(float* a, float* b, float* c, int N) {
 这个 Kernel 在 NVIDIA Tesla V100 上的有效带宽是 119.9 GB/s。为了分析性能，我们必须知道在`for`循环里面 Warp 如何访问全局内存。每一个 Warp 各自计算$C$中子矩阵的一行，而这需要访问$A$子矩阵的一行和$B$的整个子矩阵。$C$中子矩阵一行中的不同列的元素是由$A$中的一行分别与$B$的不同列相乘得到的。数据是行优先存储的，所以访问$B$中不同列的元素时，需要访问该列所跨越的所有行才可以，而每次访问$B$中行的命中率实际只有$\frac{1}{TILE_DIM}$，效率很低。上图 12 展示了需要访问的数据。
 
 ![图12：计算子矩阵的一行。使用$A$的一行和$B$的整个子矩阵计算$C$中子矩阵的一行](/computing-row-of-tile.png)
-**图 12：计算子矩阵的一行。使用$A$的一行和$B$的整个子矩阵计算$C$中子矩阵的一行**
 
 对于`for`循环的每一次迭代$i$，Warp 中的线程会读取$B$子矩阵中的一行，这种访问方式在所有的计算能力下都是顺序且合并的。
 
