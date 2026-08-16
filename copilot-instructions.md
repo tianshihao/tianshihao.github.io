@@ -1,7 +1,8 @@
 # Copilot Instructions
 
-Hugo (v0.128 extended) blog. Site root: `tianshihao.github.io`. The theme is a
-git submodule at `themes/hugo-theme-tokiwa` (detached HEAD).
+Hugo (v0.165.0+extended) blog. Site root: `tianshihao.github.io`. The theme is a
+git submodule at `themes/hugo-theme-tokiwa`, tracked on its own `master`
+branch (commits go in the submodule first, then the root bumps the pointer).
 
 ## Before changing the theme — read the design doc
 
@@ -35,6 +36,20 @@ literals) and documented in DESIGN.md §9. The design doc is the source of truth
   VS Code grammars + theme JSONs). Adding a language = drop its `.tmLanguage`
   into `static/lib/` + one line in `static/lib/grammars.json` — no rebuild.
   Fences are emitted raw by `layouts/_default/_markup/render-codeblock.html`.
+  Inline code is also TextMate-highlighted at 12px (body/lists/tables only;
+  headings keep 0.875em via the `hN > code` direct-child rule).
+- Table fitting is load-bearing — EVERY body table is sized by JS
+  (`fitTables` in `layouts/partials/site-scripts.html`, entry
+  `window.tokiwaFitTables`): `tbl-flat` (narrow: full no-wrap width, every
+  cell one line — never compress a narrow table), `tbl-oneline` (wide:
+  pane-wide, headers one line), `tbl-fit` (over-wide: fixed, only when
+  min-content > pane), `tbl-spread` (zen: `min(max-content, --tbl-spread-max)`).
+  In zen, tables are centred by `left:50% + translateX(-50%)` with
+  `margin:0` — the normal `margin:auto` centring is switched off there, else a
+  narrow table double-shifts off-centre. See DESIGN.md §12.
+- vim `g`-leader (`gp/gt/gc/gs/ga`) always routes through home
+  (`/?to=<path>`, reusing `tokiwaLoadToPage`); never SPA-preview from an
+  article/term page. See DESIGN.md §4.
 - Colors are design tokens: `static/css/tokens.css` (DESIGN.md §9). Never add a
   raw color literal to the theme — define a token and document it.
 - Git: manual commands only (no GitLens/GitKraken MCP); conventional commits;
@@ -50,8 +65,9 @@ literals) and documented in DESIGN.md §9. The design doc is the source of truth
   `hugo server -D --buildFuture --disableFastRender --port 63217 --bind 127.0.0.1`
 - Long-running dev servers can serve stale content — restart and clear
   `resources/_gen` if behavior seems stale.
-- Pushing the theme submodule requires `git branch -f master HEAD` first, then
-  push origin master.
+- The theme submodule tracks its own `master`; push it with a plain
+  `git push origin master`. The old `git branch -f master HEAD` dance is only
+  needed if a `git submodule update` left it on a detached HEAD.
 - The VS Code built-in browser caches inline scripts; hard-refresh
   (Cmd+Shift+R) after script changes.
 
