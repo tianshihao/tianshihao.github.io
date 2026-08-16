@@ -38,12 +38,17 @@ literals) and documented in DESIGN.md §9. The design doc is the source of truth
   Fences are emitted raw by `layouts/_default/_markup/render-codeblock.html`.
   Inline code is also TextMate-highlighted at 12px (body/lists/tables only;
   headings keep 0.875em via the `hN > code` direct-child rule).
-- Table fitting is load-bearing — EVERY body table is sized by JS
-  (`fitTables` in `layouts/partials/site-scripts.html`, entry
-  `window.tokiwaFitTables`): `tbl-flat` (narrow: full no-wrap width, every
+- Table fitting is load-bearing — EVERY body table and code block is sized by
+  JS (`fitTables` + `fitCodeBlocks` in `layouts/partials/site-scripts.html`,
+  entry `window.tokiwaFitContent`): `tbl-flat` (narrow: full no-wrap width,
+  every
   cell one line — never compress a narrow table), `tbl-oneline` (wide:
   pane-wide, headers one line), `tbl-fit` (over-wide: fixed, only when
   min-content > pane), `tbl-spread` (zen: `min(max-content, --tbl-spread-max)`).
+  Code blocks mirror the tables: in zen a block wider than the pane spreads
+  to `min(content, --tbl-spread-max)` (no scrollbar); in normal mode it stays
+  pinned to the pane and long lines scroll inside the themed overlay
+  scrollbar.
   In zen, tables are centred by `left:50% + translateX(-50%)` with
   `margin:0` — the normal `margin:auto` centring is switched off there, else a
   narrow table double-shifts off-centre. See DESIGN.md §12.
