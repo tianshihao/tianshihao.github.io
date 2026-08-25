@@ -1,6 +1,6 @@
 +++
 date = '2026-08-25T13:36:10+08:00'
-draft = true
+draft = false
 title = 'Quantization in Depth 1'
 series = ["Quantization in Depth"]
 tags = ['Quantization']
