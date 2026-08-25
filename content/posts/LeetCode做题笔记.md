@@ -22,10 +22,12 @@ toc = true
 题目：
 
 
-1. **[70. Climbing Stairs](https://leetcode.cn/problems/climbing-stairs/description/)**
-   1. 自己的解法：递归+记忆话搜索、动态规规划
-2. [62. Unique Paths](https://leetcode.cn/problems/unique-paths/description/)
-2. [2312. Selliing Pieces of Wood](https://leetcode.cn/problems/selling-pieces-of-wood/description/)
+1. 70，爬楼梯
+1. 746，带cost的爬楼梯
+1. 1137，斐波那契数列
+上面三个最优相同的模版。
+1. [62. Unique Paths](https://leetcode.cn/problems/unique-paths/description/)
+1. [2312. Selliing Pieces of Wood](https://leetcode.cn/problems/selling-pieces-of-wood/description/)
 
 ## 记忆化搜索
 
@@ -76,3 +78,4 @@ toc = true
 
 1. 901
 2. 739
+3. 84
