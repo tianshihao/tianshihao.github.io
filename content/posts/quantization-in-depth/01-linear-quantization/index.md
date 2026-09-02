@@ -1,7 +1,7 @@
 +++
 date = '2026-08-25T13:36:10+08:00'
-draft = false
 title = 'Quantization in Depth 1'
+description = 'What is quantization'
 series = ["Quantization in Depth"]
 tags = ['Quantization']
 toc = true

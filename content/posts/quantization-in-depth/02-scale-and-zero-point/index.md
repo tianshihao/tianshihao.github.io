@@ -1,6 +1,7 @@
 +++
 date = '2026-08-27T14:12:40+08:00'
 title = 'Quantization in Depth 2'
+description = 'Get the scale and zero point'
 series = ["Quantization in Depth"]
 tags = ['Quantization']
 toc = true
