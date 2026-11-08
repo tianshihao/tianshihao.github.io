@@ -1,11 +1,14 @@
 +++
 date = '2026-09-04T17:00:22+08:00'
-title = 'Bevformer Quantization Notes 8'
+title = 'BEVFormer Quantization Notes 8'
 tags = ['Quantization']
+series = ['BEVFormer量化']
 toc = true
 +++
 
 # BEVFormer量化笔记8
+
+> 注：本篇是升级 PyTorch 2.0.1 后的新一轮记录，章节编号重新从 1 开始，与笔记 2–5（第 1–10 节）不连续。
 
 ## 1. 现状
 
@@ -22,7 +25,7 @@ ONNX ─────────────(TRT fp32)────────�
 TRT fp32 ────────(fp16)─────────────▶ TRT fp16 engine
 ```
 
-### 2.2 FP32 和 FP16 精度对比
+### 2.2. FP32 和 FP16 精度对比
 
 | precision         | bevformer_tiny_fp32_700126_042353 | bevformer_tiny_fp16_260904_103737 |
 | ----------------- | --------------------------------- | --------------------------------- |
@@ -108,7 +111,7 @@ Scatter/索引回填
 
 理论上两者应等价，但只要无效 camera/query 的处理、mask、slots 归一化存在一个细小差异，就可能影响 decoder hidden state。
 
-`bbox 分支对这种差异可能不敏感，cls 分支则更敏感。
+bbox 分支对这种差异可能不敏感，cls 分支则更敏感。
 
 ### 2.3. 对模型做的替换
 
@@ -143,8 +146,8 @@ cls 的偏差可能来自以上任意一层，设计实验，逐 patch 实验。
 
 结果：
 
-| patches        | cls_cosine | bbox_cosine | cls_max/mean diff   |
-| :------------- | :--------- | :---------- | :------------------ |
+| patches      | cls_cosine | bbox_cosine | cls_max/mean diff   |
+| :----------- | :--------- | :---------- | :------------------ |
 | original     | 1.000000   | 1.000000    | 0 / 0               |
 | all          | 0.828565   | 0.999915    | 0.627761 / 0.000042 |
 | sca          | 0.828565   | 0.999915    | 0.627761 / 0.000042 |
@@ -157,7 +160,7 @@ cls 的偏差可能来自以上任意一层，设计实验，逐 patch 实验。
 
 | patches               | cls_cosine | bbox_cosine | cls_max/mean diff   |
 | :-------------------- | :--------- | :---------- | :------------------ |
-| original            | 1.000000   | 1.000000    | 0 / 0               |
+| original              | 1.000000   | 1.000000    | 0 / 0               |
 | `point_sampling_onnx` | 1.000000   | 1.000000    | 0.000000 / 0.000000 |
 | 静态`_sca_forward`    | 0.828565   | 0.999915    | 0.627761 / 0.000042 |
 
@@ -171,7 +174,7 @@ cls 的偏差可能来自以上任意一层，设计实验，逐 patch 实验。
 
 **现象**：从“原始 PyTorch vs 部署路径（patch eager / TRT engine）”的对比看，`bbox_preds` 几乎无差异（cosine≈0.9999），但 `cls_scores` 明显下降（0.83 量级）；逐 patch 开关定位到唯一来源是 `SpatialCrossAttention` 的静态化。
 
-**分析**：静态 `_sca_forwrad` 与原版有个差异，集中在对不可见 anchor 的处理。
+**分析**：静态 `_sca_forward` 与原版有个差异，集中在对不可见 anchor 的处理。
 
 - 原版：每个相机只对“该 query 至少一个 z-anchor 可见”的 query 做 msda，query 带着它全部 D 个 anchor 的原始坐标去采样；落在图外的 anchor 在 mmcv/CUDA 里按采样坐标 `clamp` 到图像边界参与，`softmax` 仍覆盖这些点。
 - 静态：对不可见 anchor 一律把坐标换成 0.5（图像中心）再采样，同样参与 softmax。
@@ -182,11 +185,11 @@ cls 的偏差可能来自以上任意一层，设计实验，逐 patch 实验。
 
 测试新版本静态 `_sca_forward_2`：
 
-| patches                   | cls_cosine | bbox_cosine | cls_max/mean diff   |
-| :------------------------ | :--------- | :---------- | :------------------ |
+| patches                 | cls_cosine | bbox_cosine | cls_max/mean diff   |
+| :---------------------- | :--------- | :---------- | :------------------ |
 | original（vs original） | 1.000000   | 1.000000    | 0 / 0               |
-| 静态`_sca_forward`        | 0.828565   | 0.999915    | 0.627761 / 0.000042 |
-| 静态`_sca_forward_2`      | 1.000000   | 1.000000    | 0 / 0               |
+| 静态`_sca_forward`      | 0.828565   | 0.999915    | 0.627761 / 0.000042 |
+| 静态`_sca_forward_2`    | 1.000000   | 1.000000    | 0 / 0               |
 
 ### 4.2. 修复后指标
 
